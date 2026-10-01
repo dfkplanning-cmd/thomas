@@ -50,7 +50,7 @@ De grote titel bestaat uit twee regels: de projectnaam in Outfit 500 en daaronde
 
 ## Opbouw van de pagina
 
-1. **Bovenbalk**, sticky. Links het TAG-logo (32 px hoog, `tag-logo.png`) met "BasePage". Dan de afleveringtabs nummer en naam in Silkscreen. Rechts de schaalregelaar.
+1. **Bovenbalk**, sticky. Links het TAG-logo (32 px hoog, `tag-logo.png`) met "BasePage". Dan de afleveringtabs, met nummer en naam in Silkscreen. Rechts de schaalregelaar.
 2. **Cue-menu** links, per aflevering. Elke sectie en serie is een regel met een code in Doto (`R` voor refs, `4.1` voor serie 1, `33,0` voor de montage) en een korte naam.
 3. **Grip**: de dunne lijn tussen menu en inhoud. Slepen verandert de breedte.
 4. **Inhoud**, per aflevering in deze volgorde:

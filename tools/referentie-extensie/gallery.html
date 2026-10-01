@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referentiebibliotheek</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="top">
+    <div class="row">
+      <h1><span class="dot"></span>Referentiebibliotheek <span id="total" class="muted"></span></h1>
+      <button id="theme" class="ghost" title="Licht of donker">◐</button>
+      <button id="export" class="ghost">Exporteer</button>
+      <button id="settings-btn" class="ghost">Instellingen</button>
+    </div>
+    <input id="search" type="search" placeholder="Zoek op titel, site, notitie of tag">
+    <div id="filters" class="chips"></div>
+  </div>
+  <main id="wall" class="wall"></main>
+  <p id="empty" class="empty" hidden>Nog niets bewaard. Klik op het extensie-icoon (of Alt+Shift+S) op een pagina die je mooi vindt.</p>
+
+  <dialog id="settings">
+    <form method="dialog">
+      <h3>Instellingen</h3>
+      <label>Map binnen Downloads<input id="set-folder" type="text"></label>
+      <label>Tags (komma-gescheiden)<input id="set-tags" type="text"></label>
+      <label style="display:flex;gap:8px;align-items:center"><input id="set-youtube" type="checkbox"> Ook op YouTube bewaren</label>
+      <div class="row" style="display:flex;gap:8px;justify-content:flex-end">
+        <button value="cancel" class="ghost">Annuleer</button>
+        <button id="set-save" value="ok" class="primary">Opslaan</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog id="zoom" class="zoom"><img alt=""></dialog>
+
+  <script src="db.js"></script>
+  <script src="gallery.js"></script>
+</body>
+</html>

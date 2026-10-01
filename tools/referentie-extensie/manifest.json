@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Design Assistent: Referenties",
+  "version": "1.0.0",
+  "description": "Bewaar design-inspiratie met één klik: screenshot, URL, titel en een notitie.",
+  "action": {
+    "default_title": "Bewaar als referentie",
+    "default_popup": "popup.html"
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": { "default": "Alt+Shift+S" },
+      "description": "Bewaar deze pagina als referentie"
+    }
+  },
+  "permissions": ["activeTab", "downloads", "storage", "unlimitedStorage"],
+  "options_page": "gallery.html"
+}

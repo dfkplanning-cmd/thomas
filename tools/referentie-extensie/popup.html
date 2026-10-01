@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+<title>Bewaar referentie</title>
+</head>
+<body class="popup">
+  <header class="bar">
+    <span class="dot"></span><b>Bewaar referentie</b>
+    <a id="open-gallery" href="#" class="link">Bibliotheek</a>
+  </header>
+  <img id="shot" alt="" class="shot">
+  <p id="page-title" class="muted clip"></p>
+  <input id="note" type="text" placeholder="Eén regel: wat vind je hier goed?" autocomplete="off">
+  <div id="tags" class="chips"></div>
+  <button id="save" class="primary">Bewaar</button>
+  <p id="status" class="muted"></p>
+  <script src="db.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

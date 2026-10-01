@@ -1,0 +1,15 @@
+# Design OS: persoonlijke instellingen en index
+tools/design-os/config.json
+tools/design-os/.index/
+
+# Tweak-backups
+*.html.bak
+*.css.bak
+
+# Python
+__pycache__/
+*.pyc
+
+# Geheimen
+.env
+.env.*

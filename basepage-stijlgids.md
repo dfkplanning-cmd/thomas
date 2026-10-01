@@ -8,7 +8,7 @@ Referentie: de Regietafel (https://claude.ai/artifact/UM2bt88izptDFRcTrgoRnV) en
 
 - Kopiëren en downloaden gaan voor alles. De kopieerknop is het grootste element op een kaart.
 - Donker is de standaard. Er is altijd een lichte variant die het systeem volgt.
-- Kleuren komen van de TAG-website. Typografie is Outfit plus een blokkerige pixelletter (Silkscreen).
+- Kleuren komen van de TAG-website. Typografie is Outfit, met Doto voor titel en nummers en Silkscreen voor de afleveringtabs.
 - Geen schaduwen, geen verlopen. Vlakken met een dunne rand.
 - Alles schaalt mee met één regelaar. Maten dus in `rem`, niet in `px`.
 - Werkt op 400 px breed zonder dat er iets uit beeld schuift.
@@ -36,21 +36,22 @@ In licht is de teal donkerder, zodat witte tekst op de knop leesbaar blijft.
 
 ## Typografie
 
-Laad via Google Fonts: Outfit (300 tot 700), Silkscreen (400 en 700) en JetBrains Mono (400 en 600).
+Laad via Google Fonts: Outfit (300 tot 700), Doto (800 tot 900), Silkscreen (400 en 700) en JetBrains Mono (400 en 600).
 
 | Rol | Letter | Voorbeeld |
 |---|---|---|
 | Koppen en lopende tekst | Outfit | `TAG-supermarkt`, kaarttitels, knoppen |
-| Grote titel en nummers | Silkscreen, in `--accent` | `STROOMSTORING`, `4.1`, `33,0`, afleveringnummers in de tabs |
+| Grote titel en nummers | Doto, gewicht 900, in `--accent` | `STROOMSTORING`, `4.1`, `33,0`, codes in het cue-menu |
+| Afleveringtabs | Silkscreen | `1 AANBIEDINGEN`, `4 STROOMSTORING` in de bovenbalk |
 | Prompts, tijdcodes, rollen | JetBrains Mono | inhoud van `<pre>`, "Joep" voor een liedregel |
 | Labels | Outfit 600, 0,6875rem, hoofdletters, spatiëring 0,22em, `--accent` | `CUES`, `REFS`, `HET LIED` |
 
-De grote titel bestaat uit twee regels: de projectnaam in Outfit 500 en daaronder de afleveringstitel in Silkscreen. Silkscreen is een pixelletter van dichte, vierkante blokjes. Geen stippenletter zoals Doto, en geen andere display-letter. Silkscreen loopt breed: controleer op 400 px dat de titel en de nummers passen.
+De grote titel bestaat uit twee regels: de projectnaam in Outfit 500 en daaronder de afleveringstitel in Doto. Gebruik geen andere display-letter. Silkscreen, een pixelletter van dichte vierkante blokjes, is alleen voor de tabs. Hij loopt breed: controleer op 400 px dat de tabs passen.
 
 ## Opbouw van de pagina
 
-1. **Bovenbalk**, sticky. Links het TAG-logo (32 px hoog, `tag-logo.png`) met "BasePage". Dan de afleveringtabs met het nummer in Silkscreen. Rechts de schaalregelaar.
-2. **Cue-menu** links, per aflevering. Elke sectie en serie is een regel met een code in Silkscreen (`R` voor refs, `4.1` voor serie 1, `33,0` voor de montage) en een korte naam.
+1. **Bovenbalk**, sticky. Links het TAG-logo (32 px hoog, `tag-logo.png`) met "BasePage". Dan de afleveringtabs nummer en naam in Silkscreen. Rechts de schaalregelaar.
+2. **Cue-menu** links, per aflevering. Elke sectie en serie is een regel met een code in Doto (`R` voor refs, `4.1` voor serie 1, `33,0` voor de montage) en een korte naam.
 3. **Grip**: de dunne lijn tussen menu en inhoud. Slepen verandert de breedte.
 4. **Inhoud**, per aflevering in deze volgorde:
    - kop: label, titel in twee regels, een korte alinea over het verhaal;
@@ -66,7 +67,7 @@ Tussen secties staat een dunne lijn (`border-top: 1px solid var(--line)`).
 
 **Kaart.** `background: var(--panel)`, rand 1px `--line`, hoeken 0,625rem, binnenruimte 1,125rem.
 
-**Cuekaart (serie).** Bovenaan drie kolommen: het nummer in Silkscreen (teal, zo groot als past), de titel met de feiten eronder (stuk uit het lied, aantal tekens), en rechts de duur als teal pil (`7 SEC`). Daaronder de regels van die serie, dan de refs als pillen, dan het promptvak.
+**Cuekaart (serie).** Bovenaan drie kolommen: het nummer in Doto (2,5rem, teal), de titel met de feiten eronder (stuk uit het lied, aantal tekens), en rechts de duur als teal pil (`7 SEC`). Daaronder de regels van die serie, dan de refs als pillen, dan het promptvak.
 
 **Pillen.** Volledig rond, rand 1px.
 - Duur en status: teal rand, `--accent-fill` vulling, teal tekst, hoofdletters met spatiëring.

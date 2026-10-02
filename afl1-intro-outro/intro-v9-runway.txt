@@ -1,0 +1,30 @@
+Use the SONG (@Audio 1) only for its exact audio, no remix, no added music, no extra voices. Nobody in the picture speaks or moves their lips.
+
+Model: Seedance 2.5 via Runway, references mode. Photoreal cinematic Broadway musical film, TAG supermarket series, episode 1: the opening title. Duration: 5 seconds. 16:9. 3 shots, 2 hard cuts, natural realtime speed.
+
+REFERENCES
+@Image 7 = AISLE: the TAG supermarket set that stands on the stage behind the curtain: navy gondola ends with gold edging and glowing white house logos, warm pendant lamps, a pale polished floor. The set only, lit and coloured exactly as the image, with no people from it. It also sets the colour and light of the whole clip.
+@Audio 1 = SONG: the soundtrack, sound only.
+
+THE HALL: a grand theatre dressed in the TAG house colours, the same navy-and-gold world as the supermarket set: deep navy velvet seats with thin gold piping, a navy carpet, two curved balconies with navy fronts and gold trim lined with small warm bulbs, a gold proscenium arch, and one heavy navy velvet curtain with a gold fringe. Centred on the curtain, at two-thirds of its height, a large white house-shaped outline with the lowercase word "tag" inside, embroidered in white and gold thread. A full house of dressed-up guests in dark suits and evening dresses in sapphire, royal blue, black and gold.
+
+SONG TIMING: 0.0-0.2 the hall hushes; 0.2-4.2 an off-screen announcer speaks in Dutch, grand and warm: "Hooggeëerd publiek, met trots presenteert..."; 4.4 one big full-orchestra hit, ringing to 5.0. Nobody in the picture speaks or moves their lips.
+
+SHOT 1 (0.0-1.8 s) - WIDE, 24mm, eye level, from the centre aisle at the back of the hall. The whole navy-and-gold hall, full rows of guests seen from behind, the closed navy curtain with the white tag logo at the end of the aisle. At 0.6 s the house lights dim one step and the guests settle. One steady push-in of about 10 percent.
+
+HARD CUT - SHOT 2 (1.8-3.2 s) - MEDIUM CLOSE-UP, 85mm, eye level. A young woman in a sapphire sequin dress in the third row, face three-quarter to the lens, looking up toward the stage with an excited closed-lip smile; at 2.4 s she squeezes the hand of the man beside her at chest height. Round warm bokeh of balcony bulbs behind her. Static camera.
+
+HARD CUT - SHOT 3 (3.2-5.0 s) - WIDE FRONTAL, 35mm, from the middle of the stalls, perfectly centred and symmetrical on the stage; the heads of the audience form a dark band along the bottom edge. The navy curtain with the white tag logo fills the gold arch. At 4.0 s the curtain rises straight up fast, never parting sideways, and at 4.4 s, on the orchestra hit, it is fully up: behind it the AISLE (@Image 7) as a brightly lit set on the stage, navy gondola ends with gold edging and glowing white house-shaped tag logos, warm pendant lamps and a pale polished floor, one empty aisle running straight into depth. The camera stays still and the frame holds on the bright set to the end.
+
+LIGHT AND GRADE (identical to the four series of this episode)
+A large diffused frontal key light from camera left, slightly above eye level and close to the camera axis, 1.5:1 on faces, neutral 5600K so skin stays natural, never yellow or orange; one small catchlight in each eye; a subtle cool rim light separates dark coats from the background. Warmth comes from the gold trim and the warm practical lamps of the set, not from the key. Deep blacks with shadow detail; cream whites held below clipping; only lamps and glowing logos glow, with a tight edge. Restrained navy-and-gold palette; TAG blue and gold are the only saturated accents. The hall is bright and clearly lit like a television gala, never a dark amber cinema: no orange or red cast, no red velvet, no sepia. Shallow depth of field on close shots with round bokeh from the lamps. Clean digital cinema image with natural skin texture. No film grain, no lens flare, no light beams, no haze, no teal-and-orange grade.
+
+TEXT RULES
+The only lettering is the lowercase word "tag" inside the white house-shaped logos, spelled exactly t-a-g. No other words, no captions, no subtitles, no theatre name.
+
+EXCLUSIONS
+No doors, no walk-in, no drone flight, no chandelier fly-by, no old men with opera glasses. No red or amber hall, no dark auditorium, no tears, no slow motion. Nobody looks into the lens. No duplicated faces.
+
+CONSTRAINTS (reassert)
+5 seconds, 3 hard cuts at 1.8 s and 3.2 s, not morphs. Navy-and-gold hall lit like the supermarket series, neutral white balance. The curtain is fully up exactly on the orchestra hit at 4.4 s and the last frame is the bright, empty TAG supermarket set.
+Asset roles: AISLE (@Image 7, the stage set and the look), SONG (@Audio 1, audio only).

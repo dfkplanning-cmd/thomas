@@ -1,0 +1,35 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Lyric,Bitstream Charter,56,&H00FFFFFF,&H00FFFFFF,&H00101010,&H90000000,0,0,0,0,100,100,0.5,0,1,2.2,2,2,80,80,44,1
+Style: Announcer,Bitstream Charter,52,&H00FFFFFF,&H00FFFFFF,&H00101010,&H90000000,0,1,0,0,100,100,0.5,0,1,2.2,2,2,80,80,44,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:01.80,0:00:04.00,Announcer,,0,0,0,,{\fad(80,80)}We proudly present...
+Dialogue: 0,0:00:04.97,0:00:07.34,Lyric,,0,0,0,,{\fad(80,80)}Good evening, ladies,
+Dialogue: 0,0:00:07.45,0:00:09.59,Lyric,,0,0,0,,{\fad(80,80)}good evening, sir!
+Dialogue: 0,0:00:09.75,0:00:11.27,Lyric,,0,0,0,,{\fad(80,80)}Just stay calm and still,
+Dialogue: 0,0:00:11.29,0:00:13.28,Lyric,,0,0,0,,{\fad(80,80)}I've got the deal of the week,
+Dialogue: 0,0:00:13.37,0:00:16.14,Lyric,,0,0,0,,{\fad(80,80)}the deal of the week!
+Dialogue: 0,0:00:16.20,0:00:17.74,Lyric,,0,0,0,,{\fad(80,80)}Sir, what would you like?
+Dialogue: 0,0:00:17.85,0:00:18.64,Lyric,,0,0,0,,{\fad(80,80)}One euro.
+Dialogue: 0,0:00:18.71,0:00:19.54,Lyric,,0,0,0,,{\fad(80,80)}For both?
+Dialogue: 0,0:00:19.61,0:00:20.69,Lyric,,0,0,0,,{\fad(80,80)}Technically speaking.
+Dialogue: 0,0:00:21.25,0:00:23.74,Lyric,,0,0,0,,{\fad(80,80)}A whole kilo of spiced cookies!
+Dialogue: 0,0:00:23.84,0:00:25.69,Lyric,,0,0,0,,{\fad(80,80)}Cinnamon and anise!
+Dialogue: 0,0:00:25.74,0:00:26.99,Lyric,,0,0,0,,{\fad(80,80)}One euro for that too?
+Dialogue: 0,0:00:27.05,0:00:28.29,Lyric,,0,0,0,,{\fad(80,80)}One euro too.
+Dialogue: 0,0:00:28.39,0:00:29.64,Lyric,,0,0,0,,{\fad(80,80)}That's robbery!
+Dialogue: 0,0:00:29.71,0:00:31.29,Lyric,,0,0,0,,{\fad(80,80)}No, that's...
+Dialogue: 0,0:00:32.40,0:00:33.67,Lyric,,0,0,0,,{\fad(80,80)}One euro,
+Dialogue: 0,0:00:33.71,0:00:34.89,Lyric,,0,0,0,,{\fad(80,80)}one euro,
+Dialogue: 0,0:00:34.94,0:00:36.77,Lyric,,0,0,0,,{\fad(80,80)}two nets and a kilo.
+Dialogue: 0,0:00:36.79,0:00:39.20,Lyric,,0,0,0,,{\fad(80,80)}Everything I want, I find...
+Dialogue: 0,0:00:39.20,0:00:40.62,Lyric,,0,0,0,,{\fad(80,80)}here!

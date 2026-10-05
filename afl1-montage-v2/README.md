@@ -28,4 +28,6 @@ ffmpeg -i afl1-montage-final-v2-web.mp4 -loop 1 -i masker-ondertitels.png -filte
 -map "[v]" -map 0:a ... afl1-montage-final-v2-EN.mp4
 ```
 
+Stijl: dezelfde als de Nederlandse ondertitels, Castoro vet in crème (#FFF8F2), zonder rand of schaduw. In de editor is dat 36 pt met letterafstand −1,14; op het 1080p-beeld komt dat neer op 108 px met `\fsp-3` (nagemeten door de tekst over de Nederlandse ondertitel te leggen). Castoro moet geïnstalleerd zijn (Google Fonts).
+
 Beide bestanden staan op de BasePage, two-pass gecodeerd op 2200 kbit/s (rond 13 MB).

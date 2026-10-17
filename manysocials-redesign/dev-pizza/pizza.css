@@ -650,3 +650,11 @@ button.opt { font-family: inherit; cursor: pointer; }
 .story-kaart.wissel { animation: storyWissel .6s var(--veer); }
 @keyframes storyWissel { 0% { filter: brightness(1.6) blur(6px); scale: .94; } 100% { filter: none; scale: 1; } }
 .story-kaart::after { content: attr(data-initialen); position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font: 800 44px/1 var(--kop); }
+
+/* Mening: kop boven, foto eronder met het cijfer erop */
+.mening-s mark { background: var(--heet); color: #fff; padding: .04em .22em; border-radius: .14em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.mening-s .voetregel { margin: 0; color: inherit; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.45; max-width: 34ch; }
+.mening-foto { position: relative; margin-top: clamp(22px, 3vw, 36px); border-radius: 28px; aspect-ratio: 16 / 8; background: #1a1210 center 25% / cover no-repeat; overflow: hidden; }
+.mening-onder { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(18px, 3vw, 40px); margin-top: clamp(16px, 2vw, 24px); }
+.mening-onder .stat-bol { justify-self: auto; box-shadow: none; }
+@media (max-width: 700px) { .mening-foto { aspect-ratio: 4 / 3; background-position: 35% 20%; } }

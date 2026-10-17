@@ -670,6 +670,14 @@ button.opt { font-family: inherit; cursor: pointer; }
 @keyframes storyWissel { 0% { filter: brightness(1.6) blur(6px); scale: .94; } 100% { filter: none; scale: 1; } }
 .story-kaart::after { content: attr(data-initialen); position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font: 800 44px/1 var(--kop); }
 
+/* Mening: kop boven, foto eronder met het cijfer erop */
+.mening-s mark { background: var(--heet); color: #fff; padding: .04em .22em; border-radius: .14em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.mening-s .voetregel { margin: 0; color: inherit; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.45; max-width: 34ch; }
+.mening-foto { position: relative; margin-top: clamp(22px, 3vw, 36px); border-radius: 28px; aspect-ratio: 16 / 8; background: #1a1210 center 25% / cover no-repeat; overflow: hidden; }
+.mening-onder { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(18px, 3vw, 40px); margin-top: clamp(16px, 2vw, 24px); }
+.mening-onder .stat-bol { justify-self: auto; box-shadow: none; }
+@media (max-width: 700px) { .mening-foto { aspect-ratio: 4 / 3; background-position: 35% 20%; } }
+
 </style>
 
 <header class="balk" id="balk">
@@ -811,15 +819,18 @@ button.opt { font-family: inherit; cursor: pointer; }
   </div>
 </section>
 
-<section class="beeldsectie mening" id="mening" style="--foto:url(img/mening-iphone.jpg)">
+<section class="dia mening-s" id="mening">
   <div class="wrap">
-    <div class="beeld-tekst opbouw">
-      <div class="kicker licht">Iedereen doet mee</div>
+    <div class="kopgroep opbouw">
+      <div class="kicker">Iedereen doet mee</div>
       <h2 class="kop">Iedereen heeft een mening over pizza.</h2>
       <p class="sub"><mark>Tijd dat een pizzamerk het aan iedereen vraagt.</mark></p>
+    </div>
+    <div class="mening-foto opbouw" style="background-image:url(img/mening-iphone.jpg)" aria-hidden="true"></div>
+    <div class="mening-onder opbouw">
+      <div class="stat-bol"><b data-tel="61">61%</b><span>van de jongeren zegt dat merkcontent hun aankoop beïnvloedt<sup><a href="#bron-1">1</a></sup></span></div>
       <p class="voetregel">Stëlz<sup><a href="#bron-9">9</a></sup>, KFC<sup><a href="#bron-2">2</a> <a href="#bron-3">3</a></sup> en Domino's<sup><a href="#bron-4">4</a></sup> lieten een handvol fans meedenken. Hier doet iedere klant mee.</p>
     </div>
-    <div class="stat-bol opbouw"><b data-tel="61">61%</b><span>van de jongeren zegt dat merkcontent hun aankoop beïnvloedt<sup><a href="#bron-1">1</a></sup></span></div>
   </div>
 </section>
 

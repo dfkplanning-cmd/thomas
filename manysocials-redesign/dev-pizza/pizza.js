@@ -392,13 +392,13 @@
 
   // Meteen zien dat je kiest: de pizza vliegt uit de band naar het toneel en landt met een knal.
   const herstart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
-  const toonKeuze = knop => {
+  const toonKeuze = bron => {
     const doel = $('#p-keuze'), label = $('#p-label');
-    herstart(knop, 'net');
+    if (bron.classList.contains('band-pizza')) herstart(bron, 'net');
     herstart(scherm, 'wissel');
     const land = () => { herstart(doel, 'land'); herstart(doel.parentElement, 'knal'); herstart(label, 'wissel'); };
     // Midden en echte breedte: de pizza's draaien, dus de bounding box is groter dan de schijf.
-    const vanEl = knop.querySelector('.pizza'), vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
+    const vanEl = bron.querySelector('.pizza') || bron, vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
     const vw = vanEl.offsetWidth, nw = doel.offsetWidth * schaal;
     const vx = vr.left + vr.width / 2, vy = vr.top + vr.height / 2, nx = nr.left + nr.width / 2, ny = nr.top + nr.height / 2;
     const zichtbaar = ny > 0 && ny < innerHeight && vy < innerHeight;
@@ -417,12 +417,162 @@
     ], { duration: 720, easing: 'cubic-bezier(.45, 0, .2, 1)' }).onfinish = () => { vlieg.remove(); doel.style.visibility = ''; land(); };
   };
 
+
+  // ---------- Zelf typen: een echte DM met de pizza-agent ----------
+  // Claude antwoordt via de sample-capability; zonder die (of zonder toestemming) neemt een eenvoudig script het over.
+  const invoerVeld = $('#ig-input'), hint = $('#zelf-hint');
+  const GROET = 'Welke pizza moeten wij nog maken? Eerst: welke bodem?';
+  const REGELS = `Je bent de DM-assistent van New York Pizza op Instagram (@newyorkpizza_nl) in de campagne "De Pizza van Nederland": iedereen bedenkt via de DM zijn eigen pizza en de beste komt echt op de kaart.
+Schrijf kort en informeel Nederlands, hooguit twee zinnen, hooguit één emoji. Vraag één ding tegelijk, in deze volgorde: bodem (New York Style, Italiaans dun of Bloemkool), toppings, saus.
+Zodra bodem, toppings en saus bekend zijn: bedenk een pakkende pizzanaam van twee of drie woorden (Engels of Nederlands, speels), zeg dat ze meedoen en zo een kortingscode ontvangen, en geef de pizza mee. Daarna mag de klant een nieuwe pizza bedenken.
+Blijf bij pizza en deze campagne; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste toppings weiger je met humor.
+Antwoord met alleen JSON in deze vorm:
+{"tekst": "je bericht", "opties": ["max 3 korte snelknoppen, of leeg"], "pizza": null}
+of, als de pizza af is:
+{"tekst": "je bericht", "opties": [], "pizza": {"titel": "Naam Van De Pizza", "toppings": "Nduja & hot honey", "foto": "daan"}}
+Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees), parmaham (ham, burrata, rucola), mortadella (mortadella, pistache, romig), bresaola (rundvlees, rucola, Parmezaan), gorgonzola (kaas, peer, noten, zoet), ricotta (groente, vegetarisch, citroen, fris).`;
+  const TREF = [
+    ['daan', ['nduja', 'salami', 'pepperoni', 'chorizo', 'chili', 'jalape', 'pittig', 'worst', 'kip', 'gehakt', 'spek']],
+    ['mortadella', ['mortadella', 'pistache']],
+    ['parmaham', ['ham', 'parma', 'burrata', 'prosciutto']],
+    ['bresaola', ['bresaola', 'rund', 'parmezaan', 'rucola', 'biefstuk']],
+    ['gorgonzola', ['gorgonzola', 'kaas', 'peer', 'noot', 'noten', 'honing', 'brie', 'geit']],
+    ['ricotta', ['ricotta', 'courgette', 'citroen', 'groente', 'vega', 'spinazie', 'paprika', 'champignon', 'ui', 'tomaat', 'olijf', 'ananas']],
+  ];
+  let live = false, liveId = 0, bezig = false, beurten = [], agent = null, stap = 0, recept = {};
+  if (window.claude && claude.use) claude.use('sample').then(s => { agent = s; }, () => {});
+
+  const bubbel = (tekst, kant) => {
+    const n = document.createElement('div');
+    n.className = `bub ${kant} in-anim` + (kant === 'in' ? ' met-av' : '');
+    n.textContent = tekst;
+    draad.appendChild(n);
+    scrollNaarOnder();
+  };
+  const snelknoppen = lijst => {
+    if (!Array.isArray(lijst) || !lijst.length) return;
+    const o = document.createElement('div');
+    o.className = 'opts in-anim';
+    lijst.slice(0, 3).forEach(t => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.textContent = String(t).slice(0, 30);
+      o.appendChild(b);
+    });
+    draad.appendChild(o);
+    scrollNaarOnder();
+  };
+  const maakPizza = p => {
+    const key = KEUZES.some(k => k.key === p.foto) ? p.foto : 'daan';
+    const naam = String(p.toppings || '').slice(0, 60) || 'Jouw pizza';
+    keuze = { key, titel: String(p.titel || 'Jouw pizza').slice(0, 40), naam, toppings: naam, bestel: 'Bestel je eigen pizza' };
+    zetKeuzeInBeeld();
+    const kaart = sjablonen[9].cloneNode(true);
+    kaart.classList.add('in-anim', 'genereren');
+    draad.appendChild(kaart);
+    scrollNaarOnder();
+    setTimeout(() => { kaart.classList.remove('genereren'); if (live) toonKeuze(kaart); }, 1600);
+  };
+
+  const scriptAgent = () => {
+    const t = beurten[beurten.length - 1].content;
+    if (stap === 0) { recept.bodem = t; stap = 1; return { tekst: 'Lekker. En wat moet erop?' }; }
+    if (stap === 1) { recept.toppings = t; stap = 2; return { tekst: 'Welke saus eronder?', opties: ['Tomaat', 'BBQ', 'Crème fraîche'] }; }
+    stap = 0;
+    const l = recept.toppings.toLowerCase();
+    const foto = (TREF.find(([, w]) => w.some(x => l.includes(x))) || ['daan'])[0];
+    const toppings = recept.toppings.charAt(0).toUpperCase() + recept.toppings.slice(1);
+    return { tekst: 'Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.', pizza: { titel: KEUZES.find(k => k.key === foto).titel, toppings, foto } };
+  };
+  const vraagAgent = async () => {
+    if (agent) {
+      try {
+        const r = await agent.json([{ role: 'user', content: REGELS }, ...beurten.slice(-14)], { modelTier: 'quick', cache: false });
+        if (r && typeof r.tekst === 'string' && r.tekst.trim()) return r;
+      } catch (e) {
+        if (!['upstream_error', 'invalid_json', 'rate_limited', 'cancelled'].includes(e && e.code)) agent = null;
+      }
+    }
+    return scriptAgent();
+  };
+
+  const stuurBericht = async tekst => {
+    tekst = String(tekst).trim().slice(0, 200);
+    if (!live || !tekst || bezig) return;
+    const mijn = liveId;
+    bezig = true;
+    $$('.opts', draad).forEach(o => o.remove());
+    bubbel(tekst, 'uit');
+    beurten.push({ role: 'user', content: tekst });
+    const stippen = document.createElement('div');
+    stippen.className = 'typen in-anim';
+    stippen.innerHTML = '<i></i><i></i><i></i>';
+    draad.appendChild(stippen);
+    scrollNaarOnder();
+    const [r] = await Promise.all([vraagAgent(), wacht(700)]);
+    stippen.remove();
+    bezig = false;
+    if (mijn !== liveId) return;
+    const tekstIn = String(r.tekst).slice(0, 400);
+    bubbel(tekstIn, 'in');
+    beurten.push({ role: 'assistant', content: tekstIn + (r.pizza ? ` [pizza: ${r.pizza.titel}, ${r.pizza.toppings}]` : '') });
+    snelknoppen(r.opties);
+    if (r.pizza && typeof r.pizza === 'object') maakPizza(r.pizza);
+  };
+
+  const startLive = () => {
+    if (live) return;
+    live = true; liveId++; run++;
+    verbergPop(true);
+    leeg();
+    scherm.classList.add('live');
+    beurten = [{ role: 'assistant', content: GROET }];
+    stap = 0; recept = {};
+    bubbel(GROET, 'in');
+    snelknoppen(['New York Style', 'Italiaans dun', 'Bloemkool']);
+  };
+  function stopLive() {
+    if (!live) return;
+    live = false; liveId++; bezig = false;
+    scherm.classList.remove('live');
+    invoerVeld.value = '';
+    invoerVeld.blur();
+  }
+  const verstuurVeld = () => { const t = invoerVeld.value; invoerVeld.value = ''; invoer.classList.remove('tekst'); stuurBericht(t); };
+
+  invoerVeld.addEventListener('pointerdown', startLive);
+  invoerVeld.addEventListener('focus', startLive);
+  invoerVeld.addEventListener('input', () => invoer.classList.toggle('tekst', !!invoerVeld.value.trim()));
+  invoerVeld.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); verstuurVeld(); } });
+  stuur.addEventListener('click', () => { if (live) { verstuurVeld(); invoerVeld.focus(); } });
+  stuur.addEventListener('keydown', e => { if (live && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); verstuurVeld(); } });
+  hint.addEventListener('click', () => invoerVeld.focus());
+  draad.addEventListener('click', e => {
+    if (!live) return;
+    const opt = e.target.closest('.opt');
+    if (opt && !bezig) {
+      opt.classList.add('gekozen');
+      stuurBericht(opt.textContent);
+      if (matchMedia('(pointer: fine)').matches) invoerVeld.focus({ preventScroll: true });
+      return;
+    }
+    if (e.target.closest('.pizzakaart')) { scherm.classList.add('op-pagina'); vlieg(); }
+  });
+  $('.adres', scherm).addEventListener('click', () => { if (live) { verbergPop(false); scherm.classList.remove('op-pagina'); } });
+  chat.addEventListener('wheel', e => {
+    if (!live) return;
+    e.preventDefault();
+    const max = Math.max(0, draad.offsetHeight - chat.clientHeight);
+    scrollY = Math.min(max, Math.max(0, scrollY + e.deltaY));
+    draad.style.transform = `translateY(${-scrollY}px)`;
+  }, { passive: false });
+
   // Kies een pizza in de band: het gesprek begint opnieuw met die pizza.
   band.addEventListener('click', e => {
     const b = e.target.closest('.band-pizza');
     if (!b) return;
     const nieuw = KEUZES.find(k => k.key === b.dataset.keuze);
     if (!nieuw) return;
+    stopLive();
     keuze = nieuw;
     run++;
     toonKeuze(b);

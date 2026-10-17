@@ -633,6 +633,24 @@ sup a:hover { text-decoration: underline; }
 .band-pizza .bijnaam { display: block; font: 800 14px/1.15 var(--kop); color: #fff; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s var(--veer), opacity .3s, margin .3s; }
 .band-pizza[aria-pressed="true"] .bijnaam { max-height: 2.4em; opacity: 1; margin-bottom: 3px; }
 
+/* Zelf typen in de DM */
+.ig-veld { position: relative; }
+.ig-input { position: absolute; inset: 0; width: 100%; min-width: 0; border: 0; outline: 0; padding: 0; margin: 0; background: transparent; font: inherit; color: transparent; caret-color: transparent; cursor: text; }
+.ig-input::placeholder { color: transparent; }
+.scherm.live .ig-input { position: static; color: var(--ig-tekst); caret-color: var(--ig-blauw); }
+.scherm.live .ig-input::placeholder { color: var(--ig-sub); }
+.scherm.live .ig-veld :is(.plaats, .getypt, .caret), .scherm.live .vinger, .scherm.live .zelf-hint { display: none; }
+.ig-stuur { cursor: pointer; }
+button.opt { font-family: inherit; cursor: pointer; }
+.scherm.live .opt:hover { background: color-mix(in srgb, var(--ig-blauw) 10%, var(--ig-bg)); }
+.scherm.live .pizzakaart { cursor: pointer; }
+.scherm.live .adres { cursor: pointer; }
+.zelf-hint { position: absolute; z-index: 4; left: 50%; bottom: 86px; translate: -50% 0; border: 0; cursor: pointer; white-space: nowrap; background: var(--ig-blauw); color: #fff; font: 700 12.5px/1 var(--ios, var(--tekst)); padding: 9px 14px; border-radius: 999px; box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .45); animation: hintDobber 2.2s ease-in-out infinite; }
+.zelf-hint::after { content: ""; position: absolute; left: 50%; bottom: -4px; width: 10px; height: 10px; background: inherit; border-radius: 2px; transform: translateX(-50%) rotate(45deg); }
+.scherm.op-pagina .zelf-hint { display: none; }
+@keyframes hintDobber { 0%, 100% { translate: -50% 0; } 50% { translate: -50% -5px; } }
+@media (prefers-reduced-motion: reduce) { .zelf-hint { animation: none; } }
+
 </style>
 
 <header class="balk" id="balk">
@@ -691,13 +709,14 @@ sup a:hover { text-decoration: underline; }
                           <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">HOT HONEY HUSTLE</div><div class="s">Nduja &amp; hot honey</div></div><span class="gloed" aria-hidden="true"></span><span class="maak" aria-hidden="true"></span></div>
                         </div>
                       </div>
-                      <div class="ig-invoer" id="ig-invoer" aria-hidden="true">
+                      <div class="ig-invoer" id="ig-invoer">
                         <span class="ig-cam"><svg viewBox="0 0 24 24"><path d="M4 8.5c0-1.1.9-2 2-2h1.6l1.4-2h6l1.4 2H18c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z"/><circle cx="12" cy="12.5" r="3.4"/></svg></span>
-                        <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span></span>
+                        <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span><input class="ig-input" id="ig-input" type="text" enterkeyhint="send" autocomplete="off" maxlength="200" placeholder="Bericht…" aria-label="Typ een bericht aan New York Pizza"></span>
                         <span class="ig-rechts"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="9" cy="9.5" r="1.6"/><path d="M20.5 15.5 16 11l-9 9.5"/></svg><svg viewBox="0 0 24 24"><path d="M20.5 12A8.5 8.5 0 1 1 12 3.5"/><path d="M20.5 12c-4.7 0-8.5-3.8-8.5-8.5"/><path d="M8.5 14.5c1.6 1.6 5.4 1.6 7 0"/></svg></span>
-                        <span class="ig-stuur" id="ig-stuur">Verstuur</span>
+                        <span class="ig-stuur" id="ig-stuur" role="button" tabindex="0">Verstuur</span>
                       </div>
                     </div>
+                    <button type="button" class="zelf-hint" id="zelf-hint">Probeer het zelf · typ hier</button>
                     <div class="pagina" id="pagina" aria-hidden="true">
                       <div class="adres"><svg viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 10 0v2h1v11H6V10zm2 0h6V8a3 3 0 0 0-6 0z"/></svg>newyorkpizza.nl/jouwpizza</div>
                       <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">HOT HONEY HUSTLE</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div><div class="voortgang"><i></i></div></div>
@@ -1327,13 +1346,13 @@ sup a:hover { text-decoration: underline; }
 
   // Meteen zien dat je kiest: de pizza vliegt uit de band naar het toneel en landt met een knal.
   const herstart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
-  const toonKeuze = knop => {
+  const toonKeuze = bron => {
     const doel = $('#p-keuze'), label = $('#p-label');
-    herstart(knop, 'net');
+    if (bron.classList.contains('band-pizza')) herstart(bron, 'net');
     herstart(scherm, 'wissel');
     const land = () => { herstart(doel, 'land'); herstart(doel.parentElement, 'knal'); herstart(label, 'wissel'); };
     // Midden en echte breedte: de pizza's draaien, dus de bounding box is groter dan de schijf.
-    const vanEl = knop.querySelector('.pizza'), vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
+    const vanEl = bron.querySelector('.pizza') || bron, vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
     const vw = vanEl.offsetWidth, nw = doel.offsetWidth * schaal;
     const vx = vr.left + vr.width / 2, vy = vr.top + vr.height / 2, nx = nr.left + nr.width / 2, ny = nr.top + nr.height / 2;
     const zichtbaar = ny > 0 && ny < innerHeight && vy < innerHeight;
@@ -1352,12 +1371,162 @@ sup a:hover { text-decoration: underline; }
     ], { duration: 720, easing: 'cubic-bezier(.45, 0, .2, 1)' }).onfinish = () => { vlieg.remove(); doel.style.visibility = ''; land(); };
   };
 
+
+  // ---------- Zelf typen: een echte DM met de pizza-agent ----------
+  // Claude antwoordt via de sample-capability; zonder die (of zonder toestemming) neemt een eenvoudig script het over.
+  const invoerVeld = $('#ig-input'), hint = $('#zelf-hint');
+  const GROET = 'Welke pizza moeten wij nog maken? Eerst: welke bodem?';
+  const REGELS = `Je bent de DM-assistent van New York Pizza op Instagram (@newyorkpizza_nl) in de campagne "De Pizza van Nederland": iedereen bedenkt via de DM zijn eigen pizza en de beste komt echt op de kaart.
+Schrijf kort en informeel Nederlands, hooguit twee zinnen, hooguit één emoji. Vraag één ding tegelijk, in deze volgorde: bodem (New York Style, Italiaans dun of Bloemkool), toppings, saus.
+Zodra bodem, toppings en saus bekend zijn: bedenk een pakkende pizzanaam van twee of drie woorden (Engels of Nederlands, speels), zeg dat ze meedoen en zo een kortingscode ontvangen, en geef de pizza mee. Daarna mag de klant een nieuwe pizza bedenken.
+Blijf bij pizza en deze campagne; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste toppings weiger je met humor.
+Antwoord met alleen JSON in deze vorm:
+{"tekst": "je bericht", "opties": ["max 3 korte snelknoppen, of leeg"], "pizza": null}
+of, als de pizza af is:
+{"tekst": "je bericht", "opties": [], "pizza": {"titel": "Naam Van De Pizza", "toppings": "Nduja & hot honey", "foto": "daan"}}
+Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees), parmaham (ham, burrata, rucola), mortadella (mortadella, pistache, romig), bresaola (rundvlees, rucola, Parmezaan), gorgonzola (kaas, peer, noten, zoet), ricotta (groente, vegetarisch, citroen, fris).`;
+  const TREF = [
+    ['daan', ['nduja', 'salami', 'pepperoni', 'chorizo', 'chili', 'jalape', 'pittig', 'worst', 'kip', 'gehakt', 'spek']],
+    ['mortadella', ['mortadella', 'pistache']],
+    ['parmaham', ['ham', 'parma', 'burrata', 'prosciutto']],
+    ['bresaola', ['bresaola', 'rund', 'parmezaan', 'rucola', 'biefstuk']],
+    ['gorgonzola', ['gorgonzola', 'kaas', 'peer', 'noot', 'noten', 'honing', 'brie', 'geit']],
+    ['ricotta', ['ricotta', 'courgette', 'citroen', 'groente', 'vega', 'spinazie', 'paprika', 'champignon', 'ui', 'tomaat', 'olijf', 'ananas']],
+  ];
+  let live = false, liveId = 0, bezig = false, beurten = [], agent = null, stap = 0, recept = {};
+  if (window.claude && claude.use) claude.use('sample').then(s => { agent = s; }, () => {});
+
+  const bubbel = (tekst, kant) => {
+    const n = document.createElement('div');
+    n.className = `bub ${kant} in-anim` + (kant === 'in' ? ' met-av' : '');
+    n.textContent = tekst;
+    draad.appendChild(n);
+    scrollNaarOnder();
+  };
+  const snelknoppen = lijst => {
+    if (!Array.isArray(lijst) || !lijst.length) return;
+    const o = document.createElement('div');
+    o.className = 'opts in-anim';
+    lijst.slice(0, 3).forEach(t => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.textContent = String(t).slice(0, 30);
+      o.appendChild(b);
+    });
+    draad.appendChild(o);
+    scrollNaarOnder();
+  };
+  const maakPizza = p => {
+    const key = KEUZES.some(k => k.key === p.foto) ? p.foto : 'daan';
+    const naam = String(p.toppings || '').slice(0, 60) || 'Jouw pizza';
+    keuze = { key, titel: String(p.titel || 'Jouw pizza').slice(0, 40), naam, toppings: naam, bestel: 'Bestel je eigen pizza' };
+    zetKeuzeInBeeld();
+    const kaart = sjablonen[9].cloneNode(true);
+    kaart.classList.add('in-anim', 'genereren');
+    draad.appendChild(kaart);
+    scrollNaarOnder();
+    setTimeout(() => { kaart.classList.remove('genereren'); if (live) toonKeuze(kaart); }, 1600);
+  };
+
+  const scriptAgent = () => {
+    const t = beurten[beurten.length - 1].content;
+    if (stap === 0) { recept.bodem = t; stap = 1; return { tekst: 'Lekker. En wat moet erop?' }; }
+    if (stap === 1) { recept.toppings = t; stap = 2; return { tekst: 'Welke saus eronder?', opties: ['Tomaat', 'BBQ', 'Crème fraîche'] }; }
+    stap = 0;
+    const l = recept.toppings.toLowerCase();
+    const foto = (TREF.find(([, w]) => w.some(x => l.includes(x))) || ['daan'])[0];
+    const toppings = recept.toppings.charAt(0).toUpperCase() + recept.toppings.slice(1);
+    return { tekst: 'Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.', pizza: { titel: KEUZES.find(k => k.key === foto).titel, toppings, foto } };
+  };
+  const vraagAgent = async () => {
+    if (agent) {
+      try {
+        const r = await agent.json([{ role: 'user', content: REGELS }, ...beurten.slice(-14)], { modelTier: 'quick', cache: false });
+        if (r && typeof r.tekst === 'string' && r.tekst.trim()) return r;
+      } catch (e) {
+        if (!['upstream_error', 'invalid_json', 'rate_limited', 'cancelled'].includes(e && e.code)) agent = null;
+      }
+    }
+    return scriptAgent();
+  };
+
+  const stuurBericht = async tekst => {
+    tekst = String(tekst).trim().slice(0, 200);
+    if (!live || !tekst || bezig) return;
+    const mijn = liveId;
+    bezig = true;
+    $$('.opts', draad).forEach(o => o.remove());
+    bubbel(tekst, 'uit');
+    beurten.push({ role: 'user', content: tekst });
+    const stippen = document.createElement('div');
+    stippen.className = 'typen in-anim';
+    stippen.innerHTML = '<i></i><i></i><i></i>';
+    draad.appendChild(stippen);
+    scrollNaarOnder();
+    const [r] = await Promise.all([vraagAgent(), wacht(700)]);
+    stippen.remove();
+    bezig = false;
+    if (mijn !== liveId) return;
+    const tekstIn = String(r.tekst).slice(0, 400);
+    bubbel(tekstIn, 'in');
+    beurten.push({ role: 'assistant', content: tekstIn + (r.pizza ? ` [pizza: ${r.pizza.titel}, ${r.pizza.toppings}]` : '') });
+    snelknoppen(r.opties);
+    if (r.pizza && typeof r.pizza === 'object') maakPizza(r.pizza);
+  };
+
+  const startLive = () => {
+    if (live) return;
+    live = true; liveId++; run++;
+    verbergPop(true);
+    leeg();
+    scherm.classList.add('live');
+    beurten = [{ role: 'assistant', content: GROET }];
+    stap = 0; recept = {};
+    bubbel(GROET, 'in');
+    snelknoppen(['New York Style', 'Italiaans dun', 'Bloemkool']);
+  };
+  function stopLive() {
+    if (!live) return;
+    live = false; liveId++; bezig = false;
+    scherm.classList.remove('live');
+    invoerVeld.value = '';
+    invoerVeld.blur();
+  }
+  const verstuurVeld = () => { const t = invoerVeld.value; invoerVeld.value = ''; invoer.classList.remove('tekst'); stuurBericht(t); };
+
+  invoerVeld.addEventListener('pointerdown', startLive);
+  invoerVeld.addEventListener('focus', startLive);
+  invoerVeld.addEventListener('input', () => invoer.classList.toggle('tekst', !!invoerVeld.value.trim()));
+  invoerVeld.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); verstuurVeld(); } });
+  stuur.addEventListener('click', () => { if (live) { verstuurVeld(); invoerVeld.focus(); } });
+  stuur.addEventListener('keydown', e => { if (live && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); verstuurVeld(); } });
+  hint.addEventListener('click', () => invoerVeld.focus());
+  draad.addEventListener('click', e => {
+    if (!live) return;
+    const opt = e.target.closest('.opt');
+    if (opt && !bezig) {
+      opt.classList.add('gekozen');
+      stuurBericht(opt.textContent);
+      if (matchMedia('(pointer: fine)').matches) invoerVeld.focus({ preventScroll: true });
+      return;
+    }
+    if (e.target.closest('.pizzakaart')) { scherm.classList.add('op-pagina'); vlieg(); }
+  });
+  $('.adres', scherm).addEventListener('click', () => { if (live) { verbergPop(false); scherm.classList.remove('op-pagina'); } });
+  chat.addEventListener('wheel', e => {
+    if (!live) return;
+    e.preventDefault();
+    const max = Math.max(0, draad.offsetHeight - chat.clientHeight);
+    scrollY = Math.min(max, Math.max(0, scrollY + e.deltaY));
+    draad.style.transform = `translateY(${-scrollY}px)`;
+  }, { passive: false });
+
   // Kies een pizza in de band: het gesprek begint opnieuw met die pizza.
   band.addEventListener('click', e => {
     const b = e.target.closest('.band-pizza');
     if (!b) return;
     const nieuw = KEUZES.find(k => k.key === b.dataset.keuze);
     if (!nieuw) return;
+    stopLive();
     keuze = nieuw;
     run++;
     toonKeuze(b);

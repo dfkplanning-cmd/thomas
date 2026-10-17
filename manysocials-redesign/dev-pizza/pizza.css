@@ -591,6 +591,7 @@ sup a:hover { text-decoration: underline; }
 .p-label i { font: 600 9.5px/1 var(--mono, monospace); letter-spacing: .14em; text-transform: uppercase; font-style: normal; color: var(--accent-licht, var(--accent)); }
 .p-label.wissel { animation: labelWissel .6s var(--veer) both; }
 @keyframes labelWissel { 0% { scale: .6; opacity: 0; } 100% { scale: 1; opacity: 1; } }
+.p-label { transform-origin: left center; }
 .p2 .pizza.land { animation: pizzaLand .7s var(--veer) both, draaien 52s linear .7s infinite reverse; }
 @keyframes pizzaLand { 0% { transform: scale(.4) rotate(-160deg); } 60% { transform: scale(1.12) rotate(8deg); } 100% { transform: scale(1) rotate(0); } }
 .p2 .laag::after { content: ""; position: absolute; left: 50%; top: 0; width: 168px; aspect-ratio: 1; translate: -50% 0; border-radius: 50%; border: 3px solid var(--accent); opacity: 0; pointer-events: none; }
@@ -658,3 +659,7 @@ button.opt { font-family: inherit; cursor: pointer; }
 .mening-onder { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(18px, 3vw, 40px); margin-top: clamp(16px, 2vw, 24px); }
 .mening-onder .stat-bol { justify-self: auto; box-shadow: none; }
 @media (max-width: 700px) { .mening-foto { aspect-ratio: 4 / 3; background-position: 35% 20%; } }
+
+/* Label groeit naar rechts, zodat lange namen niet links buiten beeld vallen */
+.p-label { left: 14px; translate: 0 0; }
+.scherm.live .ig-chat { touch-action: pan-x; }

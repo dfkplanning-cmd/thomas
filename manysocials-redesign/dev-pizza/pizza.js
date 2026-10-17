@@ -23,7 +23,7 @@
   // Presenteren met het toetsenbord: pijl omlaag of PageDown naar het volgende onderdeel.
   const secties = $$('main > section, main > .band');
   document.addEventListener('keydown', e => {
-    if (e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, button, a, summary, [contenteditable]')) return;
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, button, a, summary, [contenteditable], [role=button]')) return;
     const vooruit = ['ArrowDown', 'PageDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey);
     const terug = ['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey);
     if (!vooruit && !terug) return;
@@ -196,7 +196,7 @@
     $('#p-titel').textContent = keuze.titel;
     zetGezicht();
     $('#pop-titel').textContent = keuze.titel;
-    $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
+    $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key && !!keuze.gezicht)));
   };
 
   // Aanraakpunt in plaats van een duim: zo zie je waar er getikt en geveegd wordt.
@@ -246,6 +246,7 @@
   };
   const leeg = () => {
     draad.style.transition = 'none';
+    draad.style.opacity = '';
     draad.innerHTML = '';
     scrollY = 0;
     draad.style.transform = 'translateY(0)';
@@ -416,6 +417,7 @@
 
   // Meteen zien dat je kiest: de pizza vliegt uit de band naar het toneel en landt met een knal.
   const herstart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  let vluchtNr = 0;
   const toonKeuze = bron => {
     const doel = $('#p-keuze'), label = $('#p-label');
     if (bron.classList.contains('band-pizza')) { herstart(bron, 'net'); herstart(scherm, 'wissel'); }
@@ -426,6 +428,8 @@
     const vx = vr.left + vr.width / 2, vy = vr.top + vr.height / 2, nx = nr.left + nr.width / 2, ny = nr.top + nr.height / 2;
     const zichtbaar = ny > 0 && ny < innerHeight && vy < innerHeight;
     if (rust || !zichtbaar || !doel.animate) { land(); return; }
+    $$('.vlieg-pizza').forEach(v => v.remove());
+    const vlucht = ++vluchtNr;
     const vlieg = document.createElement('div');
     vlieg.className = 'vlieg-pizza';
     Object.assign(vlieg.style, { left: nx - nw / 2 + 'px', top: ny - nw / 2 + 'px', width: nw + 'px', height: nw + 'px' });
@@ -437,7 +441,7 @@
       { transform: `translate(${dx}px, ${dy}px) scale(${k}) rotate(0deg)` },
       { transform: `translate(${dx * .45}px, ${dy * .45 - 140}px) scale(${(k + 1.25) / 2}) rotate(200deg)`, offset: .55 },
       { transform: 'translate(0, 0) scale(1) rotate(360deg)' },
-    ], { duration: 720, easing: 'cubic-bezier(.45, 0, .2, 1)' }).onfinish = () => { vlieg.remove(); doel.style.visibility = ''; land(); };
+    ], { duration: 720, easing: 'cubic-bezier(.45, 0, .2, 1)' }).onfinish = () => { vlieg.remove(); if (vlucht !== vluchtNr) return; doel.style.visibility = ''; land(); };
   };
 
 
@@ -495,12 +499,13 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     kaart.classList.add('in-anim', 'genereren');
     draad.appendChild(kaart);
     scrollNaarOnder();
-    setTimeout(() => { kaart.classList.remove('genereren'); if (live) toonKeuze(kaart); }, 1600);
+    const id = liveId;
+    setTimeout(() => { kaart.classList.remove('genereren'); if (live && id === liveId && kaart.isConnected) toonKeuze(kaart); }, 1600);
   };
 
   const scriptAgent = () => {
     const t = beurten[beurten.length - 1].content;
-    if (stap === -1) { recept.naam = t.split(/[\s,.!]+/).filter(Boolean).pop() || t; recept.naam = recept.naam.charAt(0).toUpperCase() + recept.naam.slice(1); stap = 0; return { tekst: `Leuk, ${recept.naam}! Eerst: welke bodem?`, opties: ['New York Style', 'Italiaans dun', 'Bloemkool'] }; }
+    if (stap === -1) { const woorden = t.replace(/^(hoi|hey|hallo|ik ben|ik heet|mijn naam is|de naam is|noem me)\s+/i, '').split(/[\s,.!]+/).filter(Boolean); recept.naam = woorden[0] || t; recept.naam = recept.naam.charAt(0).toUpperCase() + recept.naam.slice(1); stap = 0; return { tekst: `Leuk, ${recept.naam}! Eerst: welke bodem?`, opties: ['New York Style', 'Italiaans dun', 'Bloemkool'] }; }
     if (stap === 0) { recept.bodem = t; stap = 1; return { tekst: 'Lekker. En wat moet erop?' }; }
     if (stap === 1) { recept.toppings = t; stap = 2; return { tekst: 'Welke saus eronder?', opties: ['Tomaat', 'BBQ', 'Crème fraîche'] }; }
     stap = 0;
@@ -538,8 +543,8 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     scrollNaarOnder();
     const [r] = await Promise.all([vraagAgent(), wacht(700)]);
     stippen.remove();
-    bezig = false;
     if (mijn !== liveId) return;
+    bezig = false;
     const tekstIn = String(r.tekst).slice(0, 400);
     bubbel(tekstIn, 'in');
     beurten.push({ role: 'assistant', content: tekstIn + (r.pizza ? ` [pizza: ${r.pizza.titel}, ${r.pizza.toppings}]` : '') });
@@ -585,12 +590,23 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     if (e.target.closest('.pizzakaart')) { scherm.classList.add('op-pagina'); toonKeuze(paginaKaart); }
   });
   $('.adres', scherm).addEventListener('click', () => { if (live) { verbergPop(false); scherm.classList.remove('op-pagina'); } });
-  chat.addEventListener('wheel', e => {
-    if (!live) return;
-    e.preventDefault();
+  // Scrollen in de live-chat met wiel of vinger; aan de rand scrolt de pagina gewoon door.
+  const scrollChat = dy => {
     const max = Math.max(0, draad.offsetHeight - chat.clientHeight);
-    scrollY = Math.min(max, Math.max(0, scrollY + e.deltaY));
+    const nieuw = Math.min(max, Math.max(0, scrollY + dy));
+    if (nieuw === scrollY) return false;
+    scrollY = nieuw;
     draad.style.transform = `translateY(${-scrollY}px)`;
+    return true;
+  };
+  chat.addEventListener('wheel', e => { if (live && scrollChat(e.deltaY)) e.preventDefault(); }, { passive: false });
+  let vingerY = null;
+  chat.addEventListener('touchstart', e => { vingerY = live ? e.touches[0].clientY : null; }, { passive: true });
+  chat.addEventListener('touchmove', e => {
+    if (!live || vingerY === null) return;
+    const y = e.touches[0].clientY;
+    if (scrollChat((vingerY - y) / schaal)) e.preventDefault();
+    vingerY = y;
   }, { passive: false });
 
   // Kies een pizza in de band: het gesprek begint opnieuw met die pizza.

@@ -108,10 +108,22 @@
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
   const kk = $('#kk'), kkOpen = $('#kk-open');
-  const toonKk = aan => { kk.hidden = !aan; kkOpen.hidden = aan; opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
+  const toonKk = (aan, bewaar = true) => { kk.hidden = !aan; kkOpen.hidden = aan; if (bewaar) opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
   $('#kk-dicht').addEventListener('click', () => toonKk(false));
   kkOpen.addEventListener('click', () => toonKk(true));
-  toonKk(opslag.get('ms-kk-dicht') !== '1');
+  // Op de telefoon begint de werkbalk ingeklapt, tenzij iemand hem eerder zelf openzette.
+  const kkVoorkeur = opslag.get('ms-kk-dicht');
+  toonKk(matchMedia('(max-width: 700px)').matches ? kkVoorkeur === '0' : kkVoorkeur !== '1', false);
+  // Staat de band onderin beeld, dan schuift de werkbalk erboven zodat hij "Kies een pizza" niet afdekt.
+  const bandEl = $('#band');
+  const tilKk = () => {
+    const r = bandEl.getBoundingClientRect(), onder = innerHeight - 70;
+    const til = r.top < innerHeight && r.bottom > onder && r.top > innerHeight * .4 ? innerHeight - r.top + 10 : 0;
+    document.documentElement.style.setProperty('--kk-til', til + 'px');
+  };
+  window.addEventListener('scroll', tilKk, { passive: true });
+  window.addEventListener('resize', tilKk);
+  tilKk();
   const themaKnop = $('#kk-thema');
   const zetThema = donker => {
     document.documentElement.classList.toggle('donker', donker);
@@ -616,7 +628,7 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     if (!nieuw) return;
     stopLive();
     keuze = nieuw;
-    run++;
+    const mijn = ++run;
     toonKeuze(b);
     draad.style.opacity = '';
     verbergPop(true);
@@ -625,7 +637,15 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     const r = toneel.getBoundingClientRect();
     if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
     if (rust) { sjablonen.forEach((s, i) => { if (i !== 1 && i !== 6) draad.appendChild(s.cloneNode(true)); }); scrollNaarOnder(); }
-    else gesprek(run, 300);
+    // Meteen de pagina van de gekozen pizza in de telefoon; daarna begint het gesprek opnieuw.
+    void scherm.offsetWidth;
+    scherm.classList.add('beeld', 'op-pagina');
+    setTimeout(() => {
+      if (mijn !== run) return;
+      if (rust) { scherm.classList.remove('op-pagina', 'beeld'); return; }
+      leeg();
+      gesprek(run, 0);
+    }, 4500);
   });
 
   zetKeuzeInBeeld();

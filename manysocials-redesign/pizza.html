@@ -706,6 +706,94 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
 .conf { color: color-mix(in srgb, var(--heet) 88%, #0F0F0E); }
 .donker :is(.conf, .meta .rood, .meta-chips .rood) { color: #FF6B57; }
 
+/* ===== Ronde 2: boven de vouw, lichter idee, beeld in de tegels, korter op mobiel ===== */
+
+/* Werkbalk: schuift boven de band als die onderin beeld staat */
+.kk, .kk-open { transform: translateY(calc(-1 * var(--kk-til, 0px))); transition: transform .35s var(--zacht-uit); }
+
+/* Boven de vouw: het toneel krimpt mee met de schermhoogte, zodat de band op het eerste scherm staat */
+@media (min-width: 960px) {
+  .toneel { max-width: min(540px, calc((100svh - 64px - 112px - 34px) * 560 / 760)); }
+  .cover .wrap { padding-top: clamp(12px, 2vw, 28px); }
+  .cover-tekst { padding-bottom: 40px; gap: 20px; }
+  .band { padding-block: 12px; }
+  .band-rij { gap: 34px; }
+  .band-pizza { width: auto; grid-template-columns: 88px 128px; align-items: center; gap: 12px; padding: 0; font-size: 12.5px; text-align: left; }
+  .band-pizza .pizza { width: 88px; }
+  .band-pizza .naam { min-height: 0; max-width: none; text-align: left; }
+  .band-label { font-size: 14px; padding: 9px 13px; top: 50%; }
+}
+
+/* Hero op mobiel: de chips in één rij die je opzij veegt */
+@media (max-width: 640px) {
+  .meta-chips { flex-wrap: nowrap; overflow-x: auto; justify-self: stretch; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding-inline: var(--gutter) var(--gutter-r); scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+  .meta-chips::-webkit-scrollbar { display: none; }
+  .meta-chips li { flex: none; white-space: nowrap; }
+}
+
+/* Het idee: de telefoons voeren het woord, de vier voordelen eronder zijn een lichte rij */
+.krijgt { margin-top: 18px; gap: 18px 14px; }
+.krijgt .tegel-i { background: none; border: 0; border-radius: 0; padding: 0; gap: 14px; }
+.krijgt .tegel-i .ico { width: 60px; height: 60px; }
+.krijgt .tegel-i .ico svg { width: 30px; height: 30px; }
+.krijgt .tegel-i b { font-size: 16.5px; }
+@media (max-width: 639px) {
+  .krijgt { grid-template-columns: 1fr 1fr; }
+  .krijgt .tegel-i { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
+@media (min-width: 1100px) { .krijgt { display: flex; justify-content: center; gap: 22px 48px; } .krijgt .tegel-i { max-width: 230px; } }
+
+/* Wat het oplevert: beeld in de tegels */
+.zeven-t li { min-height: 0; position: relative; overflow: hidden; isolation: isolate; }
+.zeven-t i { font-size: 40px; }
+.zeven-t .deco { position: absolute; top: 20px; right: 20px; display: flex; pointer-events: none; }
+.gezichten > span { width: 34px; height: 34px; border-radius: 50%; background: #ccc center 30% / cover no-repeat; box-shadow: 0 0 0 3px var(--vlak); }
+.gezichten > span + span { margin-left: -10px; }
+.schijfjes .pizza { width: 36px; box-shadow: 0 0 0 3px var(--vlak), 0 8px 12px -6px rgba(0,0,0,.4); }
+.schijfjes .pizza + .pizza { margin-left: -8px; }
+.zeven-t .deco.grote-pizza { top: auto; right: -70px; bottom: -120px; width: 270px; z-index: -1; }
+.grote-pizza .pizza { animation: draaien 60s linear infinite; box-shadow: 0 0 0 10px rgba(255,255,255,.06), 0 30px 50px -20px rgba(0,0,0,.6); }
+.zeven-t .breed { padding-right: 200px; min-height: 162px; }
+
+/* Mobiel: minder scrollen. Fases als carrousel, tegels in twee kolommen */
+@media (max-width: 639px) {
+  .fase-rij { grid-auto-flow: column; grid-auto-columns: 80%; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding-inline: var(--gutter) var(--gutter-r); scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
+  .fase-rij::-webkit-scrollbar { display: none; }
+  .fase-kaart { scroll-snap-align: start; min-height: 380px; }
+  .zeven-t { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .zeven-t li { padding: 16px; gap: 6px; }
+  .zeven-t i { font-size: 32px; }
+  .zeven-t b { font-size: 16px; }
+  .zeven-t .breed { grid-column: 1 / -1; padding-right: 130px; min-height: 0; }
+  .zeven-t .deco.grote-pizza { width: 170px; right: -46px; bottom: -64px; }
+  .zeven-t .deco { top: 16px; right: 14px; }
+  .gezichten > span { width: 26px; height: 26px; box-shadow: 0 0 0 2px var(--vlak); }
+  .gezichten > span + span { margin-left: -9px; }
+  .gezichten > span:nth-child(n+4) { display: none; }
+  .schijfjes .pizza { width: 28px; box-shadow: 0 0 0 2px var(--vlak), 0 6px 10px -6px rgba(0,0,0,.4); }
+  .zes-t { grid-template-columns: 1fr 1fr; }
+  .zes-t .tegel-i { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; }
+  .zes-t .tegel-i b { font-size: 15.5px; }
+  .zes-t .tegel-i .ico { width: 40px; height: 40px; }
+  .zes-t .tegel-i .ico svg { width: 20px; height: 20px; }
+}
+
+/* Volgende stap: de pizza zelf, met het gezicht erbij */
+.stap .foto-paneel { background-position: center 62%; }
+.stap-gezicht { position: absolute; top: 18px; right: 18px; width: 56px; height: 56px; border-radius: 50%; background: #ccc center 30% / cover no-repeat; box-shadow: 0 0 0 3px #fff, 0 12px 24px -8px rgba(0,0,0,.5); }
+
+/* Schaal en landen: inhoud naast de kop */
+@media (min-width: 960px) {
+  .schaal-s, .landen-s { padding-block: clamp(40px, 4.2vw, 64px); }
+  .schaal-s .wrap, .landen-s .wrap { display: grid; grid-template-columns: minmax(0, .95fr) minmax(0, 1.05fr); column-gap: clamp(40px, 5vw, 80px); align-items: center; }
+  .schaal-s .kopgroep, .landen-s .kopgroep { margin-bottom: 0; }
+  .schaal-s .kop, .landen-s .kop { font-size: clamp(44px, 4.6vw, 68px); }
+  .zes-t { grid-template-columns: 1fr 1fr; }
+  .landen-s .kopgroep { grid-row: span 2; }
+  .landen-s .landen-v { align-self: end; }
+  .landen-s .wrap > .sub { align-self: start; }
+}
+
 </style>
 
 <header class="balk" id="balk">
@@ -903,12 +991,12 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
     </div>
     <ol class="zeven-t">
       <li class="opbouw"><i>1</i><b>Publiciteit rond de lancering</b></li>
-      <li class="opbouw"><i>2</i><b>Aandacht van een jonge doelgroep</b></li>
+      <li class="opbouw met-deco"><i>2</i><b>Aandacht van een jonge doelgroep</b><span class="deco gezichten" aria-hidden="true"><span style="background-image:url(img/gezicht-sanne.webp)"></span><span style="background-image:url(img/gezicht-jesse.webp)"></span><span style="background-image:url(img/gezicht-noor.webp)"></span><span style="background-image:url(img/gezicht-lars.webp)"></span><span style="background-image:url(img/gezicht-marije.webp)"></span></span></li>
       <li class="opbouw"><i>3</i><b>Een eigen mailinglijst</b></li>
       <li class="opbouw"><i>4</i><b>Beelden die deelnemers zelf delen</b></li>
       <li class="opbouw accent"><i>5</i><b>Bestellingen in de app</b><span>Per code zie je of er besteld is.</span></li>
-      <li class="opbouw"><i>6</i><b>Inzicht in welke pizza Nederland wil</b></li>
-      <li class="opbouw breed"><i>7</i><b>Een nieuwe pizza op de kaart</b><span>Een tweede moment in de media.</span></li>
+      <li class="opbouw met-deco"><i>6</i><b>Inzicht in welke pizza Nederland wil</b><span class="deco schijfjes" aria-hidden="true"><span class="pizza" data-pizza="ricotta"></span><span class="pizza" data-pizza="gorgonzola"></span><span class="pizza" data-pizza="bresaola"></span></span></li>
+      <li class="opbouw breed"><i>7</i><b>Een nieuwe pizza op de kaart</b><span>Een tweede moment in de media.</span><span class="deco grote-pizza" aria-hidden="true"><span class="pizza" data-pizza="nduja"></span></span></li>
     </ol>
   </div>
 </section>
@@ -973,7 +1061,7 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
         </div>
       </div>
     </div>
-    <div class="foto-paneel opbouw" style="background-image:url(img/finale.webp)" aria-hidden="true"></div>
+    <div class="foto-paneel opbouw" style="background-image:url(img/pizza-nduja.jpg)" aria-hidden="true"><span class="stap-gezicht" style="background-image:url(img/gezicht-thomas.webp)"></span></div>
   </div>
 </section>
 
@@ -1120,10 +1208,22 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
   const kk = $('#kk'), kkOpen = $('#kk-open');
-  const toonKk = aan => { kk.hidden = !aan; kkOpen.hidden = aan; opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
+  const toonKk = (aan, bewaar = true) => { kk.hidden = !aan; kkOpen.hidden = aan; if (bewaar) opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
   $('#kk-dicht').addEventListener('click', () => toonKk(false));
   kkOpen.addEventListener('click', () => toonKk(true));
-  toonKk(opslag.get('ms-kk-dicht') !== '1');
+  // Op de telefoon begint de werkbalk ingeklapt, tenzij iemand hem eerder zelf openzette.
+  const kkVoorkeur = opslag.get('ms-kk-dicht');
+  toonKk(matchMedia('(max-width: 700px)').matches ? kkVoorkeur === '0' : kkVoorkeur !== '1', false);
+  // Staat de band onderin beeld, dan schuift de werkbalk erboven zodat hij "Kies een pizza" niet afdekt.
+  const bandEl = $('#band');
+  const tilKk = () => {
+    const r = bandEl.getBoundingClientRect(), onder = innerHeight - 70;
+    const til = r.top < innerHeight && r.bottom > onder && r.top > innerHeight * .4 ? innerHeight - r.top + 10 : 0;
+    document.documentElement.style.setProperty('--kk-til', til + 'px');
+  };
+  window.addEventListener('scroll', tilKk, { passive: true });
+  window.addEventListener('resize', tilKk);
+  tilKk();
   const themaKnop = $('#kk-thema');
   const zetThema = donker => {
     document.documentElement.classList.toggle('donker', donker);
@@ -1628,7 +1728,7 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     if (!nieuw) return;
     stopLive();
     keuze = nieuw;
-    run++;
+    const mijn = ++run;
     toonKeuze(b);
     draad.style.opacity = '';
     verbergPop(true);
@@ -1637,7 +1737,15 @@ Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees
     const r = toneel.getBoundingClientRect();
     if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
     if (rust) { sjablonen.forEach((s, i) => { if (i !== 1 && i !== 6) draad.appendChild(s.cloneNode(true)); }); scrollNaarOnder(); }
-    else gesprek(run, 300);
+    // Meteen de pagina van de gekozen pizza in de telefoon; daarna begint het gesprek opnieuw.
+    void scherm.offsetWidth;
+    scherm.classList.add('beeld', 'op-pagina');
+    setTimeout(() => {
+      if (mijn !== run) return;
+      if (rust) { scherm.classList.remove('op-pagina', 'beeld'); return; }
+      leeg();
+      gesprek(run, 0);
+    }, 4500);
   });
 
   zetKeuzeInBeeld();

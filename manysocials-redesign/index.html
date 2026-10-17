@@ -273,7 +273,7 @@ mark { background: none; color: inherit; }
 /* Band met de vijf smaken */
 .band { position: relative; z-index: 2; background: var(--paneel); overflow: hidden; padding-block: 30px; }
 .band-rij { display: flex; align-items: center; gap: 46px; width: max-content; animation: band 46s linear infinite; }
-.band:hover .band-rij { animation-play-state: paused; }
+.band:hover .band-rij, .band:focus-within .band-rij { animation-play-state: paused; }
 .band-zak { width: 112px; flex: none; transition: transform .4s var(--veer); background: none; border: 0; padding: 0; cursor: pointer; display: grid; justify-items: center; gap: 8px; color: var(--op-paneel); font: 600 12px/1.2 var(--tekst); }
 .band-zak .zak-svg { filter: drop-shadow(0 16px 14px rgba(0,0,0,.35)); }
 .band-zak .naam { opacity: .7; text-align: center; max-width: 12ch; }
@@ -289,6 +289,11 @@ mark { background: none; color: inherit; }
 .band-chip { width: 30px; flex: none; opacity: .95; }
 .band-chip svg { width: 100%; display: block; }
 @keyframes band { to { transform: translateX(-50%); } }
+@media (max-width: 560px) {
+  .band { padding-top: 54px; }
+  .band::before { width: 44px; background: linear-gradient(90deg, var(--paneel), transparent); }
+  .band-label { top: 14px; transform: rotate(-3deg); font-size: 14px; padding: 8px 12px; }
+}
 
 /* Secties */
 .sectie { padding-block: clamp(44px, 5.5vw, 80px); }
@@ -365,7 +370,7 @@ mark { background: none; color: inherit; }
 @media (min-width: 900px) { .uitgelicht { grid-template-columns: 1.15fr .85fr; } }
 
 /* Live inzendingen */
-.bewijs .wrap { display: grid; gap: 36px; padding-block: clamp(36px, 4.5vw, 64px) clamp(44px, 5.5vw, 80px); }
+.bewijs .wrap { display: grid; gap: 36px; padding-block: clamp(12px, 1.6vw, 24px) clamp(44px, 5.5vw, 80px); }
 .bewijs h2 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.02; margin-bottom: 16px; }
 .bewijs-tekst { display: grid; gap: 4px; align-content: center; }
 .live-stapel { position: relative; }
@@ -554,7 +559,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .band { padding-block: 16px; }
+  .band-rij { width: auto; overflow-x: auto; scrollbar-width: none; padding: 14px 24px 14px 190px; }
+  .band-rij::-webkit-scrollbar { display: none; }
 }
+@media (max-width: 560px) and (prefers-reduced-motion: reduce) { .band { padding-top: 44px; } .band-rij { padding-left: 24px; } }
 
 /* Licht of donker: licht is de standaard, de knop in de werkbalk wisselt */
 .kk-icoon .maan { fill: currentColor; stroke: none; }
@@ -649,7 +658,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   </div>
 </section>
 
-<div class="band" id="band"><span class="band-label" aria-hidden="true">Kies een smaak</span><div class="band-rij" id="band-rij" role="list" aria-label="Kies een smaak voor Sanne"></div></div>
+<div class="band" id="band"><span class="band-label" aria-hidden="true">Kies een smaak</span><div class="band-rij" id="band-rij" role="group" aria-label="Kies een smaak voor Sanne"></div></div>
 
 <section class="sectie" id="diensten" aria-labelledby="diensten-kop">
   <div class="wrap">
@@ -688,7 +697,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       <p class="lead">Eén product, heel veel smaken. Elke inzending komt live binnen, en jij ziet direct wat je publiek kiest.</p>
     </div>
     <div class="live-stapel opbouw">
-      <div class="live" aria-label="Voorbeeld van binnenkomende inzendingen">
+      <div class="live" role="group" aria-label="Voorbeeld van binnenkomende inzendingen">
         <div class="live-kop"><span>Inzendingen voor jouw chips</span><i>live</i></div>
         <div class="feed-rijen" id="feed-rijen">
           <div class="rij"><div class="tegel" style="--tegel:#FFE3B3"><div data-zak="0" data-label=""></div></div><div><b>Mango met chili</b></div><span class="st">nieuw</span></div>
@@ -1212,7 +1221,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     let h = '';
     for (let set = 0; set < 4; set++) for (let i = 0; i < 5; i++) {
       const verborgen = set ? ' tabindex="-1" aria-hidden="true"' : '';
-      h += `<button type="button" class="band-zak" role="listitem" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
+      h += `<button type="button" class="band-zak" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
     }
     band.innerHTML = h;
   };
@@ -1409,7 +1418,9 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       { transform: `translate(${EIND.x - 24}px, ${EIND.y - 40}px) rotate(-15deg) scale(1.1)`, opacity: 1, offset: .68 },
       { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(1)`, opacity: 1 },
     ], { duration: 1150, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
-    setTimeout(() => { pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
+    // Alleen landen als er intussen geen andere smaak is gekozen.
+    const mijn = run;
+    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
   };
   const verbergPop = snel => {
     pop.classList.remove('geland');

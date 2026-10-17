@@ -42,7 +42,7 @@
     let h = '';
     for (let set = 0; set < 4; set++) for (let i = 0; i < 5; i++) {
       const verborgen = set ? ' tabindex="-1" aria-hidden="true"' : '';
-      h += `<button type="button" class="band-zak" role="listitem" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
+      h += `<button type="button" class="band-zak" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
     }
     band.innerHTML = h;
   };
@@ -239,7 +239,9 @@
       { transform: `translate(${EIND.x - 24}px, ${EIND.y - 40}px) rotate(-15deg) scale(1.1)`, opacity: 1, offset: .68 },
       { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(1)`, opacity: 1 },
     ], { duration: 1150, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
-    setTimeout(() => { pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
+    // Alleen landen als er intussen geen andere smaak is gekozen.
+    const mijn = run;
+    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
   };
   const verbergPop = snel => {
     pop.classList.remove('geland');

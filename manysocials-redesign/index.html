@@ -572,6 +572,99 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .donker .kk-icoon .maan { display: none; }
 @media (max-width: 430px) { .kk-merk .mini { display: none; } .kk-merk { padding: 0 10px; } }
 
+/* ---------- Ronde 2: compacter bovenaan, echte zakken in de diensten, waaier in de afsluiter ---------- */
+
+/* Desktop: hero en band samen boven de vouw */
+@media (min-width: 960px) {
+  /* 100svh min navigatie (72), bovenmarge (16) en band (~178) */
+  .toneel { max-width: min(540px, calc((100svh - 270px) * 560 / 760)); }
+  .hero .wrap { padding-top: 16px; }
+  .hero-tekst { padding-bottom: 40px; }
+  .band { padding-block: 12px; }
+  .band-rij { gap: 38px; }
+  .band-zak { width: 88px; gap: 6px; font-size: 11.5px; }
+  .band-chip { width: 26px; }
+}
+@media (min-width: 960px) and (max-height: 820px) {
+  .hero h1 { font-size: clamp(54px, min(6.3vw, 10.4svh), 96px); }
+  .hero-tekst { gap: 20px; padding-bottom: 22px; }
+  .hero .sub { line-height: 1.5; }
+}
+/* De zak landt kleiner naast de telefoon; het label blijft even groot als voorheen */
+.pop-label { font-size: 17.5px; padding: 12px 17px; bottom: -30px; }
+
+/* Klantinteractie: de eerste inkomende bubbel brengt een echte zak mee */
+.mini-chat .in1 { height: auto; min-height: 30px; padding: 7px 10px; display: flex; align-items: center; gap: 10px; }
+.mini-chat .in1::after { position: static; flex: 1; margin: 0 18% 0 0; }
+.mini-chat .in1 .mini-zak { display: block; flex: none; width: 38px; transform: rotate(-8deg); filter: drop-shadow(0 4px 4px rgba(var(--schaduw), .2)); }
+.mini-chat .mini-zak .zak-svg { width: 100%; display: block; }
+
+/* Beheer: een raster posts met zakken op zachte smaakkleuren */
+.raster span.zt { background: var(--tegel); display: grid; place-items: end center; }
+.raster span.zt i { display: block; width: 52%; max-width: 46px; margin-bottom: -14%; transform: rotate(-7deg); filter: drop-shadow(0 6px 6px rgba(var(--schaduw), .2)); transition: transform .45s var(--veer); }
+.raster span.zt:nth-child(even) i { transform: rotate(6deg); }
+.raster span.zt .zak-svg { width: 100%; display: block; }
+.raster span:nth-child(n)::after { content: none; }
+.raster span.hart { background: var(--accent); }
+.raster span.hart::after { content: ""; position: absolute; inset: 0; height: auto; border-radius: 0; box-shadow: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z' fill='%230F0F0E'/%3E%3C/svg%3E") center/22px no-repeat; }
+.diensten a:hover .raster span.zt i { transform: rotate(0) translateY(-6%); }
+.donker .raster span.zt { background: color-mix(in srgb, var(--tegel) 82%, #000); }
+
+/* Telefoon: diensten als veegbare kaarten */
+@media (max-width: 700px) {
+  .diensten { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding: 8px var(--gutter-r) 14px var(--gutter); scroll-padding-inline: var(--gutter); }
+  .diensten::-webkit-scrollbar { display: none; }
+  .diensten > li { flex: 0 0 82%; scroll-snap-align: start; }
+  .diensten a { padding-bottom: 22px; }
+  .diensten a:hover { transform: none; box-shadow: none; }
+  .diensten h3 { font-size: 24px; padding-top: 18px; }
+  .diensten p { font-size: 15px; }
+  .dienst-beeld { height: 150px; }
+  .waaier { bottom: -34px; }
+  .mini-chat { inset: 14px 18px; gap: 7px; }
+  .raster { inset: 16px 20px; gap: 7px; }
+}
+
+/* Afsluiter: drie zakken in een waaier rond de winnaar */
+.slot-beeld { width: min(360px, 92%); aspect-ratio: 36 / 38; }
+.slot-waaier { position: absolute; left: 50%; top: 4%; width: 0; height: 100%; }
+.slot-waaier .slot-zak { left: 0; top: 0; width: 210px; margin-left: -105px; transform-origin: 50% 115%; transform: rotate(4deg); z-index: 1; }
+.slot-waaier .slot-zak.zij { width: 168px; margin-left: -84px; top: 12%; z-index: 0; filter: drop-shadow(0 24px 22px rgba(0,0,0,.26)); }
+.slot-waaier .slot-zak.zij:first-child { transform: translateX(-38%) rotate(-16deg); }
+.slot-waaier .slot-zak.zij:last-child { transform: translateX(38%) rotate(18deg); }
+.slot-beeld:hover .slot-waaier .slot-zak:not(.zij) { transform: rotate(-2deg) scale(1.04); }
+.slot-beeld:hover .slot-waaier .slot-zak.zij:first-child { transform: translateX(-50%) rotate(-24deg); }
+.slot-beeld:hover .slot-waaier .slot-zak.zij:last-child { transform: translateX(50%) rotate(26deg); }
+@media (max-width: 560px) {
+  .slot-waaier .slot-zak { width: 170px; margin-left: -85px; }
+  .slot-waaier .slot-zak.zij { width: 136px; margin-left: -68px; }
+}
+
+/* Zo werken we: de cirkels vullen per stap verder */
+.stappen li:nth-child(1) { --p: 25%; } .stappen li:nth-child(2) { --p: 50%; } .stappen li:nth-child(3) { --p: 75%; } .stappen li:nth-child(4) { --p: 100%; }
+.stappen li::before { border: 0; background: radial-gradient(closest-side, var(--vlak) calc(100% - 5px), transparent calc(100% - 4px)), conic-gradient(var(--accent) var(--p), var(--lijn) 0); }
+.stappen li:hover::before { background: radial-gradient(closest-side, var(--accent) calc(100% - 5px), transparent calc(100% - 4px)), conic-gradient(var(--ink) var(--p), var(--lijn) 0); }
+.stappen b { font-size: 23px; }
+.stappen { margin-top: clamp(26px, 3vw, 40px); }
+#werkwijze, #vragen { padding-block: clamp(36px, 4.4vw, 60px); }
+.faq summary { padding: 18px 0; }
+@media (min-width: 900px) { .faq { grid-template-columns: .6fr 1.4fr; } }
+
+/* Werkbalk op de telefoon: kleiner */
+@media (max-width: 700px) {
+  .kk { padding: 3px; gap: 2px; font-size: 12px; }
+  .kk-merk { height: 34px; }
+  .kk-icoon { width: 32px; height: 32px; }
+  .kk-icoon svg { width: 16px; height: 16px; }
+  .kk-kleur i { width: 15px; height: 15px; }
+  .kk-merk b { font-size: 12.5px; }
+  .kk-merk[data-merk="zilt"] b { font-size: 14.5px; }
+  .kk-open { width: 42px; height: 42px; }
+  .kk-open .mini { width: 18px; height: 24px; }
+}
+/* Na een klik op het rondje meteen tonen, zonder de vertraagde intro */
+.intro .kk.los { animation: none; }
+
 </style>
 
 <header class="nav" id="nav">
@@ -668,8 +761,8 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     </div>
     <ul class="diensten">
       <li class="vlag opbouw"><a href="./winactie/index.html"><div class="dienst-beeld" aria-hidden="true"><div class="waaier"><div data-zak="2" data-label=""></div><div data-zak="0" data-label=""></div><div data-zak="4" data-label=""></div></div></div><h3>Campagne</h3><p>Van concept tot finale: je klanten kiezen je volgende product, en het bereik komt vanzelf.</p><span class="meer">Bekijk de winactie <i aria-hidden="true">→</i></span></a></li>
-      <li class="opbouw"><a href="./diensten/klantinteractie/index.html"><div class="dienst-beeld" aria-hidden="true"><div class="mini-chat"><span class="in1"></span><span class="uit"></span><span class="in2"><i></i><i></i><i></i></span></div></div><h3>Klantinteractie</h3><p>Elk bericht in de DM beantwoord en opgevolgd, met of zonder campagne.</p><span class="meer">Meer over klantinteractie <i aria-hidden="true">→</i></span></a></li>
-      <li class="opbouw"><a href="./diensten/beheer/index.html"><div class="dienst-beeld" aria-hidden="true"><div class="raster"><span></span><span></span><span></span><span></span><span></span><span></span></div></div><h3>Beheer</h3><p>Van een losse post tot je kanalen volledig uit handen. Jij kiest wat je nodig hebt.</p><span class="meer">Meer over beheer <i aria-hidden="true">→</i></span></a></li>
+      <li class="opbouw"><a href="./diensten/klantinteractie/index.html"><div class="dienst-beeld" aria-hidden="true"><div class="mini-chat"><span class="in1"><i class="mini-zak" data-zak="0" data-label=""></i></span><span class="uit"></span><span class="in2"><i></i><i></i><i></i></span></div></div><h3>Klantinteractie</h3><p>Elk bericht in de DM beantwoord en opgevolgd, met of zonder campagne.</p><span class="meer">Meer over klantinteractie <i aria-hidden="true">→</i></span></a></li>
+      <li class="opbouw"><a href="./diensten/beheer/index.html"><div class="dienst-beeld" aria-hidden="true"><div class="raster"><span class="zt" style="--tegel:#FFE3B3"><i data-zak="0" data-label=""></i></span><span class="hart"></span><span class="zt" style="--tegel:#E4DCFF"><i data-zak="1" data-label=""></i></span><span class="zt" style="--tegel:#D4F7D9"><i data-zak="4" data-label=""></i></span><span class="zt" style="--tegel:#FFD9D3"><i data-zak="2" data-label=""></i></span><span class="zt" style="--tegel:#FFF0B0"><i data-zak="3" data-label=""></i></span></div></div><h3>Beheer</h3><p>Van een losse post tot je kanalen volledig uit handen. Jij kiest wat je nodig hebt.</p><span class="meer">Meer over beheer <i aria-hidden="true">→</i></span></a></li>
     </ul>
     <p class="draad opbouw">Bij elke stap zie je wat het oplevert en wat je klanten willen.</p>
   </div>
@@ -736,7 +829,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         <a class="knop groot" href="#demo" data-demo>Demo inplannen <span class="pijl" aria-hidden="true"><svg viewBox="0 0 12 12"><path d="M2 6h8M6.5 2.5 10 6l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
         <ul class="fud"><li>Live in één markt binnen weken</li><li>Elke inzending gecheckt</li><li>Eerst testen, dan live</li></ul>
       </div>
-      <div class="slot-beeld"><div class="slot-zak" data-zak="0" data-label="Een zak chips met de smaak mango met chili"></div><div class="et"><b>Mango met chili</b><span>Gekozen door het publiek</span></div></div>
+      <div class="slot-beeld"><div class="slot-waaier"><div class="slot-zak zij" data-zak="1" data-label="" aria-hidden="true"></div><div class="slot-zak" data-zak="0" data-label="Een zak chips met de smaak mango met chili"></div><div class="slot-zak zij" data-zak="4" data-label="" aria-hidden="true"></div></div><div class="et"><b>Mango met chili</b><span>Gekozen door het publiek</span></div></div>
     </div>
   </div>
 </section>
@@ -1262,10 +1355,12 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
   const kk = $('#kk'), kkOpen = $('#kk-open');
-  const toonKk = aan => { kk.hidden = !aan; kkOpen.hidden = aan; opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
-  $('#kk-dicht').addEventListener('click', () => toonKk(false));
-  kkOpen.addEventListener('click', () => toonKk(true));
-  toonKk(opslag.get('ms-kk-dicht') !== '1');
+  // Alleen een echte klik wordt onthouden. Op een telefoon start de balk dicht, anders bedekt hij de telefoon in de hero.
+  const toonKk = (aan, bewaar) => { kk.hidden = !aan; kkOpen.hidden = aan; if (bewaar) { opslag.set('ms-kk', aan ? 'open' : 'dicht'); kk.classList.add('los'); } };
+  $('#kk-dicht').addEventListener('click', () => toonKk(false, true));
+  kkOpen.addEventListener('click', () => toonKk(true, true));
+  const kkKeuze = opslag.get('ms-kk') || (opslag.get('ms-kk-dicht') === '1' ? 'dicht' : '');
+  toonKk(kkKeuze ? kkKeuze === 'open' : !matchMedia('(max-width: 700px)').matches, false);
 
   // Licht of donker. Licht is de standaard, ook als het systeem op donker staat.
   const themaKnop = $('#kk-thema');
@@ -1406,8 +1501,16 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' }).onfinish = () => v.remove();
     }
   };
-  const EIND = { x: 8, y: 66 };
-  const vlieg = () => {
+  // Landplek links naast de telefoon, klein genoeg om de chat vrij te laten.
+  const EIND = { x: -24, y: 118, s: .74 };
+  const vlieg = async () => {
+    const mijn = run;
+    if (pop.classList.contains('geland')) {
+      pop.classList.remove('geland');
+      await pop.animate([{ opacity: 1 }, { transform: `translate(${EIND.x + 40}px, ${EIND.y + 60}px) rotate(-4deg) scale(${EIND.s * .7})`, opacity: 0 }], { duration: 240, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished.catch(() => {});
+      if (mijn !== run) return;
+    }
+    pop.getAnimations().forEach(a => a.cancel());
     const tin = toneelIn.getBoundingClientRect();
     const b = $('.creatie-zak', draad).getBoundingClientRect();
     const bx = (b.left - tin.left) / schaal, by = (b.top - tin.top) / schaal, k = (b.width / schaal) / 230;
@@ -1415,16 +1518,29 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     pop.animate([
       { transform: `translate(${bx}px, ${by}px) rotate(-5deg) scale(${k})`, opacity: 0 },
       { opacity: 1, offset: .12 },
-      { transform: `translate(${EIND.x - 24}px, ${EIND.y - 40}px) rotate(-15deg) scale(1.1)`, opacity: 1, offset: .68 },
-      { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(1)`, opacity: 1 },
+      { transform: `translate(${EIND.x - 24}px, ${EIND.y - 40}px) rotate(-15deg) scale(${EIND.s * 1.1})`, opacity: 1, offset: .68 },
+      { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(${EIND.s})`, opacity: 1 },
     ], { duration: 1150, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
     // Alleen landen als er intussen geen andere smaak is gekozen.
+    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115 * EIND.s, EIND.y + 150 * EIND.s); }, 900);
+  };
+  // De grote zak staat meteen geland naast de telefoon: veerkrachtig binnen, met vonken.
+  const POP_EIND = `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(${EIND.s})`;
+  const landPop = () => {
+    pop.getAnimations().forEach(a => a.cancel());
+    pop.classList.remove('geland');
+    if (rust) { pop.animate([{ transform: POP_EIND, opacity: 1 }], { duration: 1, fill: 'forwards' }); pop.classList.add('geland'); return; }
+    pop.animate([
+      { transform: `translate(${EIND.x + 60}px, ${EIND.y + 120}px) rotate(6deg) scale(${EIND.s * .45})`, opacity: 0 },
+      { opacity: 1, offset: .3 },
+      { transform: POP_EIND, opacity: 1 },
+    ], { duration: 550, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'forwards' });
     const mijn = run;
-    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
+    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115 * EIND.s, EIND.y + 150 * EIND.s); }, 320);
   };
   const verbergPop = snel => {
     pop.classList.remove('geland');
-    return pop.animate([{ opacity: snel ? 0 : 1 }, { transform: `translate(${EIND.x + 120}px, ${EIND.y + 220}px) rotate(-2deg) scale(.4)`, opacity: 0 }], { duration: snel ? 1 : 600, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
+    return pop.animate([{ opacity: snel ? 0 : 1 }, { transform: `translate(${EIND.x + 120 * EIND.s}px, ${EIND.y + 220 * EIND.s}px) rotate(-2deg) scale(${EIND.s * .4})`, opacity: 0 }], { duration: snel ? 1 : 600, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
   };
 
   const gesprek = async (mijn, eersteWacht) => {
@@ -1534,13 +1650,23 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     zetSmaakInBeeld();
     const r = toneel.getBoundingClientRect();
     if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
+    landPop();
     if (rust) { sjablonen.forEach((s, i) => { const n = s.cloneNode(true); draad.appendChild(n); vulZakken(n, false); }); scrollNaarOnder(); }
-    else gesprek(run, 300);
+    else gesprek(run, 2500);
   });
 
   zetSmaakInBeeld();
-  if (rust) scrollNaarOnder();
-  else { leeg(); gesprek(run, 1900); }
+  if (rust) { scrollNaarOnder(); landPop(); }
+  else {
+    leeg();
+    gesprek(run, 300);
+    // De hero is meteen vol: de zak landt zodra de intro loopt.
+    const start = run;
+    const land = () => { if (start === run && !pop.classList.contains('geland')) landPop(); };
+    const r = document.documentElement;
+    if (!r.classList.contains('intro') || r.classList.contains('start')) setTimeout(land, 250);
+    else new MutationObserver((m, o) => { if (r.classList.contains('start')) { o.disconnect(); setTimeout(land, 450); } }).observe(r, { attributes: true, attributeFilter: ['class'] });
+  }
 })();
 
 </script>

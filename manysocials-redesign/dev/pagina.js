@@ -83,10 +83,12 @@
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
   const kk = $('#kk'), kkOpen = $('#kk-open');
-  const toonKk = aan => { kk.hidden = !aan; kkOpen.hidden = aan; opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
-  $('#kk-dicht').addEventListener('click', () => toonKk(false));
-  kkOpen.addEventListener('click', () => toonKk(true));
-  toonKk(opslag.get('ms-kk-dicht') !== '1');
+  // Alleen een echte klik wordt onthouden. Op een telefoon start de balk dicht, anders bedekt hij de telefoon in de hero.
+  const toonKk = (aan, bewaar) => { kk.hidden = !aan; kkOpen.hidden = aan; if (bewaar) { opslag.set('ms-kk', aan ? 'open' : 'dicht'); kk.classList.add('los'); } };
+  $('#kk-dicht').addEventListener('click', () => toonKk(false, true));
+  kkOpen.addEventListener('click', () => toonKk(true, true));
+  const kkKeuze = opslag.get('ms-kk') || (opslag.get('ms-kk-dicht') === '1' ? 'dicht' : '');
+  toonKk(kkKeuze ? kkKeuze === 'open' : !matchMedia('(max-width: 700px)').matches, false);
 
   // Licht of donker. Licht is de standaard, ook als het systeem op donker staat.
   const themaKnop = $('#kk-thema');
@@ -227,8 +229,16 @@
       ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' }).onfinish = () => v.remove();
     }
   };
-  const EIND = { x: 8, y: 66 };
-  const vlieg = () => {
+  // Landplek links naast de telefoon, klein genoeg om de chat vrij te laten.
+  const EIND = { x: -24, y: 118, s: .74 };
+  const vlieg = async () => {
+    const mijn = run;
+    if (pop.classList.contains('geland')) {
+      pop.classList.remove('geland');
+      await pop.animate([{ opacity: 1 }, { transform: `translate(${EIND.x + 40}px, ${EIND.y + 60}px) rotate(-4deg) scale(${EIND.s * .7})`, opacity: 0 }], { duration: 240, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished.catch(() => {});
+      if (mijn !== run) return;
+    }
+    pop.getAnimations().forEach(a => a.cancel());
     const tin = toneelIn.getBoundingClientRect();
     const b = $('.creatie-zak', draad).getBoundingClientRect();
     const bx = (b.left - tin.left) / schaal, by = (b.top - tin.top) / schaal, k = (b.width / schaal) / 230;
@@ -236,16 +246,29 @@
     pop.animate([
       { transform: `translate(${bx}px, ${by}px) rotate(-5deg) scale(${k})`, opacity: 0 },
       { opacity: 1, offset: .12 },
-      { transform: `translate(${EIND.x - 24}px, ${EIND.y - 40}px) rotate(-15deg) scale(1.1)`, opacity: 1, offset: .68 },
-      { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(1)`, opacity: 1 },
+      { transform: `translate(${EIND.x - 24}px, ${EIND.y - 40}px) rotate(-15deg) scale(${EIND.s * 1.1})`, opacity: 1, offset: .68 },
+      { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(${EIND.s})`, opacity: 1 },
     ], { duration: 1150, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
     // Alleen landen als er intussen geen andere smaak is gekozen.
+    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115 * EIND.s, EIND.y + 150 * EIND.s); }, 900);
+  };
+  // De grote zak staat meteen geland naast de telefoon: veerkrachtig binnen, met vonken.
+  const POP_EIND = `translate(${EIND.x}px, ${EIND.y}px) rotate(-9deg) scale(${EIND.s})`;
+  const landPop = () => {
+    pop.getAnimations().forEach(a => a.cancel());
+    pop.classList.remove('geland');
+    if (rust) { pop.animate([{ transform: POP_EIND, opacity: 1 }], { duration: 1, fill: 'forwards' }); pop.classList.add('geland'); return; }
+    pop.animate([
+      { transform: `translate(${EIND.x + 60}px, ${EIND.y + 120}px) rotate(6deg) scale(${EIND.s * .45})`, opacity: 0 },
+      { opacity: 1, offset: .3 },
+      { transform: POP_EIND, opacity: 1 },
+    ], { duration: 550, easing: 'cubic-bezier(.34,1.56,.64,1)', fill: 'forwards' });
     const mijn = run;
-    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
+    setTimeout(() => { if (mijn !== run) return; pop.classList.add('geland'); vonken(EIND.x + 115 * EIND.s, EIND.y + 150 * EIND.s); }, 320);
   };
   const verbergPop = snel => {
     pop.classList.remove('geland');
-    return pop.animate([{ opacity: snel ? 0 : 1 }, { transform: `translate(${EIND.x + 120}px, ${EIND.y + 220}px) rotate(-2deg) scale(.4)`, opacity: 0 }], { duration: snel ? 1 : 600, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
+    return pop.animate([{ opacity: snel ? 0 : 1 }, { transform: `translate(${EIND.x + 120 * EIND.s}px, ${EIND.y + 220 * EIND.s}px) rotate(-2deg) scale(${EIND.s * .4})`, opacity: 0 }], { duration: snel ? 1 : 600, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
   };
 
   const gesprek = async (mijn, eersteWacht) => {
@@ -355,11 +378,21 @@
     zetSmaakInBeeld();
     const r = toneel.getBoundingClientRect();
     if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
+    landPop();
     if (rust) { sjablonen.forEach((s, i) => { const n = s.cloneNode(true); draad.appendChild(n); vulZakken(n, false); }); scrollNaarOnder(); }
-    else gesprek(run, 300);
+    else gesprek(run, 2500);
   });
 
   zetSmaakInBeeld();
-  if (rust) scrollNaarOnder();
-  else { leeg(); gesprek(run, 1900); }
+  if (rust) { scrollNaarOnder(); landPop(); }
+  else {
+    leeg();
+    gesprek(run, 300);
+    // De hero is meteen vol: de zak landt zodra de intro loopt.
+    const start = run;
+    const land = () => { if (start === run && !pop.classList.contains('geland')) landPop(); };
+    const r = document.documentElement;
+    if (!r.classList.contains('intro') || r.classList.contains('start')) setTimeout(land, 250);
+    else new MutationObserver((m, o) => { if (r.classList.contains('start')) { o.disconnect(); setTimeout(land, 450); } }).observe(r, { attributes: true, attributeFilter: ['class'] });
+  }
 })();

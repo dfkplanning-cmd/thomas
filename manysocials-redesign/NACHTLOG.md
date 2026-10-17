@@ -24,3 +24,14 @@ Per ronde: wat de agents vonden, wat is aangepast en gepubliceerd.
 - Toegankelijkheid: bandknoppen weer echte knoppen, beschrijvingen bij de twee foto's, focusring op invoerveld en snelknoppen.
 - Lichtere beelden: mening-iphone.webp (354 KB), keuken-licht.webp (341 KB).
 - Voor de gebruiker: bij reduced motion staat "Probeer het zelf" over de onderkant van de pizzakaart; de kleurkiezer linksonder dekt op mobiel het begin van de band.
+
+## Ronde 2, chips (gepubliceerd)
+
+Na een art-directorreview:
+- Smaak kiezen toont meteen de zak met vonken; de zak landt nu kleiner links van de telefoon zodat het chatscherm vrij blijft (terug te zetten via `EIND` in pagina.js).
+- Band boven de vouw op 1440x900 en 1280x720; telefoon vanaf de eerste seconde gevuld.
+- Merkwisselaar start ingeklapt op mobiel (keuze wordt onthouden onder `ms-kk`); bug opgelost waardoor heropenen 1,5 s onzichtbaar bleef.
+- Diensten: echte zakken in Beheer en Klantinteractie, op mobiel een swipe-carrousel.
+- Afsluiter: waaier van drie zakken in plaats van dezelfde mangozak als het vlaggenschip.
+- Werkwijze met voortgangsringen, minder wit bij Werkwijze en Vragen.
+- Overgeslagen (vraag voor de gebruiker): stembalkjes in de live-lijst.

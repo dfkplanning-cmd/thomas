@@ -546,3 +546,96 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .donker .kk-icoon .zon { display: block; }
 .donker .kk-icoon .maan { display: none; }
 @media (max-width: 430px) { .kk-merk .mini { display: none; } .kk-merk { padding: 0 10px; } }
+
+/* ---------- Ronde 2: compacter bovenaan, echte zakken in de diensten, waaier in de afsluiter ---------- */
+
+/* Desktop: hero en band samen boven de vouw */
+@media (min-width: 960px) {
+  /* 100svh min navigatie (72), bovenmarge (16) en band (~178) */
+  .toneel { max-width: min(540px, calc((100svh - 270px) * 560 / 760)); }
+  .hero .wrap { padding-top: 16px; }
+  .hero-tekst { padding-bottom: 40px; }
+  .band { padding-block: 12px; }
+  .band-rij { gap: 38px; }
+  .band-zak { width: 88px; gap: 6px; font-size: 11.5px; }
+  .band-chip { width: 26px; }
+}
+@media (min-width: 960px) and (max-height: 820px) {
+  .hero h1 { font-size: clamp(54px, min(6.3vw, 10.4svh), 96px); }
+  .hero-tekst { gap: 20px; padding-bottom: 22px; }
+  .hero .sub { line-height: 1.5; }
+}
+/* De zak landt kleiner naast de telefoon; het label blijft even groot als voorheen */
+.pop-label { font-size: 17.5px; padding: 12px 17px; bottom: -30px; }
+
+/* Klantinteractie: de eerste inkomende bubbel brengt een echte zak mee */
+.mini-chat .in1 { height: auto; min-height: 30px; padding: 7px 10px; display: flex; align-items: center; gap: 10px; }
+.mini-chat .in1::after { position: static; flex: 1; margin: 0 18% 0 0; }
+.mini-chat .in1 .mini-zak { display: block; flex: none; width: 38px; transform: rotate(-8deg); filter: drop-shadow(0 4px 4px rgba(var(--schaduw), .2)); }
+.mini-chat .mini-zak .zak-svg { width: 100%; display: block; }
+
+/* Beheer: een raster posts met zakken op zachte smaakkleuren */
+.raster span.zt { background: var(--tegel); display: grid; place-items: end center; }
+.raster span.zt i { display: block; width: 52%; max-width: 46px; margin-bottom: -14%; transform: rotate(-7deg); filter: drop-shadow(0 6px 6px rgba(var(--schaduw), .2)); transition: transform .45s var(--veer); }
+.raster span.zt:nth-child(even) i { transform: rotate(6deg); }
+.raster span.zt .zak-svg { width: 100%; display: block; }
+.raster span:nth-child(n)::after { content: none; }
+.raster span.hart { background: var(--accent); }
+.raster span.hart::after { content: ""; position: absolute; inset: 0; height: auto; border-radius: 0; box-shadow: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z' fill='%230F0F0E'/%3E%3C/svg%3E") center/22px no-repeat; }
+.diensten a:hover .raster span.zt i { transform: rotate(0) translateY(-6%); }
+.donker .raster span.zt { background: color-mix(in srgb, var(--tegel) 82%, #000); }
+
+/* Telefoon: diensten als veegbare kaarten */
+@media (max-width: 700px) {
+  .diensten { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding: 8px var(--gutter-r) 14px var(--gutter); scroll-padding-inline: var(--gutter); }
+  .diensten::-webkit-scrollbar { display: none; }
+  .diensten > li { flex: 0 0 82%; scroll-snap-align: start; }
+  .diensten a { padding-bottom: 22px; }
+  .diensten a:hover { transform: none; box-shadow: none; }
+  .diensten h3 { font-size: 24px; padding-top: 18px; }
+  .diensten p { font-size: 15px; }
+  .dienst-beeld { height: 150px; }
+  .waaier { bottom: -34px; }
+  .mini-chat { inset: 14px 18px; gap: 7px; }
+  .raster { inset: 16px 20px; gap: 7px; }
+}
+
+/* Afsluiter: drie zakken in een waaier rond de winnaar */
+.slot-beeld { width: min(360px, 92%); aspect-ratio: 36 / 38; }
+.slot-waaier { position: absolute; left: 50%; top: 4%; width: 0; height: 100%; }
+.slot-waaier .slot-zak { left: 0; top: 0; width: 210px; margin-left: -105px; transform-origin: 50% 115%; transform: rotate(4deg); z-index: 1; }
+.slot-waaier .slot-zak.zij { width: 168px; margin-left: -84px; top: 12%; z-index: 0; filter: drop-shadow(0 24px 22px rgba(0,0,0,.26)); }
+.slot-waaier .slot-zak.zij:first-child { transform: translateX(-38%) rotate(-16deg); }
+.slot-waaier .slot-zak.zij:last-child { transform: translateX(38%) rotate(18deg); }
+.slot-beeld:hover .slot-waaier .slot-zak:not(.zij) { transform: rotate(-2deg) scale(1.04); }
+.slot-beeld:hover .slot-waaier .slot-zak.zij:first-child { transform: translateX(-50%) rotate(-24deg); }
+.slot-beeld:hover .slot-waaier .slot-zak.zij:last-child { transform: translateX(50%) rotate(26deg); }
+@media (max-width: 560px) {
+  .slot-waaier .slot-zak { width: 170px; margin-left: -85px; }
+  .slot-waaier .slot-zak.zij { width: 136px; margin-left: -68px; }
+}
+
+/* Zo werken we: de cirkels vullen per stap verder */
+.stappen li:nth-child(1) { --p: 25%; } .stappen li:nth-child(2) { --p: 50%; } .stappen li:nth-child(3) { --p: 75%; } .stappen li:nth-child(4) { --p: 100%; }
+.stappen li::before { border: 0; background: radial-gradient(closest-side, var(--vlak) calc(100% - 5px), transparent calc(100% - 4px)), conic-gradient(var(--accent) var(--p), var(--lijn) 0); }
+.stappen li:hover::before { background: radial-gradient(closest-side, var(--accent) calc(100% - 5px), transparent calc(100% - 4px)), conic-gradient(var(--ink) var(--p), var(--lijn) 0); }
+.stappen b { font-size: 23px; }
+.stappen { margin-top: clamp(26px, 3vw, 40px); }
+#werkwijze, #vragen { padding-block: clamp(36px, 4.4vw, 60px); }
+.faq summary { padding: 18px 0; }
+@media (min-width: 900px) { .faq { grid-template-columns: .6fr 1.4fr; } }
+
+/* Werkbalk op de telefoon: kleiner */
+@media (max-width: 700px) {
+  .kk { padding: 3px; gap: 2px; font-size: 12px; }
+  .kk-merk { height: 34px; }
+  .kk-icoon { width: 32px; height: 32px; }
+  .kk-icoon svg { width: 16px; height: 16px; }
+  .kk-kleur i { width: 15px; height: 15px; }
+  .kk-merk b { font-size: 12.5px; }
+  .kk-merk[data-merk="zilt"] b { font-size: 14.5px; }
+  .kk-open { width: 42px; height: 42px; }
+  .kk-open .mini { width: 18px; height: 24px; }
+}
+/* Na een klik op het rondje meteen tonen, zonder de vertraagde intro */
+.intro .kk.los { animation: none; }

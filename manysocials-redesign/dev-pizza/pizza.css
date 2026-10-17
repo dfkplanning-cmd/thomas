@@ -1,0 +1,574 @@
+/* Layout: een voorstel als doorlopend toneel. Elke slide uit het deck wordt een eigen set; bovenaan de telefoon in de hand waarin Daan zijn pizza bedenkt. */
+:root {
+  --bg: #F3F3EF;
+  --vlak: #FFFFFF;
+  --ink: #0F0F0E;
+  --zacht: #5C5C56;
+  --lijn: #E1E1DA;
+  --accent: #00B884;
+  --op-accent: #0F0F0E;
+  --heet: #E8412C;
+  --paneel: #121211;
+  --op-paneel: #F3F3EF;
+  --paneel-zacht: #A6A69E;
+  --mouw: color-mix(in srgb, var(--accent) 72%, #0F0F0E);
+  --accent-licht: color-mix(in srgb, var(--accent) 55%, #fff);
+  --schaduw: 15, 15, 14;
+
+  --kop: "Bricolage Grotesque", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --tekst: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ios: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "DM Sans", sans-serif;
+
+  --ig-bg: #FFFFFF;
+  --ig-in: #EFEFEF;
+  --ig-tekst: #0A0A0A;
+  --ig-sub: #737373;
+  --ig-rand: #DBDBDB;
+  --ig-veld: #EFEFEF;
+  --ig-blauw: #0095F6;
+  --ig-uit: linear-gradient(160deg, #9B36F5 0%, #6152F7 52%, #3797F0 100%);
+
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --veer: cubic-bezier(.2, .9, .25, 1.15);
+  --zacht-uit: cubic-bezier(.16, 1, .3, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
+    --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
+    --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
+  --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
+  --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px)); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--tekst); overflow-x: clip; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bg); }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--kop); font-weight: 800; letter-spacing: -0.035em; margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+@media (min-width: 720px) { :root { --gutter: max(40px, env(safe-area-inset-left, 0px)); --gutter-r: max(40px, env(safe-area-inset-right, 0px)); } }
+
+/* Gedeelde onderdelen */
+.kicker { font: 500 12.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--zacht); display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.kicker::before { content: ""; width: 22px; height: 3px; border-radius: 2px; background: var(--accent); flex: none; }
+.kop2 { font-size: clamp(32px, 4.6vw, 58px); line-height: 1; }
+.lead { font-size: clamp(18px, 1.6vw, 22px); line-height: 1.45; color: var(--ink); }
+.p { font-size: 17px; color: var(--zacht); max-width: 62ch; }
+.p + .p { margin-top: 14px; }
+.klein { font-size: 13.5px; color: var(--zacht); }
+.g { color: var(--accent); }
+sup { font: 600 .62em/0 var(--mono); }
+sup a { text-decoration: none; color: var(--accent); padding: 0 1px; }
+sup a:hover { text-decoration: underline; }
+.strip { display: inline-block; background: var(--heet); color: #fff; padding: 7px 14px 6px; transform: skewX(-10deg) rotate(-2deg); font: 800 15px/1.1 var(--kop); letter-spacing: .02em; text-transform: uppercase; box-shadow: 0 10px 20px -12px rgba(var(--schaduw), .5); }
+.strip > span { display: inline-block; transform: skewX(10deg); }
+.strip.groen { background: var(--accent); color: var(--op-accent); }
+.kaart { background: var(--vlak); border: 1px solid var(--lijn); border-radius: 24px; padding: 26px; }
+.ico { width: 52px; height: 52px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 16%, transparent); display: grid; place-items: center; flex: none; }
+.ico svg { width: 26px; height: 26px; fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.dia { padding-block: clamp(72px, 10vw, 136px); position: relative; }
+.dia + .dia { border-top: 1px solid var(--lijn); }
+.knop { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--bg); font: 600 15px/1 var(--tekst); padding: 13px 18px; border-radius: 999px; text-decoration: none; border: 0; cursor: pointer; }
+
+/* Balk bovenaan: de voettekst van de slides, nu vast in beeld */
+.balk { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; transition: background-color .3s, box-shadow .3s; }
+.balk.scroll { background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px); box-shadow: 0 1px 0 var(--lijn); }
+.balk .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.balk-merk { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
+.balk-merk svg { width: 26px; height: 28px; flex: none; transition: transform .6s var(--veer); }
+.balk-merk:hover svg { transform: rotate(-12deg) scale(1.06); }
+.balk-merk span { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.balk-merk b { font: 800 19px var(--kop); letter-spacing: -0.035em; margin-right: 4px; }
+.balk-rechts { display: flex; align-items: center; gap: 12px; font: 500 13px var(--mono); }
+.conf { color: var(--heet); text-transform: uppercase; letter-spacing: .08em; font-weight: 500; }
+.balk-nr { min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; color: var(--zacht); transition: opacity .3s; }
+@media (max-width: 520px) { .balk-merk span span { display: none; } }
+
+/* Cover */
+.cover { padding-block: 0; overflow: clip; }
+.cover .wrap { display: grid; gap: 28px; padding-top: clamp(20px, 4vw, 44px); }
+.cover-tekst { display: grid; gap: 24px; align-content: center; justify-items: start; padding-bottom: 16px; }
+.cover h1 { font-size: clamp(50px, 13vw, 100px); line-height: .88; letter-spacing: -0.055em; font-variation-settings: "opsz" 96; text-transform: none; }
+.cover h1 .r { display: block; overflow: clip; padding-bottom: .1em; margin-bottom: -.1em; }
+.cover h1 .r > span { display: inline-block; }
+.cover h1 br { display: none; }
+.cover h1 .g { color: var(--op-accent); position: relative; z-index: 0; padding: 0 .06em; margin-left: -.06em; }
+.cover h1 .g::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: .14em; bottom: .02em; background: var(--accent); border-radius: .14em; transform: rotate(-1.2deg); transform-origin: left center; }
+.cover .lead { max-width: 30ch; font-size: clamp(19px, 1.8vw, 24px); }
+.meta { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; border-top: 2px solid var(--ink); padding-top: 18px; margin-top: 6px; }
+.meta .klein { font-size: 12.5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.meta div > div:last-child { font-weight: 600; font-size: 15.5px; }
+.meta .rood { color: var(--heet); }
+@media (min-width: 640px) { .meta { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.toneel { position: relative; width: 100%; max-width: 540px; aspect-ratio: 560 / 760; margin-inline: auto; justify-self: center; align-self: end; }
+.toneel-in { position: absolute; left: 0; top: 0; width: 560px; height: 760px; transform-origin: 0 0; transform: scale(var(--s, .62)); }
+.diep { position: absolute; transform: translate3d(calc(var(--px, 0) * var(--d, 0) * 1px), calc(var(--py, 0) * var(--d, 0) * 1px), 0); transition: transform .9s var(--zacht-uit); }
+.schijf { left: 52px; top: 110px; width: 500px; height: 500px; --d: 6; }
+.schijf > span { position: absolute; inset: 0; display: block; }
+.schijf i { position: absolute; inset: 0; border-radius: 50%; }
+.schijf i:nth-child(1) { background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--accent) 65%, #fff) 0%, var(--accent) 58%, color-mix(in srgb, var(--accent) 82%, #000) 100%); }
+.schijf i:nth-child(2), .schijf i:nth-child(3) { inset: -46px; border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent); animation: ring 4.8s ease-out infinite; }
+.schijf i:nth-child(3) { animation-delay: 2.4s; }
+@keyframes ring { from { transform: scale(.9); opacity: 1; } to { transform: scale(1.18); opacity: 0; } }
+
+/* Ronde pizza uit een foto: de foto wordt zo geschaald dat de pizza precies de cirkel vult */
+.pizza { border-radius: 50%; background-repeat: no-repeat; aspect-ratio: 1; width: 100%; box-shadow: 0 26px 34px -20px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06); }
+.p1 { left: -6px; top: 64px; width: 150px; --d: 18; }
+.p1 .pizza, .p2 .pizza { animation: draaien 40s linear infinite; }
+.p2 { left: 8px; top: 520px; width: 126px; --d: 22; }
+.p2 .pizza { animation-direction: reverse; animation-duration: 52s; }
+.p1 > .laag, .p2 > .laag { display: block; animation: dobber 8s ease-in-out infinite; }
+.p2 > .laag { animation-delay: -4s; }
+@keyframes draaien { to { transform: rotate(360deg); } }
+@keyframes dobber { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+.story { left: 382px; top: 22px; width: 156px; --d: 14; }
+.story > .laag { display: block; animation: dobber 9s -2s ease-in-out infinite; }
+.story-kaart { position: relative; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; transform: rotate(7deg); background: #222 center 30% / cover no-repeat; box-shadow: 0 30px 40px -24px rgba(0,0,0,.6); }
+.story-kaart::before { content: ""; position: absolute; inset: 0 0 auto; height: 70px; background: linear-gradient(rgba(0,0,0,.45), transparent); }
+.story-balkjes { position: absolute; left: 8px; right: 8px; top: 8px; display: flex; gap: 3px; z-index: 1; }
+.story-balkjes i { flex: 1; height: 2.5px; border-radius: 2px; background: rgba(255,255,255,.45); overflow: hidden; position: relative; }
+.story-balkjes i:first-child::after { content: ""; position: absolute; inset: 0; background: #fff; transform-origin: left; animation: storyBalk 5s linear infinite; }
+.story-balkjes i:nth-child(1)::after { animation-delay: 0s; }
+@keyframes storyBalk { from { transform: scaleX(0); } }
+.story-av { position: absolute; left: 8px; top: 18px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF) border-box; z-index: 1; }
+
+.kruimel { --d: 26; }
+.kruimel > i { display: block; }
+.kruimel span { display: block; animation: kruimel 9s ease-in-out infinite; }
+.kruimel svg { width: 100%; display: block; filter: drop-shadow(0 6px 6px rgba(var(--schaduw), .25)); }
+.k1 { left: 300px; top: 4px; width: 34px; } .k1 span { animation-delay: -1s; }
+.k2 { left: 512px; top: 380px; width: 30px; } .k2 span { animation-delay: -4s; }
+.k3 { left: 70px; top: 330px; width: 36px; --d: 34; } .k3 span { animation-delay: -2s; }
+.k4 { left: 500px; top: 560px; width: 38px; } .k4 span { animation-delay: -6s; }
+@keyframes kruimel { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(24deg); } }
+
+.houder-diep { left: 150px; top: 22px; width: 300px; height: 620px; --d: 5; z-index: 3; }
+.houder-in { position: absolute; inset: 0; }
+.houder { position: absolute; inset: 0; transform-origin: 75% 92%; transform: rotate(-3deg); }
+.houder-zweef { position: absolute; inset: 0; animation: zweven 7s ease-in-out infinite; }
+@keyframes zweven { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Telefoon */
+.tel { position: absolute; inset: 0; border-radius: 54px; background: #070708; padding: 11px; isolation: isolate;
+  box-shadow: 0 0 0 1.5px #1d1e21, 0 50px 80px -34px rgba(var(--schaduw), .55), 0 22px 34px -20px rgba(var(--schaduw), .5); }
+.tel::before { content: ""; position: absolute; inset: -5px; border-radius: 59px; z-index: -1;
+  background: linear-gradient(150deg, #E4E5E8 0%, #8A8D93 18%, #C9CBD0 34%, #6C6F75 52%, #D7D8DC 70%, #7A7D83 86%, #BFC1C6 100%); }
+.tel::after { content: ""; position: absolute; inset: -5px; border-radius: 59px; z-index: -1; box-shadow: inset 0 0 0 1px rgba(255,255,255,.5), inset 0 0 0 2.5px rgba(0,0,0,.25); }
+.tel-knop { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(90deg, #6d7076, #d3d4d8 50%, #84878d); }
+.k-actie { left: -8px; top: 118px; height: 30px; } .k-op { left: -8px; top: 172px; height: 54px; } .k-neer { left: -8px; top: 238px; height: 54px; }
+.k-aan { right: -8px; top: 196px; height: 86px; }
+.eiland { position: absolute; top: 22px; left: 50%; width: 94px; height: 28px; border-radius: 20px; background: #000; transform: translateX(-50%); z-index: 5; }
+.eiland::after { content: ""; position: absolute; right: 14px; top: 9px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #2b3550, #05060a 70%); }
+.glas { position: absolute; inset: 11px; border-radius: 43px; pointer-events: none; z-index: 6; background: linear-gradient(118deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.04) 24%, rgba(255,255,255,0) 38%); }
+.scherm { position: relative; height: 100%; border-radius: 43px; overflow: hidden; background: var(--ig-bg); color: var(--ig-tekst); font-family: var(--ios); isolation: isolate; }
+.scherm::after { content: ""; position: absolute; left: 50%; bottom: 8px; width: 112px; height: 4.5px; border-radius: 3px; background: var(--ig-tekst); opacity: .85; transform: translateX(-50%); z-index: 6; }
+.app { position: absolute; inset: 0; display: flex; flex-direction: column; transition: transform .7s var(--zacht-uit), filter .7s; }
+.status { height: 50px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 var(--ios); letter-spacing: -.01em; }
+.status-r { display: flex; gap: 5px; align-items: center; }
+.status-r svg { height: 11px; width: auto; fill: currentColor; }
+
+/* Instagram-DM */
+.ig-kop { flex: none; display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px 10px; border-bottom: .5px solid var(--ig-rand); }
+.ig-kop .terug svg { width: 11px; height: 19px; display: block; stroke: currentColor; }
+.av { width: 30px; height: 30px; border-radius: 50%; flex: none; display: grid; place-items: center; background: #009A44; color: #fff; font: 800 10.5px/1 var(--kop); letter-spacing: .02em; }
+.ig-naam { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.ig-naam svg { width: 13px; height: 13px; flex: none; }
+.ig-iconen { display: flex; gap: 18px; }
+.ig-iconen svg { width: 23px; height: 23px; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ig-chat { position: relative; flex: 1; overflow: hidden; }
+.ig-draad { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; gap: 4px; padding: 12px 12px 12px 10px; transition: transform .7s var(--zacht-uit); }
+.bub { max-width: 76%; font-size: 14.4px; line-height: 19px; padding: 9px 13px; border-radius: 20px; position: relative; overflow-wrap: anywhere; }
+.bub.in { align-self: flex-start; background: var(--ig-in); color: var(--ig-tekst); margin-left: 30px; }
+.bub.in.met-av::before { content: "NYP"; position: absolute; left: -30px; bottom: 0; width: 24px; height: 24px; border-radius: 50%; background: #009A44; color: #fff; font: 800 8px/24px var(--kop); text-align: center; }
+.bub.uit { align-self: flex-end; background: var(--ig-uit); color: #fff; }
+.bub + .bub.uit, .opts + .bub.uit { margin-top: 6px; }
+.bub.uit + .bub.in, .opts + .bub.in { margin-top: 8px; }
+.opts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin: 6px 0 2px 30px; }
+.opt { font-size: 13.5px; font-weight: 600; color: var(--ig-blauw); border: 1px solid var(--ig-rand); background: var(--ig-bg); border-radius: 999px; padding: 7px 13px; transition: background-color .2s, transform .25s var(--veer); }
+.opt.gekozen { background: color-mix(in srgb, var(--ig-blauw) 14%, var(--ig-bg)); transform: scale(.94); }
+.opts.weg { animation: optsWeg .35s ease-in forwards; }
+@keyframes optsWeg { to { opacity: 0; transform: translateY(6px); } }
+.pizzakaart { position: relative; align-self: flex-start; margin: 4px 0 0 30px; width: 76%; aspect-ratio: 200 / 236; border-radius: 18px; overflow: hidden; background: #5d0616; color: #fff; }
+.pizzakaart::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(40,0,10,.55), transparent 42%); pointer-events: none; }
+.pizzakaart .t { position: absolute; left: 14px; right: 14px; top: 13px; z-index: 1; }
+.pizzakaart .n { font: 800 19px/1 var(--kop); letter-spacing: -.01em; }
+.pizzakaart .s { font-size: 12.5px; opacity: .9; margin-top: 3px; }
+.pizzakaart .gloed { position: absolute; inset: 0; z-index: 2; background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.7) 50%, transparent 70%); transform: translateX(-120%); }
+.pizzakaart .maak { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; z-index: 2; opacity: 0; transition: opacity .3s;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c.6 4.6 2.4 6.9 7 8-4.6 1.1-6.4 3.4-7 8-.6-4.6-2.4-6.9-7-8 4.6-1.1 6.4-3.4 7-8zM19 15c.3 1.8 1 2.7 2.8 3-1.8.3-2.5 1.2-2.8 3-.3-1.8-1-2.7-2.8-3 1.8-.3 2.5-1.2 2.8-3z' fill='%23ffffff'/%3E%3C/svg%3E") center/contain no-repeat; }
+.pizzakaart .foto { position: absolute; inset: 0; background: var(--img) center 65% / cover no-repeat; transition: opacity .6s, transform 1s var(--veer), filter .7s; }
+.pizzakaart.genereren { background-color: color-mix(in srgb, var(--ig-in) 80%, var(--ig-sub)); }
+.pizzakaart.genereren .foto { opacity: 0; transform: scale(1.25); filter: blur(12px); }
+.pizzakaart.genereren .t { opacity: 0; transform: translateY(-8px); }
+.pizzakaart .t { transition: opacity .5s .45s, transform .7s .45s var(--veer); }
+.pizzakaart.genereren .maak { opacity: 1; animation: maak 1.1s ease-in-out infinite; }
+.pizzakaart.genereren .gloed { animation: gloed 1.2s ease-in-out infinite; }
+.pizzakaart.genereren::after { opacity: 0; }
+@keyframes maak { 50% { transform: scale(.75) rotate(20deg); } }
+@keyframes gloed { to { transform: translateX(120%); } }
+.typen { align-self: flex-start; margin-left: 30px; background: var(--ig-in); border-radius: 20px; padding: 12px 14px; display: flex; gap: 4px; }
+.typen i { width: 7px; height: 7px; border-radius: 50%; background: var(--ig-sub); animation: stip 1.2s infinite; }
+.typen i:nth-child(2) { animation-delay: .15s; } .typen i:nth-child(3) { animation-delay: .3s; }
+@keyframes stip { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-4px); opacity: 1; } }
+.in-anim { animation: berichtIn .5s var(--zacht-uit) both; transform-origin: left bottom; }
+.bub.uit.in-anim { animation: berichtUit .45s var(--veer) both; transform-origin: right bottom; }
+@keyframes berichtIn { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+@keyframes berichtUit { from { opacity: 0; transform: translateY(10px) scale(.7); } }
+
+.ig-invoer { flex: none; display: flex; align-items: center; gap: 8px; margin: 6px 10px 28px; padding: 5px 6px 5px 5px; border-radius: 24px; background: var(--ig-veld); }
+.ig-cam { width: 32px; height: 32px; border-radius: 50%; background: var(--ig-blauw); display: grid; place-items: center; flex: none; }
+.ig-cam svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ig-veld { flex: 1; min-width: 0; font-size: 14.4px; color: var(--ig-sub); white-space: nowrap; overflow: hidden; display: flex; align-items: center; }
+.ig-veld .getypt { color: var(--ig-tekst); }
+.ig-veld .caret { width: 1.6px; height: 18px; background: var(--ig-blauw); margin-left: 1px; opacity: 0; }
+.ig-veld.actief .caret { opacity: 1; animation: knipper 1s steps(1) infinite; }
+.ig-veld.actief .plaats { display: none; }
+@keyframes knipper { 50% { opacity: 0; } }
+.ig-rechts { display: flex; gap: 12px; padding-right: 6px; align-items: center; }
+.ig-rechts svg { width: 21px; height: 21px; display: block; fill: none; stroke: var(--ig-tekst); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ig-stuur { display: none; color: var(--ig-blauw); font-weight: 600; font-size: 14.5px; padding: 0 8px; }
+.ig-invoer.tekst .ig-rechts { display: none; }
+.ig-invoer.tekst .ig-stuur { display: block; }
+.ig-stuur.tik { animation: tik .35s var(--veer); }
+@keyframes tik { 50% { transform: scale(.85); } }
+
+/* Persoonlijke pagina (derde scherm) */
+.pagina { position: absolute; inset: 0; background: #000; color: #fff; display: flex; flex-direction: column; padding: 50px 14px 30px; gap: 12px; transform: translateX(100%); transition: transform .7s var(--zacht-uit); }
+.scherm.op-pagina .pagina { transform: translateX(0); }
+.scherm.op-pagina .app { transform: translateX(-30%); filter: brightness(.5); }
+.pagina .adres { align-self: center; font: 500 12.5px/1 var(--ios); color: #bbb; background: #1c1c1e; border-radius: 10px; padding: 8px 14px; display: flex; gap: 6px; align-items: center; }
+.pagina .adres svg { width: 11px; height: 11px; fill: #bbb; }
+.pagina .pizzakaart { margin: 0; width: 100%; aspect-ratio: auto; flex: 1; min-height: 0; border-radius: 16px; }
+.pagina .pizzakaart .foto { transform-origin: 50% 60%; }
+.scherm.op-pagina .pagina .pizzakaart .foto { animation: kenburns 7s ease-out both; }
+@keyframes kenburns { from { transform: scale(1.02); } to { transform: scale(1.16) rotate(4deg); } }
+.speel { position: absolute; right: 12px; bottom: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+.speel svg { margin-left: 2px; }
+.voortgang { position: absolute; left: 12px; right: 62px; bottom: 30px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.35); z-index: 2; overflow: hidden; }
+.voortgang i { position: absolute; inset: 0; background: #fff; transform-origin: left; transform: scaleX(0); }
+.scherm.op-pagina .voortgang i { animation: voortgang 7s linear both; }
+@keyframes voortgang { to { transform: scaleX(1); } }
+.knoppen { display: grid; gap: 8px; }
+.btn { display: block; text-align: center; font: 800 12.5px/1.1 var(--kop); text-transform: uppercase; letter-spacing: .01em; padding: 14px 8px; white-space: nowrap; border-radius: 12px; background: #fff; color: #111; position: relative; overflow: hidden; transition: transform .2s var(--veer); }
+.btn.g { background: #009A44; color: #fff; }
+.btn.ingedrukt { transform: scale(.96); filter: brightness(.9); }
+.ai-regel { text-align: center; font-size: 10.5px; color: #888; }
+
+.rimpel { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.7), rgba(255,255,255,0) 70%); pointer-events: none; z-index: 7; animation: rimpel .6s ease-out forwards; }
+@keyframes rimpel { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+.hand { position: absolute; left: -100px; top: -40px; width: 560px; height: 820px; overflow: visible; pointer-events: none; z-index: 8; }
+
+.pop { position: absolute; left: 0; top: 0; width: 220px; z-index: 9; pointer-events: none; opacity: 0; transform-origin: 0 0; }
+.pop .pizza { box-shadow: 0 34px 40px -22px rgba(0,0,0,.6); }
+.pop-label { position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; background: var(--ink); color: var(--bg); font: 600 13px/1 var(--tekst); padding: 9px 13px; border-radius: 999px; box-shadow: 0 10px 20px -10px rgba(var(--schaduw), .5); opacity: 0; transition: opacity .4s; }
+.pop-label b { font-family: var(--kop); font-weight: 800; }
+.pop.geland .pop-label { opacity: 1; }
+.vonk { position: absolute; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9; }
+
+@media (min-width: 960px) {
+  .cover .wrap { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: end; gap: 24px; }
+  .cover-tekst { align-self: center; padding-bottom: 88px; }
+  .cover h1 { font-size: clamp(62px, 6vw, 96px); }
+}
+
+/* Band met pizza's */
+.band { position: relative; z-index: 2; background: var(--paneel); overflow: hidden; padding-block: 26px; }
+.band-rij { display: flex; align-items: center; gap: 40px; width: max-content; animation: band 50s linear infinite; }
+.band:hover .band-rij { animation-play-state: paused; }
+.band .pizza { width: 116px; flex: none; animation: draaien 30s linear infinite; }
+.band .pizza:nth-child(even) { animation-direction: reverse; width: 96px; }
+@keyframes band { to { transform: translateX(-50%); } }
+
+/* Inhoud */
+.inhoud .wrap { display: grid; gap: 36px; }
+.toc-lijst { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--lijn); }
+.toc { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; padding: 14px 4px; border-bottom: 1px solid var(--lijn); text-decoration: none; font-weight: 600; font-size: 17px; transition: padding-left .3s var(--veer), color .2s; }
+.toc i { font: 800 30px/1 var(--kop); font-style: normal; color: var(--accent); letter-spacing: -.04em; }
+.toc::after { content: "→"; color: var(--zacht); transition: transform .3s var(--veer); }
+.toc:hover { padding-left: 12px; }
+.toc:hover::after { transform: translateX(4px); color: var(--ink); }
+@media (min-width: 900px) {
+  .inhoud .wrap { grid-template-columns: .8fr 1.6fr; gap: 64px; }
+  .toc-lijst { grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(6, auto); column-gap: 40px; }
+}
+
+/* Samenvatting */
+.sam .wrap { display: grid; gap: 40px; }
+.sam .kop2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.05; margin-bottom: 22px; }
+.callout { margin-top: 26px; background: var(--vlak); border-left: 5px solid var(--accent); border-radius: 0 18px 18px 0; padding: 20px 22px; }
+.callout .p { color: var(--ink); }
+.opbrengst h3 { font-size: 26px; text-transform: none; }
+.opbrengst > .klein { margin: 4px 0 14px; }
+.yl { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: center; padding: 11px 0; border-top: 1px solid var(--lijn); font-weight: 500; font-size: 15.5px; }
+.yl i { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--op-accent); display: grid; place-items: center; font: 800 15px/1 var(--kop); font-style: normal; }
+@media (min-width: 960px) { .sam .wrap { grid-template-columns: 1.25fr .75fr; gap: 64px; align-items: start; } .opbrengst { position: sticky; top: 100px; } }
+
+/* Foto-panelen */
+.foto-paneel { position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; background: #222 center / cover no-repeat; }
+.mening .wrap, .idee .wrap { display: grid; gap: 40px; }
+.mening h2 { font-size: clamp(28px, 3.3vw, 44px); line-height: 1.08; margin-bottom: 22px; }
+.mening h2 .rood { color: var(--heet); }
+.mening .p.klein-p { font-size: 15px; margin-top: 16px; }
+.stat { margin-top: 28px; display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; background: color-mix(in srgb, var(--accent) 14%, var(--vlak)); border-radius: 24px; padding: 22px 26px; }
+.stat .groot { font: 800 clamp(64px, 7vw, 96px)/.9 var(--kop); color: var(--accent); letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.stat .p { color: var(--ink); font-size: 16px; }
+.stat .bron-r { display: block; margin-top: 6px; font-size: 13px; color: var(--zacht); }
+@media (min-width: 960px) {
+  .mening .wrap { grid-template-columns: .85fr 1.15fr; gap: 64px; align-items: stretch; }
+  .idee .wrap { grid-template-columns: .8fr 1.2fr; gap: 64px; align-items: stretch; }
+}
+.idee .foto-paneel { background-position: center 70%; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; }
+.idee .foto-titel { padding: 30px; text-align: center; }
+.idee .foto-titel div:first-child { font: 800 clamp(34px, 3.4vw, 46px)/1 var(--kop); letter-spacing: -.03em; text-shadow: 0 4px 24px rgba(0,0,0,.35); }
+.idee .foto-titel div:last-child { margin-top: 6px; font-weight: 500; opacity: .92; }
+.idee .foto-voet { padding: 60px 26px 22px; background: linear-gradient(transparent, rgba(40,0,10,.8)); font-size: 13px; line-height: 1.45; }
+.idee .kop2 { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.04; margin-bottom: 20px; }
+.idee h3.sub { font-size: 21px; color: var(--accent); margin: 30px 0 14px; text-transform: none; }
+.raster2 { display: grid; gap: 14px; }
+.raster2 .kaart { padding: 22px; }
+.raster2 h3 { font-size: 19px; text-transform: none; margin-bottom: 8px; }
+.raster2 .p { font-size: 15.5px; }
+@media (min-width: 640px) { .raster2 { grid-template-columns: 1fr 1fr; } }
+
+/* Naartoe */
+.vier { display: grid; gap: 16px; margin-top: 40px; }
+.vier .kaart { display: flex; flex-direction: column; gap: 14px; transition: transform .45s var(--veer), box-shadow .45s; }
+.vier .kaart:hover { transform: translateY(-6px); box-shadow: 0 34px 60px -36px rgba(var(--schaduw), .45); }
+.vier h3 { font-size: 21px; text-transform: none; }
+.vier .p { font-size: 15.5px; }
+@media (min-width: 720px) { .vier { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .vier { grid-template-columns: repeat(4, 1fr); } }
+.donker-band { margin-top: 40px; background: var(--paneel); color: var(--op-paneel); border-radius: 32px; padding: clamp(28px, 4.5vw, 56px); }
+.donker-band .zin { font: 800 clamp(24px, 3vw, 40px)/1.12 var(--kop); letter-spacing: -.03em; text-wrap: balance; }
+.donker-band .zin span { color: var(--accent-licht); }
+
+/* Daan */
+.daan { background: color-mix(in srgb, var(--vlak) 55%, var(--bg)); }
+.daan .wrap { display: grid; gap: 44px; }
+.daan .lead b { color: var(--accent); }
+.daan .kop2, .schaal .kop2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.02; }
+.daan .tekst { display: grid; gap: 16px; align-content: start; }
+.daan .tekst .p + .p { margin-top: 0; }
+.telefoons { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 4px 24px; margin-inline: -4px; scrollbar-width: thin; }
+.mini { scroll-snap-align: center; display: grid; gap: 18px; justify-items: center; }
+.mini-tel { position: relative; width: 250px; height: 560px; border-radius: 44px; background: #070708; padding: 9px; box-shadow: 0 0 0 1.5px #1d1e21, 0 0 0 5px #B8BABF, 0 40px 60px -34px rgba(var(--schaduw), .5); transition: transform .5s var(--veer); }
+.mini:nth-child(2) .mini-tel { transform: translateY(-16px); }
+.mini:hover .mini-tel { transform: translateY(-24px) rotate(-1.5deg); }
+.mini-tel .scherm { border-radius: 36px; }
+.mini-tel .eiland { top: 17px; width: 74px; height: 22px; }
+.mini-tel .scherm::after { width: 90px; height: 4px; bottom: 7px; }
+.mini .status { height: 40px; font-size: 12.5px; padding: 4px 20px 0 28px; }
+.mini .status-r svg { height: 9px; }
+.mini .ig-kop { padding: 2px 12px 8px 8px; gap: 8px; }
+.mini .av { width: 26px; height: 26px; font-size: 9px; }
+.mini .ig-naam { font-size: 13px; }
+.mini .ig-iconen { gap: 12px; } .mini .ig-iconen svg { width: 19px; height: 19px; }
+.mini .ig-draad { position: static; padding: 10px 9px; gap: 3px; }
+.mini .bub { font-size: 11.5px; line-height: 15px; padding: 6px 10px; border-radius: 15px; }
+.mini .bub.in { margin-left: 24px; }
+.mini .bub.in.met-av::before { left: -24px; width: 20px; height: 20px; font-size: 6.5px; line-height: 20px; }
+.mini .opts { margin-left: 24px; gap: 4px; }
+.mini .opt { font-size: 11px; padding: 5px 10px; }
+.mini .pizzakaart { margin-left: 24px; width: 80%; }
+.mini .pizzakaart .n { font-size: 16px; }
+.mini .pizzakaart .s { font-size: 11px; }
+.mini .pagina { position: absolute; transform: none; padding: 44px 11px 26px; gap: 10px; }
+.mini .btn { font-size: 10.5px; padding: 11px 6px; }
+.mini .adres { font-size: 11px; padding: 6px 12px; }
+.mini .ai-regel { font-size: 9.5px; }
+.mini .speel { width: 34px; height: 34px; }
+.mini-bij { display: flex; align-items: baseline; gap: 12px; max-width: 250px; }
+.mini-bij .nr { font: 800 40px/1 var(--kop); color: var(--accent); letter-spacing: -.04em; }
+.mini-bij span:last-child { font-weight: 600; font-size: 16px; line-height: 1.3; }
+@media (min-width: 1180px) {
+  .daan .wrap { grid-template-columns: .62fr 1.38fr; gap: 48px; align-items: center; }
+  .telefoons { overflow: visible; grid-auto-columns: 1fr; }
+}
+
+/* Fases */
+.fases { list-style: none; margin: 44px 0 0; padding: 0; display: grid; gap: 30px; position: relative; }
+.fase { display: grid; grid-template-columns: 52px 1fr; gap: 18px; position: relative; }
+.fase .dot { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: var(--op-accent); display: grid; place-items: center; font: 800 20px/1 var(--kop); position: relative; z-index: 1; }
+.fase.fin .dot { background: var(--heet); color: #fff; }
+.fase h3 { font-size: 24px; text-transform: none; margin: 8px 0 8px; }
+.fase .p { font-size: 15.5px; }
+.fase .q { margin-top: 16px; }
+.fase .q .strip { font-size: 12px; }
+.fases::before { content: ""; position: absolute; left: 26px; top: 26px; bottom: 26px; width: 1px; background: var(--lijn); }
+.fases::after { content: ""; position: absolute; left: 25px; top: 26px; bottom: 26px; width: 3px; border-radius: 2px; background: var(--accent); transform-origin: top; }
+@media (min-width: 960px) {
+  .fases { grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .fase { grid-template-columns: 1fr; gap: 14px; align-content: start; }
+  .fases::before { left: 26px; right: calc((100% - 96px) / 4 - 26px); top: 26px; bottom: auto; width: auto; height: 1px; }
+  .fases::after { left: 26px; right: calc((100% - 96px) / 4 - 26px); top: 25px; bottom: auto; width: auto; height: 3px; transform-origin: left; }
+}
+.tweede { display: flex; flex-wrap: wrap; gap: 18px 26px; align-items: center; }
+.tweede p { font-size: clamp(17px, 1.6vw, 21px); max-width: 60ch; color: var(--op-paneel); }
+
+/* Oplevert */
+.kopr { display: grid; gap: 18px; align-items: end; }
+.kopr .lead { color: var(--zacht); }
+@media (min-width: 900px) { .kopr { grid-template-columns: 1fr auto; } .kopr .lead { text-align: right; max-width: 26ch; } }
+.zeven { display: grid; gap: 14px; margin-top: 40px; }
+.yc { display: flex; flex-direction: column; gap: 10px; padding: 24px; transition: transform .45s var(--veer); }
+.yc:hover { transform: translateY(-5px); }
+.yc .m { font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.yc .t { font: 800 21px/1.15 var(--kop); letter-spacing: -.02em; }
+.yc p { color: var(--zacht); font-size: 15px; }
+.yc.uitgelicht { border-top: 5px solid var(--accent); }
+.yc.finale { background: var(--paneel); color: var(--op-paneel); border-color: transparent; }
+.yc.finale .m { color: var(--accent-licht); }
+.yc.finale .t { font-size: clamp(26px, 2.6vw, 34px); }
+.yc.finale p { color: var(--paneel-zacht); font-size: 16px; max-width: 54ch; }
+@media (min-width: 720px) { .zeven { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .zeven { grid-template-columns: repeat(4, 1fr); } .yc.finale { grid-column: span 2; } }
+
+/* Schaal */
+.schaal .wrap { display: grid; gap: 40px; }
+.schaal .tekst { display: grid; gap: 18px; align-content: start; }
+.bewezen { background: var(--accent); color: var(--op-accent); border-radius: 24px; padding: 24px 26px; display: grid; gap: 8px; margin-top: 10px; }
+.bewezen .h { font: 800 22px/1.1 var(--kop); letter-spacing: -.02em; }
+.zes { display: grid; gap: 14px; }
+.sc { display: flex; flex-direction: column; gap: 10px; padding: 22px; }
+.sc .ico { width: 46px; height: 46px; margin-bottom: 4px; }
+.sc .ico svg { width: 22px; height: 22px; }
+.sc .m { font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--zacht); }
+.sc .t { font: 800 19px/1.15 var(--kop); letter-spacing: -.02em; }
+.sc p { color: var(--zacht); font-size: 14.5px; }
+@media (min-width: 640px) { .zes { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .schaal .wrap { grid-template-columns: .7fr 1.3fr; gap: 56px; } .zes { grid-template-columns: repeat(3, 1fr); } }
+
+/* Landen */
+.landen-rij { display: grid; gap: 18px; margin-top: 40px; align-items: stretch; }
+.land { border-top: 6px solid var(--accent); display: grid; gap: 14px; align-content: start; }
+.land.later { border-top-color: var(--lijn); }
+.land .label { font: 600 12.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.land.later .label { color: var(--zacht); }
+.land .rij { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.cc { display: inline-grid; place-items: center; width: 72px; height: 50px; border-radius: 10px; background: var(--accent); color: var(--op-accent); font: 800 22px/1 var(--kop); }
+.land.later .cc { background: color-mix(in srgb, var(--ink) 8%, var(--vlak)); color: var(--ink); }
+.land .h { font: 800 28px/1 var(--kop); letter-spacing: -.03em; margin-left: 6px; }
+.pijl-svg { display: grid; place-items: center; }
+.pijl-svg svg { width: 44px; height: 44px; transform: rotate(90deg); }
+.inzicht { margin-top: 36px; padding-top: 26px; border-top: 2px solid var(--ink); display: grid; gap: 18px; align-items: center; }
+.inzicht .lead { max-width: 62ch; }
+@media (min-width: 900px) {
+  .landen-rij { grid-template-columns: 1fr auto 1fr; }
+  .pijl-svg svg { transform: none; }
+  .inzicht { grid-template-columns: auto 1fr; gap: 30px; }
+}
+
+/* Samenwerken */
+.drie { display: grid; gap: 16px; margin-top: 40px; align-items: start; }
+.drie h3 { font-size: 23px; text-transform: none; margin-bottom: 14px; }
+.rl { list-style: none; margin: 0; padding: 0; }
+.rl li { position: relative; padding: 11px 0 11px 22px; border-top: 1px solid var(--lijn); font-size: 15.5px; }
+.rl li::before { content: ""; position: absolute; left: 2px; top: 19px; width: 9px; height: 9px; background: var(--accent); transform: rotate(45deg); border-radius: 1.5px; }
+.drie .wij { background: var(--paneel); color: var(--op-paneel); border-color: transparent; }
+.drie .wij .rl li { border-top-color: rgba(255,255,255,.12); }
+@media (min-width: 960px) { .drie { grid-template-columns: 1fr 1.15fr 1fr; } .drie .wij { transform: translateY(-16px); } }
+
+/* Volgende stap */
+.stap { background: var(--paneel); color: var(--op-paneel); overflow: hidden; border-top: 0 !important; }
+.stap .wrap { display: grid; gap: 40px; }
+.stap .kicker { color: var(--accent-licht); }
+.stap h2 { font-size: clamp(48px, 7vw, 96px); line-height: .92; letter-spacing: -.05em; margin-bottom: 26px; }
+.stap h2 span { color: var(--accent-licht); }
+.stap .tekst > p { font-size: clamp(17px, 1.5vw, 20px); max-width: 52ch; color: color-mix(in srgb, var(--op-paneel) 86%, transparent); }
+.contact { margin-top: 34px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.2); display: grid; gap: 18px; }
+.contact .naam { font: 800 24px/1.2 var(--kop); letter-spacing: -.02em; }
+.contact .naam span { color: rgba(255,255,255,.6); font-weight: 500; font-size: 18px; font-family: var(--tekst); letter-spacing: 0; }
+.contact-rij { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px 24px; }
+.contact-rij div div:first-child { font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.55); margin-bottom: 4px; }
+.contact-rij div div:last-child { font-weight: 600; font-size: 15px; overflow-wrap: break-word; user-select: all; }
+.stap .foto-paneel { min-height: 460px; background-position: center 72%; }
+@media (min-width: 1000px) { .stap .wrap { grid-template-columns: 1.4fr .6fr; gap: 56px; align-items: stretch; } }
+
+/* Bronnen */
+.src { list-style: none; margin: 40px 0 0; padding: 0; columns: 1; column-gap: 48px; }
+.src li { break-inside: avoid; display: grid; grid-template-columns: 30px 1fr; gap: 4px 12px; padding: 14px 0; border-top: 1px solid var(--lijn); font-size: 15px; scroll-margin-top: 90px; }
+.src li:target { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.src li i { grid-row: span 2; font: 800 20px/1.1 var(--kop); font-style: normal; color: var(--accent); }
+.src li a { grid-column: 2; font: 400 12.5px/1.4 var(--mono); color: var(--zacht); overflow-wrap: anywhere; }
+.src li a:hover { color: var(--ink); }
+.bronnen .slot-noot { margin-top: 30px; }
+@media (min-width: 900px) { .src { columns: 2; } }
+
+/* Steunkleur */
+.kk { position: fixed; z-index: 50; left: max(12px, env(safe-area-inset-left, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 4px; padding: 5px; background: rgba(17,17,16,.94); color: #F4F4EF; border-radius: 999px; box-shadow: 0 20px 44px -18px rgba(0,0,0,.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.kk-icoon { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: transparent; color: #F4F4EF; cursor: pointer; display: grid; place-items: center; }
+.kk-icoon:hover { background: rgba(255,255,255,.1); }
+.kk-icoon svg { width: 18px; height: 18px; stroke: currentColor; }
+.kk-kleur i { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+.kk-kleuren { position: absolute; left: 0; bottom: calc(100% + 8px); width: min(300px, calc(100vw - 24px)); background: rgba(17,17,16,.96); border-radius: 18px; padding: 12px; display: grid; gap: 10px; box-shadow: 0 20px 44px -18px rgba(0,0,0,.6); }
+.kk-kleuren > span { font: 500 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: #A9A9A1; }
+.kk-knoppen { display: flex; flex-wrap: wrap; gap: 7px; }
+.kk-knoppen button { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,.85); cursor: pointer; padding: 0; }
+.kk-knoppen button[aria-pressed="true"] { outline: 2px solid #fff; outline-offset: 2px; }
+.kk button:focus-visible { outline: 2px solid #8ff; outline-offset: 2px; }
+.kk-open { position: fixed; z-index: 50; left: max(12px, env(safe-area-inset-left, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: 46px; height: 46px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: rgba(17,17,16,.94); display: grid; place-items: center; }
+.kk-open i { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+
+/* Scroll-gedreven opbouw: alleen beweging, de inhoud is altijd zichtbaar */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .opbouw { animation: opbouw linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    .fases::after { animation: lijn linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; }
+    .foto-paneel.zoom { animation: fotoZoom linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  }
+}
+@keyframes opbouw { from { transform: translateY(34px) scale(.985); } }
+@keyframes lijn { from { transform: scale(0); } }
+@keyframes fotoZoom { from { background-size: auto 118%; } to { background-size: auto 100%; } }
+
+/* Intro bij het openen van de pagina */
+@media (prefers-reduced-motion: no-preference) {
+  .intro .balk { animation: navIn .8s var(--zacht-uit) both; }
+  .intro .cover .strip { animation: strip .9s .1s var(--veer) both; }
+  .intro .cover h1 .r > span { animation: regelIn 1s var(--zacht-uit) both; }
+  .intro .cover h1 .r:nth-of-type(1) > span { animation-delay: .18s; }
+  .intro .cover h1 .r:nth-of-type(2) > span { animation-delay: .3s; }
+  .intro .cover h1 .g::before { animation: markeer .8s .8s var(--zacht-uit) both; }
+  .intro .cover .lead { animation: omhoog .9s .5s var(--zacht-uit) both; }
+  .intro .meta > div { animation: omhoog .8s var(--zacht-uit) both; }
+  .intro .meta > div:nth-child(1) { animation-delay: .62s; } .intro .meta > div:nth-child(2) { animation-delay: .7s; }
+  .intro .meta > div:nth-child(3) { animation-delay: .78s; } .intro .meta > div:nth-child(4) { animation-delay: .86s; }
+  .intro .schijf > span { animation: schijfIn 1.3s .15s var(--veer) both; }
+  .intro .houder-in { animation: houderIn 1.4s .3s var(--veer) both; }
+  .intro .p1 > .laag, .intro .p2 > .laag, .intro .story > .laag { animation: zakIn 1s var(--veer) both, dobber 8s 1s ease-in-out infinite; }
+  .intro .p1 > .laag { animation-delay: .85s, 1.85s; } .intro .p2 > .laag { animation-delay: 1s, 2s; } .intro .story > .laag { animation-delay: .95s, 1.95s; }
+  .intro .kruimel > i { animation: kruimelIn 1.1s var(--veer) both; }
+  .intro .k1 > i { animation-delay: .9s; } .intro .k2 > i { animation-delay: 1s; } .intro .k3 > i { animation-delay: 1.05s; } .intro .k4 > i { animation-delay: 1.1s; }
+  .intro .band { animation: bandIn 1.2s .5s var(--zacht-uit) both; }
+  .intro .kk { animation: omhoog .8s 1.5s var(--zacht-uit) both; }
+  .intro:not(.start) :is(.balk, .cover .strip, .cover h1 .r > span, .cover .lead, .meta > div, .schijf > span, .houder-in, .p1 > .laag, .p2 > .laag, .story > .laag, .kruimel > i, .band, .kk) { animation-play-state: paused; }
+  .intro:not(.start) .cover h1 .g::before { animation-play-state: paused; }
+}
+@keyframes navIn { from { opacity: 0; transform: translateY(-14px); } }
+@keyframes strip { from { opacity: 0; transform: skewX(-10deg) rotate(-14deg) scale(1.6); } }
+@keyframes regelIn { from { transform: translateY(108%) rotate(3deg); } }
+@keyframes markeer { from { transform: rotate(-1.2deg) scaleX(0); } }
+@keyframes omhoog { from { opacity: 0; transform: translateY(18px); } }
+@keyframes schijfIn { from { transform: scale(.4); opacity: 0; } }
+@keyframes houderIn { from { transform: translateY(170px) rotate(9deg); opacity: 0; } 40% { opacity: 1; } }
+@keyframes zakIn { from { transform: scale(.3) rotate(-30deg); opacity: 0; } }
+@keyframes kruimelIn { from { transform: translate(var(--kx, 0), var(--ky, 0)) scale(.2) rotate(-90deg); opacity: 0; } }
+@keyframes bandIn { from { transform: translateY(40px); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

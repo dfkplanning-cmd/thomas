@@ -1,0 +1,1416 @@
+<title>De Pizza van Nederland</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap">
+<script>
+  // Intro: de animaties staan klaar maar wachten tot de lettertypes er zijn (of hooguit 1,4 s).
+  (() => {
+    const r = document.documentElement;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    r.classList.add('intro');
+    const start = () => r.classList.add('start');
+    setTimeout(start, 1400);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(start, 60));
+  })();
+</script>
+<style>
+/* Layout: een voorstel als doorlopend toneel. Elke slide uit het deck wordt een eigen set; bovenaan de telefoon in de hand waarin Daan zijn pizza bedenkt. */
+:root {
+  --bg: #F3F3EF;
+  --vlak: #FFFFFF;
+  --ink: #0F0F0E;
+  --zacht: #5C5C56;
+  --lijn: #E1E1DA;
+  --accent: #00B884;
+  --op-accent: #0F0F0E;
+  --heet: #E8412C;
+  --paneel: #121211;
+  --op-paneel: #F3F3EF;
+  --paneel-zacht: #A6A69E;
+  --mouw: color-mix(in srgb, var(--accent) 72%, #0F0F0E);
+  --accent-licht: color-mix(in srgb, var(--accent) 55%, #fff);
+  --schaduw: 15, 15, 14;
+
+  --kop: "Bricolage Grotesque", "Avenir Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --tekst: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --ios: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", "DM Sans", sans-serif;
+
+  --ig-bg: #FFFFFF;
+  --ig-in: #EFEFEF;
+  --ig-tekst: #0A0A0A;
+  --ig-sub: #737373;
+  --ig-rand: #DBDBDB;
+  --ig-veld: #EFEFEF;
+  --ig-blauw: #0095F6;
+  --ig-uit: linear-gradient(160deg, #9B36F5 0%, #6152F7 52%, #3797F0 100%);
+
+  --gutter: max(16px, env(safe-area-inset-left, 0px));
+  --gutter-r: max(16px, env(safe-area-inset-right, 0px));
+  --veer: cubic-bezier(.2, .9, .25, 1.15);
+  --zacht-uit: cubic-bezier(.16, 1, .3, 1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
+    --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
+    --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
+  --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
+  --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(64px + env(safe-area-inset-top, 0px)); }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--tekst); overflow-x: clip; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 40; background: var(--bg); }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--kop); font-weight: 800; letter-spacing: -0.035em; margin: 0; text-wrap: balance; }
+p { margin: 0; text-wrap: pretty; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: var(--gutter); padding-right: var(--gutter-r); }
+@media (min-width: 720px) { :root { --gutter: max(40px, env(safe-area-inset-left, 0px)); --gutter-r: max(40px, env(safe-area-inset-right, 0px)); } }
+
+/* Gedeelde onderdelen */
+.kicker { font: 500 12.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--zacht); display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.kicker::before { content: ""; width: 22px; height: 3px; border-radius: 2px; background: var(--accent); flex: none; }
+.kop2 { font-size: clamp(32px, 4.6vw, 58px); line-height: 1; }
+.lead { font-size: clamp(18px, 1.6vw, 22px); line-height: 1.45; color: var(--ink); }
+.p { font-size: 17px; color: var(--zacht); max-width: 62ch; }
+.p + .p { margin-top: 14px; }
+.klein { font-size: 13.5px; color: var(--zacht); }
+.g { color: var(--accent); }
+sup { font: 600 .62em/0 var(--mono); }
+sup a { text-decoration: none; color: var(--accent); padding: 0 1px; }
+sup a:hover { text-decoration: underline; }
+.strip { display: inline-block; background: var(--heet); color: #fff; padding: 7px 14px 6px; transform: skewX(-10deg) rotate(-2deg); font: 800 15px/1.1 var(--kop); letter-spacing: .02em; text-transform: uppercase; box-shadow: 0 10px 20px -12px rgba(var(--schaduw), .5); }
+.strip > span { display: inline-block; transform: skewX(10deg); }
+.strip.groen { background: var(--accent); color: var(--op-accent); }
+.kaart { background: var(--vlak); border: 1px solid var(--lijn); border-radius: 24px; padding: 26px; }
+.ico { width: 52px; height: 52px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 16%, transparent); display: grid; place-items: center; flex: none; }
+.ico svg { width: 26px; height: 26px; fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.dia { padding-block: clamp(72px, 10vw, 136px); position: relative; }
+.dia + .dia { border-top: 1px solid var(--lijn); }
+.knop { display: inline-flex; align-items: center; gap: 10px; background: var(--ink); color: var(--bg); font: 600 15px/1 var(--tekst); padding: 13px 18px; border-radius: 999px; text-decoration: none; border: 0; cursor: pointer; }
+
+/* Balk bovenaan: de voettekst van de slides, nu vast in beeld */
+.balk { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; transition: background-color .3s, box-shadow .3s; }
+.balk.scroll { background: color-mix(in srgb, var(--bg) 84%, transparent); backdrop-filter: saturate(1.4) blur(14px); -webkit-backdrop-filter: saturate(1.4) blur(14px); box-shadow: 0 1px 0 var(--lijn); }
+.balk .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.balk-merk { display: flex; align-items: center; gap: 10px; text-decoration: none; min-width: 0; }
+.balk-merk svg { width: 26px; height: 28px; flex: none; transition: transform .6s var(--veer); }
+.balk-merk:hover svg { transform: rotate(-12deg) scale(1.06); }
+.balk-merk span { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.balk-merk b { font: 800 19px var(--kop); letter-spacing: -0.035em; margin-right: 4px; }
+.balk-rechts { display: flex; align-items: center; gap: 12px; font: 500 13px var(--mono); }
+.conf { color: var(--heet); text-transform: uppercase; letter-spacing: .08em; font-weight: 500; }
+.balk-nr { min-width: 2ch; text-align: right; font-variant-numeric: tabular-nums; color: var(--zacht); transition: opacity .3s; }
+@media (max-width: 520px) { .balk-merk span span { display: none; } }
+
+/* Cover */
+.cover { padding-block: 0; overflow: clip; }
+.cover .wrap { display: grid; gap: 28px; padding-top: clamp(20px, 4vw, 44px); }
+.cover-tekst { display: grid; gap: 24px; align-content: center; justify-items: start; padding-bottom: 16px; }
+.cover h1 { font-size: clamp(50px, 13vw, 100px); line-height: .88; letter-spacing: -0.055em; font-variation-settings: "opsz" 96; text-transform: none; }
+.cover h1 .r { display: block; overflow: clip; padding-bottom: .1em; margin-bottom: -.1em; }
+.cover h1 .r > span { display: inline-block; }
+.cover h1 br { display: none; }
+.cover h1 .g { color: var(--op-accent); position: relative; z-index: 0; padding: 0 .06em; margin-left: -.06em; }
+.cover h1 .g::before { content: ""; position: absolute; z-index: -1; left: 0; right: 0; top: .14em; bottom: .02em; background: var(--accent); border-radius: .14em; transform: rotate(-1.2deg); transform-origin: left center; }
+.cover .lead { max-width: 30ch; font-size: clamp(19px, 1.8vw, 24px); }
+.meta { width: 100%; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; border-top: 2px solid var(--ink); padding-top: 18px; margin-top: 6px; }
+.meta .klein { font-size: 12.5px; font-family: var(--mono); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.meta div > div:last-child { font-weight: 600; font-size: 15.5px; }
+.meta .rood { color: var(--heet); }
+@media (min-width: 640px) { .meta { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.toneel { position: relative; width: 100%; max-width: 540px; aspect-ratio: 560 / 760; margin-inline: auto; justify-self: center; align-self: end; }
+.toneel-in { position: absolute; left: 0; top: 0; width: 560px; height: 760px; transform-origin: 0 0; transform: scale(var(--s, .62)); }
+.diep { position: absolute; transform: translate3d(calc(var(--px, 0) * var(--d, 0) * 1px), calc(var(--py, 0) * var(--d, 0) * 1px), 0); transition: transform .9s var(--zacht-uit); }
+.schijf { left: 52px; top: 110px; width: 500px; height: 500px; --d: 6; }
+.schijf > span { position: absolute; inset: 0; display: block; }
+.schijf i { position: absolute; inset: 0; border-radius: 50%; }
+.schijf i:nth-child(1) { background: radial-gradient(circle at 38% 32%, color-mix(in srgb, var(--accent) 65%, #fff) 0%, var(--accent) 58%, color-mix(in srgb, var(--accent) 82%, #000) 100%); }
+.schijf i:nth-child(2), .schijf i:nth-child(3) { inset: -46px; border: 1.5px solid color-mix(in srgb, var(--accent) 45%, transparent); animation: ring 4.8s ease-out infinite; }
+.schijf i:nth-child(3) { animation-delay: 2.4s; }
+@keyframes ring { from { transform: scale(.9); opacity: 1; } to { transform: scale(1.18); opacity: 0; } }
+
+/* Ronde pizza uit een foto: de foto wordt zo geschaald dat de pizza precies de cirkel vult */
+.pizza { border-radius: 50%; background-repeat: no-repeat; aspect-ratio: 1; width: 100%; box-shadow: 0 26px 34px -20px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06); }
+.p1 { left: -6px; top: 64px; width: 150px; --d: 18; }
+.p1 .pizza, .p2 .pizza { animation: draaien 40s linear infinite; }
+.p2 { left: 8px; top: 520px; width: 126px; --d: 22; }
+.p2 .pizza { animation-direction: reverse; animation-duration: 52s; }
+.p1 > .laag, .p2 > .laag { display: block; animation: dobber 8s ease-in-out infinite; }
+.p2 > .laag { animation-delay: -4s; }
+@keyframes draaien { to { transform: rotate(360deg); } }
+@keyframes dobber { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+.story { left: 382px; top: 22px; width: 156px; --d: 14; }
+.story > .laag { display: block; animation: dobber 9s -2s ease-in-out infinite; }
+.story-kaart { position: relative; aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden; transform: rotate(7deg); background: #222 center 30% / cover no-repeat; box-shadow: 0 30px 40px -24px rgba(0,0,0,.6); }
+.story-kaart::before { content: ""; position: absolute; inset: 0 0 auto; height: 70px; background: linear-gradient(rgba(0,0,0,.45), transparent); }
+.story-balkjes { position: absolute; left: 8px; right: 8px; top: 8px; display: flex; gap: 3px; z-index: 1; }
+.story-balkjes i { flex: 1; height: 2.5px; border-radius: 2px; background: rgba(255,255,255,.45); overflow: hidden; position: relative; }
+.story-balkjes i:first-child::after { content: ""; position: absolute; inset: 0; background: #fff; transform-origin: left; animation: storyBalk 5s linear infinite; }
+.story-balkjes i:nth-child(1)::after { animation-delay: 0s; }
+@keyframes storyBalk { from { transform: scaleX(0); } }
+.story-av { position: absolute; left: 8px; top: 18px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid transparent; background: linear-gradient(#fff, #fff) padding-box, linear-gradient(45deg, #FEDA75, #FA7E1E, #D62976, #962FBF) border-box; z-index: 1; }
+
+.kruimel { --d: 26; }
+.kruimel > i { display: block; }
+.kruimel span { display: block; animation: kruimel 9s ease-in-out infinite; }
+.kruimel svg { width: 100%; display: block; filter: drop-shadow(0 6px 6px rgba(var(--schaduw), .25)); }
+.k1 { left: 300px; top: 4px; width: 34px; } .k1 span { animation-delay: -1s; }
+.k2 { left: 512px; top: 380px; width: 30px; } .k2 span { animation-delay: -4s; }
+.k3 { left: 70px; top: 330px; width: 36px; --d: 34; } .k3 span { animation-delay: -2s; }
+.k4 { left: 500px; top: 560px; width: 38px; } .k4 span { animation-delay: -6s; }
+@keyframes kruimel { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-14px) rotate(24deg); } }
+
+.houder-diep { left: 150px; top: 22px; width: 300px; height: 620px; --d: 5; z-index: 3; }
+.houder-in { position: absolute; inset: 0; }
+.houder { position: absolute; inset: 0; transform-origin: 75% 92%; transform: rotate(-3deg); }
+.houder-zweef { position: absolute; inset: 0; animation: zweven 7s ease-in-out infinite; }
+@keyframes zweven { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+/* Telefoon */
+.tel { position: absolute; inset: 0; border-radius: 54px; background: #070708; padding: 11px; isolation: isolate;
+  box-shadow: 0 0 0 1.5px #1d1e21, 0 50px 80px -34px rgba(var(--schaduw), .55), 0 22px 34px -20px rgba(var(--schaduw), .5); }
+.tel::before { content: ""; position: absolute; inset: -5px; border-radius: 59px; z-index: -1;
+  background: linear-gradient(150deg, #E4E5E8 0%, #8A8D93 18%, #C9CBD0 34%, #6C6F75 52%, #D7D8DC 70%, #7A7D83 86%, #BFC1C6 100%); }
+.tel::after { content: ""; position: absolute; inset: -5px; border-radius: 59px; z-index: -1; box-shadow: inset 0 0 0 1px rgba(255,255,255,.5), inset 0 0 0 2.5px rgba(0,0,0,.25); }
+.tel-knop { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(90deg, #6d7076, #d3d4d8 50%, #84878d); }
+.k-actie { left: -8px; top: 118px; height: 30px; } .k-op { left: -8px; top: 172px; height: 54px; } .k-neer { left: -8px; top: 238px; height: 54px; }
+.k-aan { right: -8px; top: 196px; height: 86px; }
+.eiland { position: absolute; top: 22px; left: 50%; width: 94px; height: 28px; border-radius: 20px; background: #000; transform: translateX(-50%); z-index: 5; }
+.eiland::after { content: ""; position: absolute; right: 14px; top: 9px; width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #2b3550, #05060a 70%); }
+.glas { position: absolute; inset: 11px; border-radius: 43px; pointer-events: none; z-index: 6; background: linear-gradient(118deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,.04) 24%, rgba(255,255,255,0) 38%); }
+.scherm { position: relative; height: 100%; border-radius: 43px; overflow: hidden; background: var(--ig-bg); color: var(--ig-tekst); font-family: var(--ios); isolation: isolate; }
+.scherm::after { content: ""; position: absolute; left: 50%; bottom: 8px; width: 112px; height: 4.5px; border-radius: 3px; background: var(--ig-tekst); opacity: .85; transform: translateX(-50%); z-index: 6; }
+.app { position: absolute; inset: 0; display: flex; flex-direction: column; transition: transform .7s var(--zacht-uit), filter .7s; }
+.status { height: 50px; flex: none; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 34px; font: 600 15px/1 var(--ios); letter-spacing: -.01em; }
+.status-r { display: flex; gap: 5px; align-items: center; }
+.status-r svg { height: 11px; width: auto; fill: currentColor; }
+
+/* Instagram-DM */
+.ig-kop { flex: none; display: flex; align-items: center; gap: 10px; padding: 4px 14px 10px 10px; border-bottom: .5px solid var(--ig-rand); }
+.ig-kop .terug svg { width: 11px; height: 19px; display: block; stroke: currentColor; }
+.av { width: 30px; height: 30px; border-radius: 50%; flex: none; display: grid; place-items: center; background: #009A44; color: #fff; font: 800 10.5px/1 var(--kop); letter-spacing: .02em; }
+.ig-naam { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.ig-naam svg { width: 13px; height: 13px; flex: none; }
+.ig-iconen { display: flex; gap: 18px; }
+.ig-iconen svg { width: 23px; height: 23px; display: block; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ig-chat { position: relative; flex: 1; overflow: hidden; }
+.ig-draad { position: absolute; left: 0; right: 0; top: 0; display: flex; flex-direction: column; gap: 4px; padding: 12px 12px 12px 10px; transition: transform .7s var(--zacht-uit); }
+.bub { max-width: 76%; font-size: 14.4px; line-height: 19px; padding: 9px 13px; border-radius: 20px; position: relative; overflow-wrap: anywhere; }
+.bub.in { align-self: flex-start; background: var(--ig-in); color: var(--ig-tekst); margin-left: 30px; }
+.bub.in.met-av::before { content: "NYP"; position: absolute; left: -30px; bottom: 0; width: 24px; height: 24px; border-radius: 50%; background: #009A44; color: #fff; font: 800 8px/24px var(--kop); text-align: center; }
+.bub.uit { align-self: flex-end; background: var(--ig-uit); color: #fff; }
+.bub + .bub.uit, .opts + .bub.uit { margin-top: 6px; }
+.bub.uit + .bub.in, .opts + .bub.in { margin-top: 8px; }
+.opts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin: 6px 0 2px 30px; }
+.opt { font-size: 13.5px; font-weight: 600; color: var(--ig-blauw); border: 1px solid var(--ig-rand); background: var(--ig-bg); border-radius: 999px; padding: 7px 13px; transition: background-color .2s, transform .25s var(--veer); }
+.opt.gekozen { background: color-mix(in srgb, var(--ig-blauw) 14%, var(--ig-bg)); transform: scale(.94); }
+.opts.weg { animation: optsWeg .35s ease-in forwards; }
+@keyframes optsWeg { to { opacity: 0; transform: translateY(6px); } }
+.pizzakaart { position: relative; align-self: flex-start; margin: 4px 0 0 30px; width: 76%; aspect-ratio: 200 / 236; border-radius: 18px; overflow: hidden; background: #5d0616; color: #fff; }
+.pizzakaart::after { content: ""; position: absolute; inset: 0; background: linear-gradient(rgba(40,0,10,.55), transparent 42%); pointer-events: none; }
+.pizzakaart .t { position: absolute; left: 14px; right: 14px; top: 13px; z-index: 1; }
+.pizzakaart .n { font: 800 19px/1 var(--kop); letter-spacing: -.01em; }
+.pizzakaart .s { font-size: 12.5px; opacity: .9; margin-top: 3px; }
+.pizzakaart .gloed { position: absolute; inset: 0; z-index: 2; background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.7) 50%, transparent 70%); transform: translateX(-120%); }
+.pizzakaart .maak { position: absolute; left: 50%; top: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; z-index: 2; opacity: 0; transition: opacity .3s;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2c.6 4.6 2.4 6.9 7 8-4.6 1.1-6.4 3.4-7 8-.6-4.6-2.4-6.9-7-8 4.6-1.1 6.4-3.4 7-8zM19 15c.3 1.8 1 2.7 2.8 3-1.8.3-2.5 1.2-2.8 3-.3-1.8-1-2.7-2.8-3 1.8-.3 2.5-1.2 2.8-3z' fill='%23ffffff'/%3E%3C/svg%3E") center/contain no-repeat; }
+.pizzakaart .foto { position: absolute; inset: 0; background: var(--img) center 65% / cover no-repeat; transition: opacity .6s, transform 1s var(--veer), filter .7s; }
+.pizzakaart.genereren { background-color: color-mix(in srgb, var(--ig-in) 80%, var(--ig-sub)); }
+.pizzakaart.genereren .foto { opacity: 0; transform: scale(1.25); filter: blur(12px); }
+.pizzakaart.genereren .t { opacity: 0; transform: translateY(-8px); }
+.pizzakaart .t { transition: opacity .5s .45s, transform .7s .45s var(--veer); }
+.pizzakaart.genereren .maak { opacity: 1; animation: maak 1.1s ease-in-out infinite; }
+.pizzakaart.genereren .gloed { animation: gloed 1.2s ease-in-out infinite; }
+.pizzakaart.genereren::after { opacity: 0; }
+@keyframes maak { 50% { transform: scale(.75) rotate(20deg); } }
+@keyframes gloed { to { transform: translateX(120%); } }
+.typen { align-self: flex-start; margin-left: 30px; background: var(--ig-in); border-radius: 20px; padding: 12px 14px; display: flex; gap: 4px; }
+.typen i { width: 7px; height: 7px; border-radius: 50%; background: var(--ig-sub); animation: stip 1.2s infinite; }
+.typen i:nth-child(2) { animation-delay: .15s; } .typen i:nth-child(3) { animation-delay: .3s; }
+@keyframes stip { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-4px); opacity: 1; } }
+.in-anim { animation: berichtIn .5s var(--zacht-uit) both; transform-origin: left bottom; }
+.bub.uit.in-anim { animation: berichtUit .45s var(--veer) both; transform-origin: right bottom; }
+@keyframes berichtIn { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+@keyframes berichtUit { from { opacity: 0; transform: translateY(10px) scale(.7); } }
+
+.ig-invoer { flex: none; display: flex; align-items: center; gap: 8px; margin: 6px 10px 28px; padding: 5px 6px 5px 5px; border-radius: 24px; background: var(--ig-veld); }
+.ig-cam { width: 32px; height: 32px; border-radius: 50%; background: var(--ig-blauw); display: grid; place-items: center; flex: none; }
+.ig-cam svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ig-veld { flex: 1; min-width: 0; font-size: 14.4px; color: var(--ig-sub); white-space: nowrap; overflow: hidden; display: flex; align-items: center; }
+.ig-veld .getypt { color: var(--ig-tekst); }
+.ig-veld .caret { width: 1.6px; height: 18px; background: var(--ig-blauw); margin-left: 1px; opacity: 0; }
+.ig-veld.actief .caret { opacity: 1; animation: knipper 1s steps(1) infinite; }
+.ig-veld.actief .plaats { display: none; }
+@keyframes knipper { 50% { opacity: 0; } }
+.ig-rechts { display: flex; gap: 12px; padding-right: 6px; align-items: center; }
+.ig-rechts svg { width: 21px; height: 21px; display: block; fill: none; stroke: var(--ig-tekst); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.ig-stuur { display: none; color: var(--ig-blauw); font-weight: 600; font-size: 14.5px; padding: 0 8px; }
+.ig-invoer.tekst .ig-rechts { display: none; }
+.ig-invoer.tekst .ig-stuur { display: block; }
+.ig-stuur.tik { animation: tik .35s var(--veer); }
+@keyframes tik { 50% { transform: scale(.85); } }
+
+/* Persoonlijke pagina (derde scherm) */
+.pagina { position: absolute; inset: 0; background: #000; color: #fff; display: flex; flex-direction: column; padding: 50px 14px 30px; gap: 12px; transform: translateX(100%); transition: transform .7s var(--zacht-uit); }
+.scherm.op-pagina .pagina { transform: translateX(0); }
+.scherm.op-pagina .app { transform: translateX(-30%); filter: brightness(.5); }
+.pagina .adres { align-self: center; font: 500 12.5px/1 var(--ios); color: #bbb; background: #1c1c1e; border-radius: 10px; padding: 8px 14px; display: flex; gap: 6px; align-items: center; }
+.pagina .adres svg { width: 11px; height: 11px; fill: #bbb; }
+.pagina .pizzakaart { margin: 0; width: 100%; aspect-ratio: auto; flex: 1; min-height: 0; border-radius: 16px; }
+.pagina .pizzakaart .foto { transform-origin: 50% 60%; }
+.scherm.op-pagina .pagina .pizzakaart .foto { animation: kenburns 7s ease-out both; }
+@keyframes kenburns { from { transform: scale(1.02); } to { transform: scale(1.16) rotate(4deg); } }
+.speel { position: absolute; right: 12px; bottom: 12px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; background: #fff; display: grid; place-items: center; }
+.speel svg { margin-left: 2px; }
+.voortgang { position: absolute; left: 12px; right: 62px; bottom: 30px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.35); z-index: 2; overflow: hidden; }
+.voortgang i { position: absolute; inset: 0; background: #fff; transform-origin: left; transform: scaleX(0); }
+.scherm.op-pagina .voortgang i { animation: voortgang 7s linear both; }
+@keyframes voortgang { to { transform: scaleX(1); } }
+.knoppen { display: grid; gap: 8px; }
+.btn { display: block; text-align: center; font: 800 12.5px/1.1 var(--kop); text-transform: uppercase; letter-spacing: .01em; padding: 14px 8px; white-space: nowrap; border-radius: 12px; background: #fff; color: #111; position: relative; overflow: hidden; transition: transform .2s var(--veer); }
+.btn.g { background: #009A44; color: #fff; }
+.btn.ingedrukt { transform: scale(.96); filter: brightness(.9); }
+.ai-regel { text-align: center; font-size: 10.5px; color: #888; }
+
+.rimpel { position: absolute; width: 46px; height: 46px; margin: -23px 0 0 -23px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.7), rgba(255,255,255,0) 70%); pointer-events: none; z-index: 7; animation: rimpel .6s ease-out forwards; }
+@keyframes rimpel { from { transform: scale(.3); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+.hand { position: absolute; left: -100px; top: -40px; width: 560px; height: 820px; overflow: visible; pointer-events: none; z-index: 8; }
+
+.pop { position: absolute; left: 0; top: 0; width: 220px; z-index: 9; pointer-events: none; opacity: 0; transform-origin: 0 0; }
+.pop .pizza { box-shadow: 0 34px 40px -22px rgba(0,0,0,.6); }
+.pop-label { position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%) rotate(-3deg); white-space: nowrap; background: var(--ink); color: var(--bg); font: 600 13px/1 var(--tekst); padding: 9px 13px; border-radius: 999px; box-shadow: 0 10px 20px -10px rgba(var(--schaduw), .5); opacity: 0; transition: opacity .4s; }
+.pop-label b { font-family: var(--kop); font-weight: 800; }
+.pop.geland .pop-label { opacity: 1; }
+.vonk { position: absolute; width: 10px; height: 10px; margin: -5px; border-radius: 50%; background: var(--accent); pointer-events: none; z-index: 9; }
+
+@media (min-width: 960px) {
+  .cover .wrap { grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); align-items: end; gap: 24px; }
+  .cover-tekst { align-self: center; padding-bottom: 88px; }
+  .cover h1 { font-size: clamp(62px, 6vw, 96px); }
+}
+
+/* Band met pizza's */
+.band { position: relative; z-index: 2; background: var(--paneel); overflow: hidden; padding-block: 26px; }
+.band-rij { display: flex; align-items: center; gap: 40px; width: max-content; animation: band 50s linear infinite; }
+.band:hover .band-rij { animation-play-state: paused; }
+.band .pizza { width: 116px; flex: none; animation: draaien 30s linear infinite; }
+.band .pizza:nth-child(even) { animation-direction: reverse; width: 96px; }
+@keyframes band { to { transform: translateX(-50%); } }
+
+/* Inhoud */
+.inhoud .wrap { display: grid; gap: 36px; }
+.toc-lijst { display: grid; grid-template-columns: 1fr; border-top: 1px solid var(--lijn); }
+.toc { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; padding: 14px 4px; border-bottom: 1px solid var(--lijn); text-decoration: none; font-weight: 600; font-size: 17px; transition: padding-left .3s var(--veer), color .2s; }
+.toc i { font: 800 30px/1 var(--kop); font-style: normal; color: var(--accent); letter-spacing: -.04em; }
+.toc::after { content: "→"; color: var(--zacht); transition: transform .3s var(--veer); }
+.toc:hover { padding-left: 12px; }
+.toc:hover::after { transform: translateX(4px); color: var(--ink); }
+@media (min-width: 900px) {
+  .inhoud .wrap { grid-template-columns: .8fr 1.6fr; gap: 64px; }
+  .toc-lijst { grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(6, auto); column-gap: 40px; }
+}
+
+/* Samenvatting */
+.sam .wrap { display: grid; gap: 40px; }
+.sam .kop2 { font-size: clamp(30px, 3.6vw, 46px); line-height: 1.05; margin-bottom: 22px; }
+.callout { margin-top: 26px; background: var(--vlak); border-left: 5px solid var(--accent); border-radius: 0 18px 18px 0; padding: 20px 22px; }
+.callout .p { color: var(--ink); }
+.opbrengst h3 { font-size: 26px; text-transform: none; }
+.opbrengst > .klein { margin: 4px 0 14px; }
+.yl { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: center; padding: 11px 0; border-top: 1px solid var(--lijn); font-weight: 500; font-size: 15.5px; }
+.yl i { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--op-accent); display: grid; place-items: center; font: 800 15px/1 var(--kop); font-style: normal; }
+@media (min-width: 960px) { .sam .wrap { grid-template-columns: 1.25fr .75fr; gap: 64px; align-items: start; } .opbrengst { position: sticky; top: 100px; } }
+
+/* Foto-panelen */
+.foto-paneel { position: relative; border-radius: 32px; overflow: hidden; min-height: 420px; background: #222 center / cover no-repeat; }
+.mening .wrap, .idee .wrap { display: grid; gap: 40px; }
+.mening h2 { font-size: clamp(28px, 3.3vw, 44px); line-height: 1.08; margin-bottom: 22px; }
+.mening h2 .rood { color: var(--heet); }
+.mening .p.klein-p { font-size: 15px; margin-top: 16px; }
+.stat { margin-top: 28px; display: grid; grid-template-columns: auto 1fr; gap: 22px; align-items: center; background: color-mix(in srgb, var(--accent) 14%, var(--vlak)); border-radius: 24px; padding: 22px 26px; }
+.stat .groot { font: 800 clamp(64px, 7vw, 96px)/.9 var(--kop); color: var(--accent); letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.stat .p { color: var(--ink); font-size: 16px; }
+.stat .bron-r { display: block; margin-top: 6px; font-size: 13px; color: var(--zacht); }
+@media (min-width: 960px) {
+  .mening .wrap { grid-template-columns: .85fr 1.15fr; gap: 64px; align-items: stretch; }
+  .idee .wrap { grid-template-columns: .8fr 1.2fr; gap: 64px; align-items: stretch; }
+}
+.idee .foto-paneel { background-position: center 70%; min-height: 520px; display: flex; flex-direction: column; justify-content: space-between; color: #fff; }
+.idee .foto-titel { padding: 30px; text-align: center; }
+.idee .foto-titel div:first-child { font: 800 clamp(34px, 3.4vw, 46px)/1 var(--kop); letter-spacing: -.03em; text-shadow: 0 4px 24px rgba(0,0,0,.35); }
+.idee .foto-titel div:last-child { margin-top: 6px; font-weight: 500; opacity: .92; }
+.idee .foto-voet { padding: 60px 26px 22px; background: linear-gradient(transparent, rgba(40,0,10,.8)); font-size: 13px; line-height: 1.45; }
+.idee .kop2 { font-size: clamp(30px, 3.6vw, 48px); line-height: 1.04; margin-bottom: 20px; }
+.idee h3.sub { font-size: 21px; color: var(--accent); margin: 30px 0 14px; text-transform: none; }
+.raster2 { display: grid; gap: 14px; }
+.raster2 .kaart { padding: 22px; }
+.raster2 h3 { font-size: 19px; text-transform: none; margin-bottom: 8px; }
+.raster2 .p { font-size: 15.5px; }
+@media (min-width: 640px) { .raster2 { grid-template-columns: 1fr 1fr; } }
+
+/* Naartoe */
+.vier { display: grid; gap: 16px; margin-top: 40px; }
+.vier .kaart { display: flex; flex-direction: column; gap: 14px; transition: transform .45s var(--veer), box-shadow .45s; }
+.vier .kaart:hover { transform: translateY(-6px); box-shadow: 0 34px 60px -36px rgba(var(--schaduw), .45); }
+.vier h3 { font-size: 21px; text-transform: none; }
+.vier .p { font-size: 15.5px; }
+@media (min-width: 720px) { .vier { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .vier { grid-template-columns: repeat(4, 1fr); } }
+.donker-band { margin-top: 40px; background: var(--paneel); color: var(--op-paneel); border-radius: 32px; padding: clamp(28px, 4.5vw, 56px); }
+.donker-band .zin { font: 800 clamp(24px, 3vw, 40px)/1.12 var(--kop); letter-spacing: -.03em; text-wrap: balance; }
+.donker-band .zin span { color: var(--accent-licht); }
+
+/* Daan */
+.daan { background: color-mix(in srgb, var(--vlak) 55%, var(--bg)); }
+.daan .wrap { display: grid; gap: 44px; }
+.daan .lead b { color: var(--accent); }
+.daan .kop2, .schaal .kop2 { font-size: clamp(32px, 3.4vw, 48px); line-height: 1.02; }
+.daan .tekst { display: grid; gap: 16px; align-content: start; }
+.daan .tekst .p + .p { margin-top: 0; }
+.telefoons { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(250px, 1fr); gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 4px 24px; margin-inline: -4px; scrollbar-width: thin; }
+.mini { scroll-snap-align: center; display: grid; gap: 18px; justify-items: center; }
+.mini-tel { position: relative; width: 250px; height: 560px; border-radius: 44px; background: #070708; padding: 9px; box-shadow: 0 0 0 1.5px #1d1e21, 0 0 0 5px #B8BABF, 0 40px 60px -34px rgba(var(--schaduw), .5); transition: transform .5s var(--veer); }
+.mini:nth-child(2) .mini-tel { transform: translateY(-16px); }
+.mini:hover .mini-tel { transform: translateY(-24px) rotate(-1.5deg); }
+.mini-tel .scherm { border-radius: 36px; }
+.mini-tel .eiland { top: 17px; width: 74px; height: 22px; }
+.mini-tel .scherm::after { width: 90px; height: 4px; bottom: 7px; }
+.mini .status { height: 40px; font-size: 12.5px; padding: 4px 20px 0 28px; }
+.mini .status-r svg { height: 9px; }
+.mini .ig-kop { padding: 2px 12px 8px 8px; gap: 8px; }
+.mini .av { width: 26px; height: 26px; font-size: 9px; }
+.mini .ig-naam { font-size: 13px; }
+.mini .ig-iconen { gap: 12px; } .mini .ig-iconen svg { width: 19px; height: 19px; }
+.mini .ig-draad { position: static; padding: 10px 9px; gap: 3px; }
+.mini .bub { font-size: 11.5px; line-height: 15px; padding: 6px 10px; border-radius: 15px; }
+.mini .bub.in { margin-left: 24px; }
+.mini .bub.in.met-av::before { left: -24px; width: 20px; height: 20px; font-size: 6.5px; line-height: 20px; }
+.mini .opts { margin-left: 24px; gap: 4px; }
+.mini .opt { font-size: 11px; padding: 5px 10px; }
+.mini .pizzakaart { margin-left: 24px; width: 80%; }
+.mini .pizzakaart .n { font-size: 16px; }
+.mini .pizzakaart .s { font-size: 11px; }
+.mini .pagina { position: absolute; transform: none; padding: 44px 11px 26px; gap: 10px; }
+.mini .btn { font-size: 10.5px; padding: 11px 6px; }
+.mini .adres { font-size: 11px; padding: 6px 12px; }
+.mini .ai-regel { font-size: 9.5px; }
+.mini .speel { width: 34px; height: 34px; }
+.mini-bij { display: flex; align-items: baseline; gap: 12px; max-width: 250px; }
+.mini-bij .nr { font: 800 40px/1 var(--kop); color: var(--accent); letter-spacing: -.04em; }
+.mini-bij span:last-child { font-weight: 600; font-size: 16px; line-height: 1.3; }
+@media (min-width: 1180px) {
+  .daan .wrap { grid-template-columns: .62fr 1.38fr; gap: 48px; align-items: center; }
+  .telefoons { overflow: visible; grid-auto-columns: 1fr; }
+}
+
+/* Fases */
+.fases { list-style: none; margin: 44px 0 0; padding: 0; display: grid; gap: 30px; position: relative; }
+.fase { display: grid; grid-template-columns: 52px 1fr; gap: 18px; position: relative; }
+.fase .dot { width: 52px; height: 52px; border-radius: 50%; background: var(--accent); color: var(--op-accent); display: grid; place-items: center; font: 800 20px/1 var(--kop); position: relative; z-index: 1; }
+.fase.fin .dot { background: var(--heet); color: #fff; }
+.fase h3 { font-size: 24px; text-transform: none; margin: 8px 0 8px; }
+.fase .p { font-size: 15.5px; }
+.fase .q { margin-top: 16px; }
+.fase .q .strip { font-size: 12px; }
+.fases::before { content: ""; position: absolute; left: 26px; top: 26px; bottom: 26px; width: 1px; background: var(--lijn); }
+.fases::after { content: ""; position: absolute; left: 25px; top: 26px; bottom: 26px; width: 3px; border-radius: 2px; background: var(--accent); transform-origin: top; }
+@media (min-width: 960px) {
+  .fases { grid-template-columns: repeat(4, 1fr); gap: 32px; }
+  .fase { grid-template-columns: 1fr; gap: 14px; align-content: start; }
+  .fases::before { left: 26px; right: calc((100% - 96px) / 4 - 26px); top: 26px; bottom: auto; width: auto; height: 1px; }
+  .fases::after { left: 26px; right: calc((100% - 96px) / 4 - 26px); top: 25px; bottom: auto; width: auto; height: 3px; transform-origin: left; }
+}
+.tweede { display: flex; flex-wrap: wrap; gap: 18px 26px; align-items: center; }
+.tweede p { font-size: clamp(17px, 1.6vw, 21px); max-width: 60ch; color: var(--op-paneel); }
+
+/* Oplevert */
+.kopr { display: grid; gap: 18px; align-items: end; }
+.kopr .lead { color: var(--zacht); }
+@media (min-width: 900px) { .kopr { grid-template-columns: 1fr auto; } .kopr .lead { text-align: right; max-width: 26ch; } }
+.zeven { display: grid; gap: 14px; margin-top: 40px; }
+.yc { display: flex; flex-direction: column; gap: 10px; padding: 24px; transition: transform .45s var(--veer); }
+.yc:hover { transform: translateY(-5px); }
+.yc .m { font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.yc .t { font: 800 21px/1.15 var(--kop); letter-spacing: -.02em; }
+.yc p { color: var(--zacht); font-size: 15px; }
+.yc.uitgelicht { border-top: 5px solid var(--accent); }
+.yc.finale { background: var(--paneel); color: var(--op-paneel); border-color: transparent; }
+.yc.finale .m { color: var(--accent-licht); }
+.yc.finale .t { font-size: clamp(26px, 2.6vw, 34px); }
+.yc.finale p { color: var(--paneel-zacht); font-size: 16px; max-width: 54ch; }
+@media (min-width: 720px) { .zeven { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 1100px) { .zeven { grid-template-columns: repeat(4, 1fr); } .yc.finale { grid-column: span 2; } }
+
+/* Schaal */
+.schaal .wrap { display: grid; gap: 40px; }
+.schaal .tekst { display: grid; gap: 18px; align-content: start; }
+.bewezen { background: var(--accent); color: var(--op-accent); border-radius: 24px; padding: 24px 26px; display: grid; gap: 8px; margin-top: 10px; }
+.bewezen .h { font: 800 22px/1.1 var(--kop); letter-spacing: -.02em; }
+.zes { display: grid; gap: 14px; }
+.sc { display: flex; flex-direction: column; gap: 10px; padding: 22px; }
+.sc .ico { width: 46px; height: 46px; margin-bottom: 4px; }
+.sc .ico svg { width: 22px; height: 22px; }
+.sc .m { font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--zacht); }
+.sc .t { font: 800 19px/1.15 var(--kop); letter-spacing: -.02em; }
+.sc p { color: var(--zacht); font-size: 14.5px; }
+@media (min-width: 640px) { .zes { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .schaal .wrap { grid-template-columns: .7fr 1.3fr; gap: 56px; } .zes { grid-template-columns: repeat(3, 1fr); } }
+
+/* Landen */
+.landen-rij { display: grid; gap: 18px; margin-top: 40px; align-items: stretch; }
+.land { border-top: 6px solid var(--accent); display: grid; gap: 14px; align-content: start; }
+.land.later { border-top-color: var(--lijn); }
+.land .label { font: 600 12.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.land.later .label { color: var(--zacht); }
+.land .rij { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.cc { display: inline-grid; place-items: center; width: 72px; height: 50px; border-radius: 10px; background: var(--accent); color: var(--op-accent); font: 800 22px/1 var(--kop); }
+.land.later .cc { background: color-mix(in srgb, var(--ink) 8%, var(--vlak)); color: var(--ink); }
+.land .h { font: 800 28px/1 var(--kop); letter-spacing: -.03em; margin-left: 6px; }
+.pijl-svg { display: grid; place-items: center; }
+.pijl-svg svg { width: 44px; height: 44px; transform: rotate(90deg); }
+.inzicht { margin-top: 36px; padding-top: 26px; border-top: 2px solid var(--ink); display: grid; gap: 18px; align-items: center; }
+.inzicht .lead { max-width: 62ch; }
+@media (min-width: 900px) {
+  .landen-rij { grid-template-columns: 1fr auto 1fr; }
+  .pijl-svg svg { transform: none; }
+  .inzicht { grid-template-columns: auto 1fr; gap: 30px; }
+}
+
+/* Samenwerken */
+.drie { display: grid; gap: 16px; margin-top: 40px; align-items: start; }
+.drie h3 { font-size: 23px; text-transform: none; margin-bottom: 14px; }
+.rl { list-style: none; margin: 0; padding: 0; }
+.rl li { position: relative; padding: 11px 0 11px 22px; border-top: 1px solid var(--lijn); font-size: 15.5px; }
+.rl li::before { content: ""; position: absolute; left: 2px; top: 19px; width: 9px; height: 9px; background: var(--accent); transform: rotate(45deg); border-radius: 1.5px; }
+.drie .wij { background: var(--paneel); color: var(--op-paneel); border-color: transparent; }
+.drie .wij .rl li { border-top-color: rgba(255,255,255,.12); }
+@media (min-width: 960px) { .drie { grid-template-columns: 1fr 1.15fr 1fr; } .drie .wij { transform: translateY(-16px); } }
+
+/* Volgende stap */
+.stap { background: var(--paneel); color: var(--op-paneel); overflow: hidden; border-top: 0 !important; }
+.stap .wrap { display: grid; gap: 40px; }
+.stap .kicker { color: var(--accent-licht); }
+.stap h2 { font-size: clamp(48px, 7vw, 96px); line-height: .92; letter-spacing: -.05em; margin-bottom: 26px; }
+.stap h2 span { color: var(--accent-licht); }
+.stap .tekst > p { font-size: clamp(17px, 1.5vw, 20px); max-width: 52ch; color: color-mix(in srgb, var(--op-paneel) 86%, transparent); }
+.contact { margin-top: 34px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,.2); display: grid; gap: 18px; }
+.contact .naam { font: 800 24px/1.2 var(--kop); letter-spacing: -.02em; }
+.contact .naam span { color: rgba(255,255,255,.6); font-weight: 500; font-size: 18px; font-family: var(--tekst); letter-spacing: 0; }
+.contact-rij { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px 24px; }
+.contact-rij div div:first-child { font: 500 11.5px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,.55); margin-bottom: 4px; }
+.contact-rij div div:last-child { font-weight: 600; font-size: 15px; overflow-wrap: break-word; user-select: all; }
+.stap .foto-paneel { min-height: 460px; background-position: center 72%; }
+@media (min-width: 1000px) { .stap .wrap { grid-template-columns: 1.4fr .6fr; gap: 56px; align-items: stretch; } }
+
+/* Bronnen */
+.src { list-style: none; margin: 40px 0 0; padding: 0; columns: 1; column-gap: 48px; }
+.src li { break-inside: avoid; display: grid; grid-template-columns: 30px 1fr; gap: 4px 12px; padding: 14px 0; border-top: 1px solid var(--lijn); font-size: 15px; scroll-margin-top: 90px; }
+.src li:target { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.src li i { grid-row: span 2; font: 800 20px/1.1 var(--kop); font-style: normal; color: var(--accent); }
+.src li a { grid-column: 2; font: 400 12.5px/1.4 var(--mono); color: var(--zacht); overflow-wrap: anywhere; }
+.src li a:hover { color: var(--ink); }
+.bronnen .slot-noot { margin-top: 30px; }
+@media (min-width: 900px) { .src { columns: 2; } }
+
+/* Steunkleur */
+.kk { position: fixed; z-index: 50; left: max(12px, env(safe-area-inset-left, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 4px; padding: 5px; background: rgba(17,17,16,.94); color: #F4F4EF; border-radius: 999px; box-shadow: 0 20px 44px -18px rgba(0,0,0,.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.kk-icoon { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: transparent; color: #F4F4EF; cursor: pointer; display: grid; place-items: center; }
+.kk-icoon:hover { background: rgba(255,255,255,.1); }
+.kk-icoon svg { width: 18px; height: 18px; stroke: currentColor; }
+.kk-kleur i { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+.kk-kleuren { position: absolute; left: 0; bottom: calc(100% + 8px); width: min(300px, calc(100vw - 24px)); background: rgba(17,17,16,.96); border-radius: 18px; padding: 12px; display: grid; gap: 10px; box-shadow: 0 20px 44px -18px rgba(0,0,0,.6); }
+.kk-kleuren > span { font: 500 10.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .08em; color: #A9A9A1; }
+.kk-knoppen { display: flex; flex-wrap: wrap; gap: 7px; }
+.kk-knoppen button { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,.85); cursor: pointer; padding: 0; }
+.kk-knoppen button[aria-pressed="true"] { outline: 2px solid #fff; outline-offset: 2px; }
+.kk button:focus-visible { outline: 2px solid #8ff; outline-offset: 2px; }
+.kk-open { position: fixed; z-index: 50; left: max(12px, env(safe-area-inset-left, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); width: 46px; height: 46px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: rgba(17,17,16,.94); display: grid; place-items: center; }
+.kk-open i { width: 18px; height: 18px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 2px rgba(255,255,255,.85); }
+
+/* Scroll-gedreven opbouw: alleen beweging, de inhoud is altijd zichtbaar */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .opbouw { animation: opbouw linear both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+    .fases::after { animation: lijn linear both; animation-timeline: view(); animation-range: entry 20% cover 45%; }
+    .foto-paneel.zoom { animation: fotoZoom linear both; animation-timeline: view(); animation-range: entry 0% exit 100%; }
+  }
+}
+@keyframes opbouw { from { transform: translateY(34px) scale(.985); } }
+@keyframes lijn { from { transform: scale(0); } }
+@keyframes fotoZoom { from { background-size: auto 118%; } to { background-size: auto 100%; } }
+
+/* Intro bij het openen van de pagina */
+@media (prefers-reduced-motion: no-preference) {
+  .intro .balk { animation: navIn .8s var(--zacht-uit) both; }
+  .intro .cover .strip { animation: strip .9s .1s var(--veer) both; }
+  .intro .cover h1 .r > span { animation: regelIn 1s var(--zacht-uit) both; }
+  .intro .cover h1 .r:nth-of-type(1) > span { animation-delay: .18s; }
+  .intro .cover h1 .r:nth-of-type(2) > span { animation-delay: .3s; }
+  .intro .cover h1 .g::before { animation: markeer .8s .8s var(--zacht-uit) both; }
+  .intro .cover .lead { animation: omhoog .9s .5s var(--zacht-uit) both; }
+  .intro .meta > div { animation: omhoog .8s var(--zacht-uit) both; }
+  .intro .meta > div:nth-child(1) { animation-delay: .62s; } .intro .meta > div:nth-child(2) { animation-delay: .7s; }
+  .intro .meta > div:nth-child(3) { animation-delay: .78s; } .intro .meta > div:nth-child(4) { animation-delay: .86s; }
+  .intro .schijf > span { animation: schijfIn 1.3s .15s var(--veer) both; }
+  .intro .houder-in { animation: houderIn 1.4s .3s var(--veer) both; }
+  .intro .p1 > .laag, .intro .p2 > .laag, .intro .story > .laag { animation: zakIn 1s var(--veer) both, dobber 8s 1s ease-in-out infinite; }
+  .intro .p1 > .laag { animation-delay: .85s, 1.85s; } .intro .p2 > .laag { animation-delay: 1s, 2s; } .intro .story > .laag { animation-delay: .95s, 1.95s; }
+  .intro .kruimel > i { animation: kruimelIn 1.1s var(--veer) both; }
+  .intro .k1 > i { animation-delay: .9s; } .intro .k2 > i { animation-delay: 1s; } .intro .k3 > i { animation-delay: 1.05s; } .intro .k4 > i { animation-delay: 1.1s; }
+  .intro .band { animation: bandIn 1.2s .5s var(--zacht-uit) both; }
+  .intro .kk { animation: omhoog .8s 1.5s var(--zacht-uit) both; }
+  .intro:not(.start) :is(.balk, .cover .strip, .cover h1 .r > span, .cover .lead, .meta > div, .schijf > span, .houder-in, .p1 > .laag, .p2 > .laag, .story > .laag, .kruimel > i, .band, .kk) { animation-play-state: paused; }
+  .intro:not(.start) .cover h1 .g::before { animation-play-state: paused; }
+}
+@keyframes navIn { from { opacity: 0; transform: translateY(-14px); } }
+@keyframes strip { from { opacity: 0; transform: skewX(-10deg) rotate(-14deg) scale(1.6); } }
+@keyframes regelIn { from { transform: translateY(108%) rotate(3deg); } }
+@keyframes markeer { from { transform: rotate(-1.2deg) scaleX(0); } }
+@keyframes omhoog { from { opacity: 0; transform: translateY(18px); } }
+@keyframes schijfIn { from { transform: scale(.4); opacity: 0; } }
+@keyframes houderIn { from { transform: translateY(170px) rotate(9deg); opacity: 0; } 40% { opacity: 1; } }
+@keyframes zakIn { from { transform: scale(.3) rotate(-30deg); opacity: 0; } }
+@keyframes kruimelIn { from { transform: translate(var(--kx, 0), var(--ky, 0)) scale(.2) rotate(-90deg); opacity: 0; } }
+@keyframes bandIn { from { transform: translateY(40px); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+</style>
+
+<header class="balk" id="balk">
+  <div class="wrap">
+    <a class="balk-merk" href="#top"><svg viewBox="0 -3 100 106" aria-hidden="true"><path fill="currentColor" d="M2.0 56.5 L96.0 53.5 L96.0 46.5 L2.0 43.5Z M6.4 30.3 L95.2 49.4 L96.8 42.6 L9.6 17.7Z M19.0 9.8 L94.4 45.1 L97.6 38.9 L25.0 -1.8Z M9.6 82.3 L96.8 57.4 L95.2 50.6 L6.4 69.7Z M25.0 101.8 L97.6 61.1 L94.4 54.9 L19.0 90.2Z"/></svg><span><b>manysocials.</b> &nbsp;<span>De Pizza van Nederland</span></span></a>
+    <div class="balk-rechts"><span class="conf">Vertrouwelijk</span><span class="balk-nr" id="balk-nr" aria-hidden="true"></span></div>
+  </div>
+</header>
+
+<main>
+<!-- 1 COVER -->
+<section class="dia cover" id="top" data-nr="">
+  <div class="wrap">
+    <div class="cover-tekst">
+      <div class="strip"><span>Campagnevoorstel voor New York Pizza</span></div>
+      <h1><span class="r"><span>De Pizza</span></span><br><span class="r"><span>van <span class="g">Nederland</span></span></span></h1>
+      <p class="lead">Iedereen in Nederland bedenkt via een DM zijn eigen pizza. De beste komt echt op de kaart.</p>
+      <div class="meta">
+        <div><div class="klein">Opdrachtgever</div><div>New York Pizza</div></div>
+        <div><div class="klein">Opgesteld door</div><div>Maarten van Gennip</div></div>
+        <div><div class="klein">Datum</div><div>13 oktober 2026</div></div>
+        <div><div class="klein">Status</div><div class="rood">Vertrouwelijk</div></div>
+      </div>
+    </div>
+
+    <div class="toneel" id="toneel">
+      <div class="toneel-in" id="toneel-in">
+        <div class="diep schijf" aria-hidden="true"><span><i></i><i></i><i></i></span></div>
+        <div class="diep story" aria-hidden="true"><div class="laag"><div class="story-kaart" style="background-image:url(img/daan-telefoon.jpg)"><div class="story-balkjes"><i></i><i></i><i></i></div><span class="story-av"></span></div></div></div>
+        <div class="diep p1" aria-hidden="true"><div class="laag"><div class="pizza" data-pizza="parmaham"></div></div></div>
+        <div class="diep p2" aria-hidden="true"><div class="laag"><div class="pizza" data-pizza="mortadella"></div></div></div>
+        <div class="diep kruimel k1" aria-hidden="true" style="--kx:-120px;--ky:260px"><i><span data-ingr="basilicum"></span></i></div>
+        <div class="diep kruimel k2" aria-hidden="true" style="--kx:-160px;--ky:60px"><i><span data-ingr="peper"></span></i></div>
+        <div class="diep kruimel k3" aria-hidden="true" style="--kx:220px;--ky:20px"><i><span data-ingr="salami"></span></i></div>
+        <div class="diep kruimel k4" aria-hidden="true" style="--kx:-170px;--ky:-180px"><i><span data-ingr="basilicum"></span></i></div>
+
+        <div class="diep houder-diep">
+          <div class="houder-in">
+            <div class="houder">
+              <div class="houder-zweef">
+                <div class="tel" role="group" aria-label="Voorbeeld van een gesprek in de DM met @newyorkpizza_nl">
+                  <span class="tel-knop k-actie"></span><span class="tel-knop k-op"></span><span class="tel-knop k-neer"></span><span class="tel-knop k-aan"></span>
+                  <div class="scherm" id="scherm">
+                    <div class="app">
+                      <div class="status" aria-hidden="true"><span>9:41</span><span class="status-r"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg><svg viewBox="0 0 16 12"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.3 10.3 0 0 0 8 .4 10.3 10.3 0 0 0 .8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zm0 3.5c.4 0 .8.2 1.1.4L8 11.6 6.9 9.7c.3-.2.7-.4 1.1-.4z"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><path d="M24.5 4v4c.8-.3 1.5-1 1.5-2s-.7-1.7-1.5-2z" opacity=".4"/></svg></span></div>
+                      <div class="ig-kop">
+                        <span class="terug" aria-hidden="true"><svg viewBox="0 0 11 19"><path d="M9.5 1.5 2 9.5l7.5 8" fill="none" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                        <span class="av" aria-hidden="true">NYP</span>
+                        <span class="ig-naam">newyorkpizza_nl</span>
+                        <span class="ig-iconen" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.6 3.5h2.6l1.4 4.2-2 1.5a12 12 0 0 0 6.2 6.2l1.5-2 4.2 1.4v2.6c0 1-.8 1.8-1.8 1.8A16.9 16.9 0 0 1 4.8 5.3c0-1 .8-1.8 1.8-1.8z"/></svg><svg viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="3"/><path d="M15.5 10.5 21 7v10l-5.5-3.5z"/></svg></span>
+                      </div>
+                      <div class="ig-chat" id="ig-chat">
+                        <div class="ig-draad" id="draad">
+                          <div class="bub in met-av">Welke pizza moeten wij nog maken? Eerst: welke bodem?</div>
+                          <div class="opts"><span class="opt">New York Style</span><span class="opt">Italiaans dun</span><span class="opt">Bloemkool</span></div>
+                          <div class="bub uit">Italiaans dun</div>
+                          <div class="bub in met-av">En wat moet erop?</div>
+                          <div class="bub uit">Nduja en hot honey</div>
+                          <div class="bub in met-av">Welke saus eronder?</div>
+                          <div class="opts"><span class="opt">Tomaat</span><span class="opt">BBQ</span></div>
+                          <div class="bub uit">Tomaat</div>
+                          <div class="bub in met-av">Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.</div>
+                          <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">DAAN'S PIZZA</div><div class="s">Nduja &amp; hot honey</div></div><span class="gloed" aria-hidden="true"></span><span class="maak" aria-hidden="true"></span></div>
+                        </div>
+                      </div>
+                      <div class="ig-invoer" id="ig-invoer" aria-hidden="true">
+                        <span class="ig-cam"><svg viewBox="0 0 24 24"><path d="M4 8.5c0-1.1.9-2 2-2h1.6l1.4-2h6l1.4 2H18c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z"/><circle cx="12" cy="12.5" r="3.4"/></svg></span>
+                        <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span></span>
+                        <span class="ig-rechts"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="9" cy="9.5" r="1.6"/><path d="M20.5 15.5 16 11l-9 9.5"/></svg><svg viewBox="0 0 24 24"><path d="M20.5 12A8.5 8.5 0 1 1 12 3.5"/><path d="M20.5 12c-4.7 0-8.5-3.8-8.5-8.5"/><path d="M8.5 14.5c1.6 1.6 5.4 1.6 7 0"/></svg></span>
+                        <span class="ig-stuur" id="ig-stuur">Verstuur</span>
+                      </div>
+                    </div>
+                    <div class="pagina" id="pagina" aria-hidden="true">
+                      <div class="adres"><svg viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 10 0v2h1v11H6V10zm2 0h6V8a3 3 0 0 0-6 0z"/></svg>newyorkpizza.nl/jouwpizza</div>
+                      <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">DAAN'S PIZZA</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div><div class="voortgang"><i></i></div></div>
+                      <div class="knoppen"><span class="btn g" id="bestel">Bestel Pepperoni Hot Honey</span><span class="btn">Opslaan &amp; delen</span><span class="ai-regel">Deze video bevat AI-gegenereerde beelden</span></div>
+                    </div>
+                  </div>
+                  <span class="eiland" aria-hidden="true"></span>
+                  <span class="glas" aria-hidden="true"></span>
+                </div>
+                <svg class="hand" viewBox="-100 -40 560 820" aria-hidden="true">
+                  <defs>
+                    <linearGradient id="h-palm" x1="230" y1="470" x2="380" y2="740" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EDB792"/><stop offset=".55" stop-color="#D99A70"/><stop offset="1" stop-color="#B9764D"/></linearGradient>
+                    <linearGradient id="h-duim" x1="-34" y1="0" x2="38" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F3C4A0"/><stop offset=".45" stop-color="#E2A57C"/><stop offset="1" stop-color="#BE7B51"/></linearGradient>
+                    <linearGradient id="h-vinger" x1="-30" y1="0" x2="18" y2="0" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#A9663F"/><stop offset=".45" stop-color="#CF8D63"/><stop offset=".85" stop-color="#EDB894"/><stop offset="1" stop-color="#E3A880"/></linearGradient>
+                    <linearGradient id="h-nagel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FBE6D8"/><stop offset="1" stop-color="#EDC3AA"/></linearGradient>
+                    <filter id="h-blur" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+                    <filter id="h-blur-s" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3.5"/></filter>
+                  </defs>
+                  <!-- vingers om de linkerrand -->
+                  <g class="vingers">
+                    <g filter="url(#h-blur-s)" fill="#000" opacity=".3" transform="translate(6 5)"><path d="M-13 439 L-4.8 440 C11 440 15 449.5 15 460 C15 470.5 11 480 -4.8 480 L-13 481 C-25 481 -27 439 -13 439 Z" transform="rotate(13 -10 460)"/><path d="M-15 390 L-5.4 391 C13 391 17 402 17 414 C17 426 13 437 -5.4 437 L-15 438 C-27 438 -29 390 -15 390 Z" transform="rotate(10 -10 414)"/><path d="M-15 341 L-5.2 342 C14 342 18 353.5 18 366 C18 378.5 14 390 -5.2 390 L-15 391 C-27 391 -29 341 -15 341 Z" transform="rotate(8 -10 366)"/><path d="M-14 294 L-5.4 295 C13 295 17 306 17 318 C17 330 13 341 -5.4 341 L-14 342 C-26 342 -28 294 -14 294 Z" transform="rotate(6 -10 318)"/></g>
+                    <g transform="rotate(13 -10 460)"><path d="M-13 439 L-4.8 440 C11 440 15 449.5 15 460 C15 470.5 11 480 -4.8 480 L-13 481 C-25 481 -27 439 -13 439 Z" fill="url(#h-vinger)"/><path d="M-12 478 L-3.8 479" stroke="#9C5A35" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/><path d="M-10 444 L-1.7 444" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/><path d="M-6 447.0 C-3 455.8 -3 464.2 -6 473.0" fill="none" stroke="#9C5A35" stroke-opacity=".3" stroke-width="1.4" stroke-linecap="round"/></g><g transform="rotate(10 -10 414)"><path d="M-15 390 L-5.4 391 C13 391 17 402 17 414 C17 426 13 437 -5.4 437 L-15 438 C-27 438 -29 390 -15 390 Z" fill="url(#h-vinger)"/><path d="M-14 435 L-4.2 436" stroke="#9C5A35" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/><path d="M-12 395 L-1.8 395" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/><path d="M-6 399.1 C-3 409.2 -3 418.8 -6 428.9" fill="none" stroke="#9C5A35" stroke-opacity=".3" stroke-width="1.4" stroke-linecap="round"/></g><g transform="rotate(8 -10 366)"><path d="M-15 341 L-5.2 342 C14 342 18 353.5 18 366 C18 378.5 14 390 -5.2 390 L-15 391 C-27 391 -29 341 -15 341 Z" fill="url(#h-vinger)"/><path d="M-14 388 L-4.0 389" stroke="#9C5A35" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/><path d="M-12 346 L-1.5 346" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/><path d="M-6 350.5 C-3 361.0 -3 371.0 -6 381.5" fill="none" stroke="#9C5A35" stroke-opacity=".3" stroke-width="1.4" stroke-linecap="round"/></g><g transform="rotate(6 -10 318)"><path d="M-14 294 L-5.4 295 C13 295 17 306 17 318 C17 330 13 341 -5.4 341 L-14 342 C-26 342 -28 294 -14 294 Z" fill="url(#h-vinger)"/><path d="M-13 339 L-4.2 340" stroke="#9C5A35" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/><path d="M-11 299 L-1.8 299" stroke="#fff" stroke-opacity=".3" stroke-width="3" stroke-linecap="round"/><path d="M-6 303.1 C-3 313.2 -3 322.8 -6 332.9" fill="none" stroke="#9C5A35" stroke-opacity=".3" stroke-width="1.4" stroke-linecap="round"/></g>
+                  </g>
+                  <!-- mouw -->
+                  <g class="mouw-g">
+                    <path class="mouw" fill="var(--mouw)" d="M252 706 C 290 690 340 670 384 662 L 486 880 L 344 930 Z"/>
+                    <path d="M252 706 C 290 690 340 670 384 662 L 404 706 C 360 714 312 732 272 750 Z" fill="#fff" opacity=".06"/>
+                    <g stroke="#000" stroke-opacity=".22" stroke-width="2" stroke-linecap="round">
+                      <path d="M266 703 L284 745 M280 697 L298 739 M294 691 L312 733 M308 686 L326 728 M322 681 L340 723 M336 676 L354 718 M350 672 L368 714 M364 668 L382 710"/>
+                    </g>
+                    <path d="M272 750 C 312 732 360 714 404 706" fill="none" stroke="#000" stroke-opacity=".3" stroke-width="2"/>
+                  </g>
+                  <!-- palm en duimmuis -->
+                  <path d="M298 598 C 302 560 300 512 300 470 C 324 468 352 494 364 536 C 376 584 374 636 362 690 L 342 744 L 278 764 C 266 724 252 684 246 650 C 244 638 250 631 262 629 C 282 625 294 614 298 598 Z" filter="url(#h-blur)" fill="#000" opacity=".2" transform="translate(-6 6)"/>
+                  <path d="M298 598 C 302 560 300 512 300 470 C 324 468 352 494 364 536 C 376 584 374 636 362 690 L 342 744 L 278 764 C 266 724 252 684 246 650 C 244 638 250 631 262 629 C 282 625 294 614 298 598 Z" fill="url(#h-palm)"/>
+                  <path d="M302 478 C 306 520 306 566 300 606" fill="none" stroke="#8E4E2C" stroke-opacity=".35" stroke-width="6" stroke-linecap="round" filter="url(#h-blur-s)"/>
+                  <path d="M252 652 C 266 662 284 660 298 642" fill="none" stroke="#A9653E" stroke-opacity=".3" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M352 560 C 360 600 358 640 346 676" fill="none" stroke="#fff" stroke-opacity=".18" stroke-width="5" stroke-linecap="round"/>
+                  <!-- duim: draaipunt op (330, 560) -->
+                  <g id="duim-schaduw-pos" transform="translate(338 572)"><g id="duim-schaduw" transform="rotate(-38)">
+                    <path d="M-34 18 C -36 -20 -30 -70 -26 -108 C -23 -134 -14 -152 2 -152 C 18 -152 26 -136 26 -110 C 28 -76 34 -36 38 18 C 24 40 -20 40 -34 18 Z" fill="#000" opacity=".3" filter="url(#h-blur)"/>
+                  </g></g>
+                  <g transform="translate(330 560)"><g id="duim" transform="rotate(-38)">
+                    <path d="M-34 18 C -36 -20 -30 -70 -26 -108 C -23 -134 -14 -152 2 -152 C 18 -152 26 -136 26 -110 C 28 -76 34 -36 38 18 C 24 40 -20 40 -34 18 Z" fill="url(#h-duim)"/>
+                    <path d="M-14 -118 C -14 -138 -6 -146 2 -146 C 12 -146 18 -138 18 -118 C 18 -108 12 -103 2 -103 C -8 -103 -14 -108 -14 -118 Z" fill="url(#h-nagel)"/>
+                    <path d="M-12 -112 C -6 -107 10 -107 16 -112" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+                    <ellipse cx="-5" cy="-130" rx="2.6" ry="8" fill="#fff" opacity=".55"/>
+                    <path d="M-19 -74 C -8 -69 8 -69 20 -74 M-15 -65 C -5 -61 6 -61 16 -65" fill="none" stroke="#A9653E" stroke-opacity=".38" stroke-width="1.5" stroke-linecap="round"/>
+                    <path d="M-28 -40 C -30 -70 -26 -96 -22 -116" fill="none" stroke="#fff" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/>
+                  </g></g>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="pop" id="pop" aria-hidden="true"><div class="pizza" data-pizza="daan"></div><div class="pop-label"><b>Daan's pizza</b> · Nduja &amp; hot honey</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band" aria-hidden="true"><div class="band-rij" id="band-rij"></div></div>
+
+<!-- 2 INHOUD -->
+<section class="dia inhoud" id="inhoud" data-nr="2">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">Inhoud</div>
+      <h2 class="kop2">Wat je in dit voorstel leest</h2>
+    </div>
+    <nav class="toc-lijst opbouw" aria-label="Inhoud">
+      <a class="toc" href="#h1"><i>1</i>Samenvatting</a>
+      <a class="toc" href="#h2"><i>2</i>Iedereen heeft een mening over pizza</a>
+      <a class="toc" href="#h3"><i>3</i>Precies waar New York Pizza nu naartoe wil</a>
+      <a class="toc" href="#h4"><i>4</i>Het idee: De Pizza van Nederland</a>
+      <a class="toc" href="#h5"><i>5</i>Zo beleeft Daan het</a>
+      <a class="toc" href="#h6"><i>6</i>De campagne in vier fases</a>
+      <a class="toc" href="#h7"><i>7</i>Wat het New York Pizza oplevert</a>
+      <a class="toc" href="#h8"><i>8</i>Gebouwd voor heel Nederland tegelijk</a>
+      <a class="toc" href="#h9"><i>9</i>Eerst Nederland, daarna verder</a>
+      <a class="toc" href="#h10"><i>10</i>Hoe we samenwerken</a>
+      <a class="toc" href="#h11"><i>11</i>Volgende stap</a>
+      <a class="toc" href="#h12"><i>12</i>Bronnen</a>
+    </nav>
+  </div>
+</section>
+
+<!-- 3 SAMENVATTING -->
+<section class="dia sam" id="h1" data-nr="3">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">1 · Samenvatting</div>
+      <h2 class="kop2">Een landelijke campagne waarin iedereen via een DM aan New York Pizza zijn eigen pizza bedenkt.</h2>
+      <p class="p">Deelnemers kiezen hun bodem en saus en bedenken de toppings. Wie meedoet krijgt binnen een minuut een beeld van zijn eigen pizza in de DM, met zijn naam erbij, plus een persoonlijke pagina met een video om te delen en een kortingscode voor de app. Staat alles wat hij bedacht op de kaart van New York Pizza, dan bestelt hij zijn eigen pizza direct. In de finale stemt Nederland. De winnende pizza komt op de kaart, en de winnaars krijgen een echte prijs: prijzengeld of een jaar lang gratis pizza.</p>
+      <p class="p">De campagne sluit aan op wat New York Pizza dit jaar al inzet: een jonge doelgroep bereiken via makers op TikTok en Instagram, en sterk zijn in klantdata. Ze start in Nederland en kan daarna naar andere landen.</p>
+      <div class="callout">
+        <p class="p">New York Pizza houdt de regie over merk en verhaal, het socialbureau en de makers brengen het verkeer, en manysocials levert de campagnemachine erachter. Als volgende stap stellen we een gesprek van een uur voor, met een live demo op een telefoon.</p>
+      </div>
+    </div>
+    <div class="kaart opbrengst opbouw">
+      <h3>Wat het oplevert</h3>
+      <div class="klein">In de volgorde van de campagne</div>
+      <div class="yl"><i>1</i>Publiciteit rond de lancering</div>
+      <div class="yl"><i>2</i>Aandacht van een jonge doelgroep, in hun eigen DM</div>
+      <div class="yl"><i>3</i>Een mailinglijst van deelnemers die zich zelf aanmelden</div>
+      <div class="yl"><i>4</i>Beelden en video's die deelnemers zelf delen</div>
+      <div class="yl"><i>5</i>Bestellingen in de app, met een persoonlijke kortingscode of direct de eigen pizza</div>
+      <div class="yl"><i>6</i>Inzicht in welke nieuwe pizza Nederland wil</div>
+      <div class="yl"><i>7</i>Een nieuwe pizza op de kaart, en een tweede moment in de media</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 MENING -->
+<section class="dia mening" id="h2" data-nr="4">
+  <div class="wrap">
+    <div class="foto-paneel zoom opbouw" style="background-image:url(img/bank.jpg);background-position:52% center" aria-hidden="true"></div>
+    <div class="opbouw">
+      <div class="kicker">2 · Iedereen heeft een mening over pizza</div>
+      <h2>Nederland bedenkt al jaren zijn eigen pizza's. Op de bank, in de groepsapp, aan de keukentafel. <span class="rood">Tijd dat een pizzamerk het aan iedereen vraagt.</span></h2>
+      <p class="p">Frikandel op een pizza, kapsalon als topping, bitterballen erop. Wat in Nederland op een pizza belandt, ontstaat niet in een testkeuken maar bij mensen thuis. Die energie is er&nbsp;al.</p>
+      <p class="p klein-p">Merken die hun publiek laten meedoen, krijgen dat terug. Stëlz liet het publiek in september 2026 kiezen welke nieuwe smaak er komt, en betrok zijn publiek eerder al bij de keuze van zijn smaken<sup><a href="#bron-9">9</a></sup>. KFC maakte in augustus 2025 een burger van een internetmeme<sup><a href="#bron-2">2</a></sup> en liet in het voorjaar van 2026 heel Nederland meedingen naar zijn nieuwe reclamegeluid<sup><a href="#bron-3">3</a></sup>. Domino's liet in mei 2025 De Bankzitters hun eigen pizza bedenken<sup><a href="#bron-4">4</a></sup>. Bij KFC en Domino's deed maar een handvol mensen mee: een paar makers, of de winnaar van een wedstrijd. <b>Bij De Pizza van Nederland doet iedere klant mee, en krijgt iedereen direct iets terug.</b></p>
+      <div class="stat">
+        <div class="groot" data-tel="61">61%</div>
+        <p class="p">van de Nederlandse jongeren zegt dat content van merken hun aankoop beïnvloedt. Als tips noemen ze gepersonaliseerde aanbiedingen en actief meedoen in de community.<span class="bron-r">Snapchat-onderzoek onder duizend jongeren, mei 2025<sup><a href="#bron-1">1</a></sup></span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 NAARTOE -->
+<section class="dia naartoe" id="h3" data-nr="5">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">3 · Precies waar New York Pizza nu naartoe wil</div>
+      <h2 class="kop2">Dichter bij een jonge doelgroep, en beter weten wie de klanten zijn.</h2>
+    </div>
+    <div class="vier">
+      <div class="kaart opbouw">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M9 17V5l10-2v12"/><circle cx="6" cy="17" r="3"/><circle cx="16" cy="15" r="3"/></svg></div>
+        <h3>Jong, sociaal, met makers</h3>
+        <p class="p">In mei 2026 koos New York Pizza een socialbureau om 18- tot 25-jarigen te bereiken op TikTok en Instagram, met een groep vaste makers<sup><a href="#bron-5">5</a></sup>. Met "Road to New York" stonden Dries Roelvink en Rijck in het middelpunt van het WK<sup><a href="#bron-6">6</a></sup>.</p>
+      </div>
+      <div class="kaart opbouw">
+        <div class="ico"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+        <h3>Sterk in klantdata</h3>
+        <p class="p">New York Pizza won in 2025 de Data Innovation Award bij de Customer Data Awards<sup><a href="#bron-7">7</a></sup>. Een campagne die een eigen mailinglijst opbouwt, past daar direct op.</p>
+      </div>
+      <div class="kaart opbouw">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 2 2 21h20z"/><circle cx="10" cy="14" r="1.3"/><circle cx="14" cy="17" r="1.3"/><circle cx="12.5" cy="10" r="1.3"/></svg></div>
+        <h3>Je eigen pizza bestaat al</h3>
+        <p class="p">Online stel je bij New York Pizza al zelf een pizza samen: drie bodems, tot vijf toppings, en je kunt hem een naam geven en bewaren<sup><a href="#bron-8">8</a></sup>. De bedachte pizza uit de DM kan daar dus gewoon besteld worden.</p>
+      </div>
+      <div class="kaart opbouw">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg></div>
+        <h3>Een landelijk netwerk</h3>
+        <p class="p">Met vestigingen door heel Nederland kan iedere deelnemer zijn code dezelfde avond inwisselen. Een landelijke campagne past daar precies bij.</p>
+      </div>
+    </div>
+    <div class="donker-band opbouw">
+      <p class="zin">De vraag is niet of Nederland een eigen pizza wil bedenken. <span>De vraag is welke pizzaketen het als eerste aan iedereen vraagt.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 6 IDEE -->
+<section class="dia idee" id="h4" data-nr="6">
+  <div class="wrap">
+    <div class="foto-paneel zoom opbouw" style="background-image:url(img/pizza-nduja.jpg)">
+      <div class="foto-titel"><div>Daan's pizza</div><div>Nduja &amp; hot honey</div></div>
+      <div class="foto-voet">Beelden zijn met AI gemaakt als voorbeeld. In de campagne volgt het beeld de huisstijl van New York Pizza.</div>
+    </div>
+    <div class="opbouw">
+      <div class="kicker">4 · Het idee</div>
+      <h2 class="kop2">Iedereen bedenkt via een DM zijn eigen pizza. De beste komt echt op de kaart.</h2>
+      <p class="p">Binnen een minuut staat zijn eigen pizza in zijn DM, met zijn naam erbij. Kan New York Pizza hem maken, dan bestelt hij hem meteen. De winnaars krijgen prijzengeld of een jaar lang gratis pizza.</p>
+      <h3 class="sub">Wat iedere deelnemer krijgt</h3>
+      <div class="raster2">
+        <div class="kaart"><h3>Zijn eigen pizza in beeld</h3><p class="p">Met de bodem, saus en toppings die hij koos, en zijn naam erbij. Binnen een minuut, in de DM.</p></div>
+        <div class="kaart"><h3>Zijn eigen pagina met video</h3><p class="p">Een korte video van zijn pizza, gemaakt om in de story te zetten.</p></div>
+        <div class="kaart"><h3>Zijn pizza, echt te bestellen</h3><p class="p">Bestaan de ingrediënten bij New York Pizza, dan bestelt hij zijn eigen pizza met één tik, met een persoonlijke kortingscode erbij.</p></div>
+        <div class="kaart"><h3>Een kans op de kaart</h3><p class="p">Zijn pizza kan de Pizza van Nederland worden. De winnaars krijgen prijzengeld of een jaar lang gratis pizza.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 DAAN -->
+<section class="dia daan" id="h5" data-nr="7">
+  <div class="wrap">
+    <div class="tekst opbouw">
+      <div class="kicker">5 · Zo beleeft Daan het</div>
+      <h2 class="kop2">Geen app, geen formulier, geen account.</h2>
+      <p class="lead">Alles gebeurt in een gesprek met <b>@newyorkpizza_nl</b>.</p>
+      <p class="p">Nduja heeft New York Pizza nog niet. Op zijn pagina staat daarom een knop voor de pizza die er het dichtst bij zit, de Pepperoni Hot Honey, met zijn kortingscode erbij. Bedenkt iemand iets dat wel volledig op de kaart staat, dan bestelt hij precies zijn eigen pizza.</p>
+      <p class="p">En de nduja-pizza van Daan doet mee voor de finale. Zijn vrienden zien zijn pizza voorbijkomen, en een deel van hen stuurt zelf een DM.</p>
+      <p class="klein">Hoe de bestelknop aan de app gekoppeld wordt, stemmen we af met het team van New York Pizza.</p>
+    </div>
+    <div class="telefoons opbouw">
+      <div class="mini">
+        <div class="mini-tel"><div class="scherm"><div class="app">
+          <div class="status" aria-hidden="true"><span>9:41</span><span class="status-r"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg><svg viewBox="0 0 16 12"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.3 10.3 0 0 0 8 .4 10.3 10.3 0 0 0 .8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zm0 3.5c.4 0 .8.2 1.1.4L8 11.6 6.9 9.7c.3-.2.7-.4 1.1-.4z"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><path d="M24.5 4v4c.8-.3 1.5-1 1.5-2s-.7-1.7-1.5-2z" opacity=".4"/></svg></span></div>
+          <div class="ig-kop"><span class="av" aria-hidden="true">NYP</span><span class="ig-naam">newyorkpizza_nl</span></div>
+          <div class="ig-chat"><div class="ig-draad">
+            <div class="bub in met-av">Welke pizza moeten wij nog maken? Eerst: welke bodem?</div>
+            <div class="opts"><span class="opt">New York Style</span><span class="opt">Italiaans dun</span><span class="opt">Bloemkool</span></div>
+            <div class="bub uit">Italiaans dun</div>
+            <div class="bub in met-av">En wat moet erop?</div>
+            <div class="bub uit">Nduja en hot honey</div>
+            <div class="bub in met-av">Welke saus eronder?</div>
+            <div class="opts"><span class="opt">Tomaat</span><span class="opt">BBQ</span></div>
+            <div class="bub uit">Tomaat</div>
+          </div></div>
+        </div></div><span class="eiland" aria-hidden="true"></span></div>
+        <div class="mini-bij"><span class="nr">1</span><span>Hij bedenkt zijn pizza in de DM</span></div>
+      </div>
+      <div class="mini">
+        <div class="mini-tel"><div class="scherm"><div class="app">
+          <div class="status" aria-hidden="true"><span>9:41</span><span class="status-r"><svg viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx=".8"/><rect x="5" y="5.5" width="3" height="6.5" rx=".8"/><rect x="10" y="3" width="3" height="9" rx=".8"/><rect x="15" y="0" width="3" height="12" rx=".8"/></svg><svg viewBox="0 0 16 12"><path d="M8 2.2c2.3 0 4.4.9 6 2.4l1.2-1.3A10.3 10.3 0 0 0 8 .4 10.3 10.3 0 0 0 .8 3.3L2 4.6a8.6 8.6 0 0 1 6-2.4zm0 3.6c1.3 0 2.5.5 3.4 1.3l1.2-1.3A6.6 6.6 0 0 0 8 4a6.6 6.6 0 0 0-4.6 1.8l1.2 1.3c.9-.8 2.1-1.3 3.4-1.3zm0 3.5c.4 0 .8.2 1.1.4L8 11.6 6.9 9.7c.3-.2.7-.4 1.1-.4z"/></svg><svg viewBox="0 0 27 12"><rect x=".5" y=".5" width="22" height="11" rx="3.2" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="19" height="8" rx="2"/><path d="M24.5 4v4c.8-.3 1.5-1 1.5-2s-.7-1.7-1.5-2z" opacity=".4"/></svg></span></div>
+          <div class="ig-kop"><span class="av" aria-hidden="true">NYP</span><span class="ig-naam">newyorkpizza_nl</span></div>
+          <div class="ig-chat"><div class="ig-draad">
+            <div class="bub in met-av">Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.</div>
+            <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">DAAN'S PIZZA</div><div class="s">Nduja &amp; hot honey</div></div></div>
+          </div></div>
+        </div></div><span class="eiland" aria-hidden="true"></span></div>
+        <div class="mini-bij"><span class="nr">2</span><span>Binnen een minuut zijn pizza in de DM</span></div>
+      </div>
+      <div class="mini">
+        <div class="mini-tel"><div class="scherm"><div class="pagina">
+          <div class="adres">newyorkpizza.nl/jouwpizza</div>
+          <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">DAAN'S PIZZA</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div></div>
+          <div class="knoppen"><span class="btn g">Bestel Pepperoni Hot Honey</span><span class="btn">Opslaan &amp; delen</span><span class="ai-regel">Deze video bevat AI-gegenereerde beelden</span></div>
+        </div></div><span class="eiland" aria-hidden="true"></span></div>
+        <div class="mini-bij"><span class="nr">3</span><span>Zijn eigen pagina: delen of direct bestellen</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 FASES -->
+<section class="dia" id="h6" data-nr="8">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">6 · De campagne in vier fases</div>
+      <h2 class="kop2">Enkele weken, met elke fase een eigen moment voor social, makers en advertenties.</h2>
+    </div>
+    <ol class="fases">
+      <li class="fase"><span class="dot">1</span><div><h3>Teaser</h3><p class="p">De makers van New York Pizza bedenken als eerste hun eigen pizza en delen hem. Iedereen ziet hem, nog niemand kan meedoen.</p><div class="q"><span class="strip"><span>"Kun jij een betere bedenken?"</span></span></div></div></li>
+      <li class="fase"><span class="dot">2</span><div><h3>Lancering</h3><p class="p">De DM gaat open. Makers, advertenties en de app sturen tegelijk naar het gesprek. De eerste golf komt in de eerste uren.</p><div class="q"><span class="strip"><span>"Stuur ons je pizza"</span></span></div></div></li>
+      <li class="fase"><span class="dot">3</span><div><h3>Live</h3><p class="p">Deelnemers delen hun pizza. New York Pizza deelt elke week de opvallendste en meest bedachte pizza's. Iedere update brengt een nieuwe golf.</p><div class="q"><span class="strip"><span>"Dit bedacht Nederland deze week"</span></span></div></div></li>
+      <li class="fase fin"><span class="dot">4</span><div><h3>Finale</h3><p class="p">Uit alle inzendingen komen vanzelf een paar duidelijke favorieten naar boven. Die worden de finalisten, Nederland stemt. De winnende pizza komt op de kaart; de winnaars krijgen prijzengeld of een jaar lang gratis pizza.</p><div class="q"><span class="strip groen"><span>"De Pizza van Nederland"</span></span></div></div></li>
+    </ol>
+    <div class="donker-band opbouw">
+      <div class="tweede"><span class="strip groen"><span>Tweede moment</span></span><p>De finale is het tweede grote moment: een nieuwe pizza met een verhaal, en een reden voor iedereen die meedeed om weer te bestellen.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 9 OPLEVERT -->
+<section class="dia" id="h7" data-nr="9">
+  <div class="wrap">
+    <div class="kopr opbouw">
+      <div>
+        <div class="kicker">7 · Wat het New York Pizza oplevert</div>
+        <h2 class="kop2">Elk moment levert iets op.</h2>
+      </div>
+      <p class="lead">Wat er binnenkomt, blijft van New York Pizza.</p>
+    </div>
+    <div class="zeven">
+      <div class="kaart yc opbouw"><div class="m">Teaser</div><div class="t">Publiciteit rond de lancering</div><p>"Nederland bedenkt de nieuwe pizza van New York Pizza" is een verhaal voor pers en social, nog voordat de eerste DM binnen is.</p></div>
+      <div class="kaart yc opbouw"><div class="m">De DM</div><div class="t">Aandacht van een jonge doelgroep</div><p>Deelnemers praten met het merk in hun eigen DM, niet via een advertentie die ze wegswipen. Elke deelname gaat als conversie terug naar Meta, zodat de advertenties sturen op mensen die echt meedoen.</p></div>
+      <div class="kaart yc opbouw"><div class="m">In het gesprek</div><div class="t">Een eigen mailinglijst</div><p>Iedere deelnemer laat zijn e-mailadres achter en meldt zich zelf aan voor nieuws en acties. Die lijst blijft na de campagne van New York Pizza.</p></div>
+      <div class="kaart yc opbouw"><div class="m">Binnen een minuut</div><div class="t">Beelden en video's die deelnemers zelf delen</div><p>Het beeld van zijn pizza in de DM en de video op zijn persoonlijke pagina zijn gemaakt om te delen. Vrienden zien ze in hun story, openen de pagina en sturen zelf een DM. De makers trekken de eerste golf, de deelnemers de volgende.</p></div>
+      <div class="kaart yc uitgelicht opbouw"><div class="m">Pagina en mailbox</div><div class="t">Bestellingen in de app</div><p>Op de persoonlijke pagina staat een bestelknop, in de mailbox een persoonlijke kortingscode. Per code is te zien of er besteld is, dus de campagne is af te rekenen op omzet, niet alleen op views.</p></div>
+      <div class="kaart yc opbouw"><div class="m">Tijdens de campagne</div><div class="t">Inzicht in welke nieuwe pizza Nederland wil</div><p>Duizenden bedachte pizza's, met bodem, saus en toppings. Elke week content om te delen, en input voor de kaart van de komende jaren.</p></div>
+      <div class="kaart yc finale opbouw"><div><div class="m">Finale</div><div class="t">Een nieuwe pizza op de kaart</div><p>De winnaar komt op de kaart als de pizza die Nederland zelf bedacht. Een tweede moment in de media, en een reden voor iedereen die meedeed om weer te bestellen.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 SCHAAL -->
+<section class="dia schaal" id="h8" data-nr="10">
+  <div class="wrap">
+    <div class="tekst opbouw">
+      <div>
+        <div class="kicker">8 · Gebouwd voor heel Nederland tegelijk</div>
+        <h2 class="kop2">Grappen opvangen, drukte aankunnen.</h2>
+      </div>
+      <p class="p">Een campagne waarin iedereen zijn naam en pizza instuurt, moet daar vanaf de eerste DM op gebouwd zijn.</p>
+      <div class="bewezen"><div class="h">Bewezen op landelijke schaal</div><p>Dit concept draaide al op landelijke schaal voor een A-merk in Nederland. Deze campagne bouwt op dezelfde basis.</p></div>
+    </div>
+    <div class="zes">
+      <div class="kaart sc opbouw"><div class="ico"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/></svg></div><div class="m">Voor de lancering</div><div class="t">Eerst testen, dan live</div><p>Alles draait eerst in een testmodus. Het team van New York Pizza doorloopt zelf de hele reis voordat Nederland meedoet.</p></div>
+      <div class="kaart sc opbouw"><div class="ico"><svg viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div><div class="m">De lancering</div><div class="t">Klaar voor de piek</div><p>Als een grote maker post, komen er in een paar minuten duizenden berichten binnen. De keten schaalt mee, zodat niemand in een wachtrij belandt.</p></div>
+      <div class="kaart sc opbouw"><div class="ico"><svg viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div><div class="m">Naam en pizza</div><div class="t">Niets in beeld dat er niet hoort</div><p>Elke naam en pizza wordt twee keer gecontroleerd voordat er een beeld gemaakt wordt: eerst op een uitgebreide woordenlijst, daarna door een AI-model dat ook verhulde grappen herkent.</p></div>
+      <div class="kaart sc opbouw"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></div><div class="m">Bij een foute inzending</div><div class="t">Geen concurrenten, geen beroemdheden</div><p>Een andere pizzaketen als smaak, publieke figuren, politiek of drugs: het gesprek vraagt vriendelijk om iets anders. De deelnemer haakt niet af.</p></div>
+      <div class="kaart sc opbouw"><div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></div><div class="m">Na de deelname</div><div class="t">Eén pizza per persoon</div><p>Een deelname per Instagram-account, en dus ook een kortingscode per account.</p></div>
+      <div class="kaart sc opbouw"><div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5v5l4-2.5z"/></svg></div><div class="m">Persoonlijke pagina</div><div class="t">Open over AI</div><p>Op de persoonlijke pagina staat dat de video AI-beelden bevat.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 LANDEN -->
+<section class="dia" id="h9" data-nr="11">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">9 · Eerst Nederland, daarna verder</div>
+      <h2 class="kop2">Start waar New York Pizza het sterkst is. Daarna kan hetzelfde concept naar andere landen.</h2>
+    </div>
+    <div class="landen-rij">
+      <div class="kaart land opbouw">
+        <div class="label">Start</div>
+        <div class="rij"><span class="cc">NL</span><span class="h">Nederland</span></div>
+        <p class="p">Een landelijke campagne, met de makers en het socialteam van New York Pizza. Na de eerste weken weten we welke makers, pizza's en momenten het meeste opleveren.</p>
+      </div>
+      <div class="pijl-svg" aria-hidden="true"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#009A44" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="stroke:var(--accent)"><path d="M4 12h16M14 6l6 6-6 6"/></svg></div>
+      <div class="kaart land later opbouw">
+        <div class="label">Daarna</div>
+        <div class="rij"><span class="cc">DE</span><span class="cc">BE</span><span class="h">Meer landen</span></div>
+        <p class="p">Bijvoorbeeld De Pizza van Duitsland of van België. Eigen taal, eigen kaart, eigen makers, op dezelfde basis. Wat in Nederland werkte, gaat mee.</p>
+      </div>
+    </div>
+    <div class="inzicht opbouw">
+      <span class="strip"><span>Gratis inzicht</span></span>
+      <p class="lead">Het mooiste van een tweede land: de bedachte pizza's staan naast elkaar. Wat Nederland op een pizza wil, is niet wat Duitsland wil. Dat inzicht krijgt New York Pizza er gratis bij.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 SAMENWERKEN -->
+<section class="dia" id="h10" data-nr="12">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">10 · Hoe we samenwerken</div>
+      <h2 class="kop2">New York Pizza houdt de regie over merk en verhaal. Wij leveren de campagnemachine erachter.</h2>
+    </div>
+    <div class="drie">
+      <div class="kaart opbouw"><h3>New York Pizza</h3><ul class="rl"><li>Merkrichtlijnen en beeldstijl</li><li>Kortingscodes uit het bestelsysteem</li><li>Koppeling van de bestelknop aan de app</li><li>Actievoorwaarden</li><li>Akkoord op de finalisten</li><li>De winnende pizza op de kaart</li><li>De prijs voor de winnaars</li></ul></div>
+      <div class="kaart wij opbouw"><h3>manysocials</h3><ul class="rl"><li>Het gesprek in de DM, in de stem van New York Pizza</li><li>Beeld en video van de eigen pizza per deelnemer</li><li>De bedachte pizza vertalen naar bodem, saus en toppings van de kaart</li><li>De persoonlijke pagina's</li><li>Codes en mail naar iedere deelnemer</li><li>Controles, capaciteit en live dashboard</li><li>Begeleiding tijdens de hele campagne</li></ul></div>
+      <div class="kaart opbouw"><h3>Socialbureau en makers</h3><ul class="rl"><li>Teaser en lancering met de makers</li><li>Advertenties en mediaplanning</li><li>Wekelijkse updates tijdens de campagne</li><li>Content rond de finale</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 VOLGENDE STAP -->
+<section class="dia stap" id="h11" data-nr="">
+  <div class="wrap">
+    <div class="tekst opbouw">
+      <div class="kicker">11 · Volgende stap</div>
+      <h2>Een uur.<br>Eén telefoon.<br><span>Jullie eigen pizza.</span></h2>
+      <p>Een gesprek van een uur met het marketingteam en het socialbureau. We laten De Pizza van Nederland live zien op een telefoon, met een eigen pizza in de stijl van New York Pizza, en stemmen samen de planning en de eerste markt af. Daarna volgt een voorstel met investering en tijdlijn.</p>
+      <div class="contact">
+        <div class="naam">Maarten van Gennip <span>· manysocials</span></div>
+        <div class="contact-rij">
+          <div><div>E-mail</div><div>maarten@automatiflow.nl</div></div>
+          <div><div>Telefoon</div><div>06 12 99 29 73</div></div>
+          <div><div>LinkedIn</div><div>linkedin.com/in/mvgennip</div></div>
+          <div><div>Web</div><div>manysocials.ai</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="foto-paneel zoom opbouw" style="background-image:url(img/pizza-nduja.jpg)" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- 14 BRONNEN -->
+<section class="dia bronnen" id="h12" data-nr="14">
+  <div class="wrap">
+    <div class="opbouw">
+      <div class="kicker">12 · Bronnen</div>
+      <h2 class="kop2">Waar de cijfers vandaan komen</h2>
+    </div>
+    <ul class="src">
+      <li id="bron-1"><i>1</i>MarketingTribune, "Onderzoek: Gen Z kritisch op merken op social media", 2 mei 2025.<a href="https://www.marketingtribune.nl/online/nieuws/2025/05/onderzoek-gen-z-kritisch-op-merken-op-social-media/index.xml" target="_blank" rel="noopener">https://www.marketingtribune.nl/<wbr>online/<wbr>nieuws/<wbr>2025/<wbr>05/<wbr>onderzoek-<wbr>gen-<wbr>z-<wbr>kritisch-<wbr>op-<wbr>merken-<wbr>op-<wbr>social-<wbr>media/<wbr>index.xml</a></li>
+      <li id="bron-2"><i>2</i>Emerce, "Van virale video tot virale burger: KFC brengt internetklassieker tot leven", 5 augustus 2025.<a href="https://www.emerce.nl/wire/viral-video-tot-virale-burger-kfc-brengt-internetklassieker-tot-leven-kazigste-burger-ooit" target="_blank" rel="noopener">https://www.emerce.nl/<wbr>wire/<wbr>viral-<wbr>video-<wbr>tot-<wbr>virale-<wbr>burger-<wbr>kfc-<wbr>brengt-<wbr>internetklassieker-<wbr>tot-<wbr>leven-<wbr>kazigste-<wbr>burger-<wbr>ooit</a></li>
+      <li id="bron-3"><i>3</i>Adformatie, "KFC zoekt nieuw campagneluid via landelijke competitie", 2 maart 2026.<a href="https://www.adformatie.nl/creatie/craft/kfc-zoekt-nieuw-campagneluid-via-landelijke-competitie" target="_blank" rel="noopener">https://www.adformatie.nl/<wbr>creatie/<wbr>craft/<wbr>kfc-<wbr>zoekt-<wbr>nieuw-<wbr>campagneluid-<wbr>via-<wbr>landelijke-<wbr>competitie</a></li>
+      <li id="bron-4"><i>4</i>Omroep Brabant, "Pizza worstenbroodje: geslaagd experiment of smakeloze stunt", mei 2025.<a href="https://www.omroepbrabant.nl/nieuws/4695865/pizza-worstenbroodje-geslaagd-experiment-of-smakeloze-stunt" target="_blank" rel="noopener">https://www.omroepbrabant.nl/<wbr>nieuws/<wbr>4695865/<wbr>pizza-<wbr>worstenbroodje-<wbr>geslaagd-<wbr>experiment-<wbr>of-<wbr>smakeloze-<wbr>stunt</a></li>
+      <li id="bron-5"><i>5</i>Fonk, "New York Pizza kiest GoSpooky voor social strategie", 12 mei 2026.<a href="https://fonkmagazine.com/artikelen/bureaus/new-york-pizza-kiest-gospooky-voor-social-strategie-76474.html" target="_blank" rel="noopener">https://fonkmagazine.com/<wbr>artikelen/<wbr>bureaus/<wbr>new-<wbr>york-<wbr>pizza-<wbr>kiest-<wbr>gospooky-<wbr>voor-<wbr>social-<wbr>strategie-<wbr>76474.html</a></li>
+      <li id="bron-6"><i>6</i>Emerce, "Dries Roelvink speelt hoofdrol in nieuwe WK-campagne van New York Pizza", 16 juni 2026.<a href="https://www.emerce.nl/?p=6922810" target="_blank" rel="noopener">https://www.emerce.nl/<wbr>?p=6922810</a></li>
+      <li id="bron-7"><i>7</i>Emerce, "UNIV en New York Pizza winnen Customer Data Awards 2025", 2025.<a href="https://www.emerce.nl/nieuws/univ-new-york-pizza-winnen-customer-data-awards-2025" target="_blank" rel="noopener">https://www.emerce.nl/<wbr>nieuws/<wbr>univ-<wbr>new-<wbr>york-<wbr>pizza-<wbr>winnen-<wbr>customer-<wbr>data-<wbr>awards-<wbr>2025</a></li>
+      <li id="bron-8"><i>8</i>New York Pizza, "Pizza's van New York Pizza", geraadpleegd 13 oktober 2026.<a href="https://www.newyorkpizza.nl/pizza" target="_blank" rel="noopener">https://www.newyorkpizza.nl/<wbr>pizza</a></li>
+      <li id="bron-9"><i>9</i>MarketingTribune, "Stëlz laat publiek strijden om nieuwe smaak", 3 september 2026.<a href="https://www.marketingtribune.nl/food-en-retail/nieuws/2026/09/stelz-laat-publiek-strijden-om-nieuwe-smaak/index.xml" target="_blank" rel="noopener">https://www.marketingtribune.nl/<wbr>food-<wbr>en-<wbr>retail/<wbr>nieuws/<wbr>2026/<wbr>09/<wbr>stelz-<wbr>laat-<wbr>publiek-<wbr>strijden-<wbr>om-<wbr>nieuwe-<wbr>smaak/<wbr>index.xml</a></li>
+    </ul>
+    <p class="klein slot-noot">Beelden in dit voorstel zijn met AI gemaakt als voorbeeld. Er zijn geen bestaande verpakkingen of logo's van New York Pizza nagemaakt.</p>
+  </div>
+</section>
+</main>
+
+<div class="kk" id="kk" role="toolbar" aria-label="Steunkleur kiezen">
+  <div class="kk-kleuren" id="kk-kleuren" hidden>
+    <span id="kk-naam">Mint (nu) #00B884</span>
+    <div class="kk-knoppen" id="kk-knoppen"><button type="button" data-kleur="#00B884" title="Mint (nu) #00B884" aria-label="Mint (nu) #00B884" style="background:#00B884"></button><button type="button" data-kleur="#FFE600" title="Signaalgeel #FFE600" aria-label="Signaalgeel #FFE600" style="background:#FFE600"></button><button type="button" data-kleur="#FFD45C" title="Boter #FFD45C" aria-label="Boter #FFD45C" style="background:#FFD45C"></button><button type="button" data-kleur="#C6F432" title="Lime #C6F432" aria-label="Lime #C6F432" style="background:#C6F432"></button><button type="button" data-kleur="#B8E986" title="Pistache #B8E986" aria-label="Pistache #B8E986" style="background:#B8E986"></button><button type="button" data-kleur="#3FD0C9" title="Turquoise #3FD0C9" aria-label="Turquoise #3FD0C9" style="background:#3FD0C9"></button><button type="button" data-kleur="#7FD1FF" title="IJsblauw #7FD1FF" aria-label="IJsblauw #7FD1FF" style="background:#7FD1FF"></button><button type="button" data-kleur="#5AA9FF" title="Hemelsblauw #5AA9FF" aria-label="Hemelsblauw #5AA9FF" style="background:#5AA9FF"></button><button type="button" data-kleur="#FF9EC4" title="Roze #FF9EC4" aria-label="Roze #FF9EC4" style="background:#FF9EC4"></button><button type="button" data-kleur="#B9A7FF" title="Lavendel #B9A7FF" aria-label="Lavendel #B9A7FF" style="background:#B9A7FF"></button><button type="button" data-kleur="#E6D3AE" title="Zand #E6D3AE" aria-label="Zand #E6D3AE" style="background:#E6D3AE"></button></div>
+  </div>
+  <button type="button" class="kk-icoon kk-kleur" id="kk-kleur" aria-expanded="false" aria-controls="kk-kleuren" aria-label="Steunkleur kiezen" title="Steunkleur kiezen"><i></i></button>
+  <button type="button" class="kk-icoon" id="kk-dicht" aria-label="Kleurkiezer verbergen" title="Verbergen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+</div>
+<button type="button" class="kk-open" id="kk-open" aria-label="Kleurkiezer tonen" title="Kleurkiezer tonen" hidden><i></i></button>
+
+<script>
+// De Pizza van Nederland: balk met paginanummer, pizza's uit de foto's, de telefoon met Instagram-DM en duim, en de steunkleur.
+(() => {
+  const $ = (s, c = document) => c.querySelector(s);
+  const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const rust = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wacht = ms => new Promise(r => setTimeout(r, ms));
+  const opslag = {
+    get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } },
+    set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
+  };
+
+  // ---------- Balk: rand bij scrollen en het slidenummer van de sectie in beeld ----------
+  const balk = $('#balk'), nr = $('#balk-nr');
+  const randje = () => balk.classList.toggle('scroll', window.scrollY > 8);
+  window.addEventListener('scroll', randje, { passive: true });
+  randje();
+  const secties = $$('section[data-nr]');
+  if ('IntersectionObserver' in window) {
+    const zichtbaar = new Map();
+    const io = new IntersectionObserver(items => {
+      items.forEach(i => zichtbaar.set(i.target, i.intersectionRatio));
+      let beste = null, max = 0;
+      zichtbaar.forEach((r, s) => { if (r > max) { max = r; beste = s; } });
+      if (beste) nr.textContent = beste.dataset.nr;
+    }, { threshold: [0, .15, .3, .5, .7, .9] });
+    secties.forEach(s => io.observe(s));
+  }
+
+  // Presenteren met het toetsenbord: pijl omlaag of PageDown naar de volgende sectie.
+  document.addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, button, a, [contenteditable]')) return;
+    const vooruit = ['ArrowDown', 'PageDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey);
+    const terug = ['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey);
+    if (!vooruit && !terug) return;
+    const y = window.scrollY + 72;
+    const tops = secties.map(s => s.getBoundingClientRect().top + window.scrollY);
+    let doel = vooruit ? tops.find(t => t > y + 4) : [...tops].reverse().find(t => t < y - 4);
+    if (doel === undefined) return;
+    e.preventDefault();
+    window.scrollTo({ top: Math.max(0, doel - 60), behavior: rust ? 'auto' : 'smooth' });
+  });
+
+  // ---------- Pizza's: elke foto zo schalen dat de pizza precies de cirkel vult ----------
+  const MAP = 'img/voor/new-york-pizza/';
+  const PIZZA = {
+    nduja:      { src: MAP + 'nduja.jpg',      w: 600, h: 800, cx: .500, cy: .547, r: .38 },
+    parmaham:   { src: MAP + 'parmaham.jpg',   w: 600, h: 800, cx: .515, cy: .612, r: .385 },
+    mortadella: { src: MAP + 'mortadella.jpg', w: 600, h: 800, cx: .500, cy: .615, r: .405 },
+    bresaola:   { src: MAP + 'bresaola.jpg',   w: 600, h: 800, cx: .500, cy: .540, r: .372 },
+    gorgonzola: { src: MAP + 'gorgonzola.jpg', w: 600, h: 800, cx: .490, cy: .593, r: .35 },
+    ricotta:    { src: MAP + 'ricotta.jpg',    w: 600, h: 800, cx: .515, cy: .632, r: .385 },
+    daan:       { src: 'img/pizza-nduja.jpg',  w: 781, h: 1400, cx: .492, cy: .647, r: .38 },
+  };
+  const zetPizza = (el, key) => {
+    const p = PIZZA[key];
+    const S = p.w / (2 * p.r * p.w);            // fotobreedte gedeeld door cirkeldiameter
+    const H = S * p.h / p.w;                      // fotohoogte gedeeld door cirkeldiameter
+    const lx = .5 - p.cx * S, ly = .5 - p.cy * H; // verschuiving als deel van de cirkel
+    el.style.backgroundImage = `url(${p.src})`;
+    el.style.backgroundSize = `${(S * 100).toFixed(2)}% ${(H * 100).toFixed(2)}%`;
+    el.style.backgroundPosition = `${(lx / (1 - S) * 100).toFixed(2)}% ${(ly / (1 - H) * 100).toFixed(2)}%`;
+  };
+  $$('[data-pizza]').forEach(el => zetPizza(el, el.dataset.pizza));
+  const band = $('#band-rij');
+  const volgorde = ['nduja', 'parmaham', 'mortadella', 'daan', 'bresaola', 'gorgonzola', 'ricotta'];
+  for (let set = 0; set < 4; set++) volgorde.forEach(k => { const d = document.createElement('div'); d.className = 'pizza'; zetPizza(d, k); band.appendChild(d); });
+
+  // Losse ingrediënten voor het decor.
+  const INGR = {
+    basilicum: '<svg viewBox="-20 -20 40 40"><defs><linearGradient id="ib" x1="0" y1="-16" x2="0" y2="16" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#4CC25E"/><stop offset="1" stop-color="#1F7A33"/></linearGradient></defs><path d="M0 -17 C 13 -10 14 7 0 17 C -14 7 -13 -10 0 -17 Z" fill="url(#ib)"/><path d="M0 -15 C 1 -4 1 6 0 15 M0 -6 L6 -10 M0 1 L-6 -3 M0 7 L6 4" stroke="#17602A" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg>',
+    peper: '<svg viewBox="-20 -20 40 40"><path d="M-12 -9 C 1 -14 15 -2 11 15 C 7 4 -2 -2 -12 -3 Z" fill="#D7261E"/><path d="M-6 -9 C 2 -9 8 -3 9 4" stroke="#FF8A7A" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M-12 -8 C -16 -10 -16 -15 -11 -17" stroke="#2E9E45" stroke-width="3" fill="none" stroke-linecap="round"/></svg>',
+    salami: '<svg viewBox="-20 -20 40 40"><circle r="15" fill="#B3261E"/><circle r="15" fill="none" stroke="#7E1712" stroke-width="2"/><g fill="#F2B8A8" opacity=".85"><circle cx="-5" cy="-6" r="2.2"/><circle cx="6" cy="-3" r="1.8"/><circle cx="-2" cy="6" r="2"/><circle cx="7" cy="7" r="1.5"/><circle cx="-8" cy="3" r="1.4"/></g></svg>',
+  };
+  $$('[data-ingr]').forEach(el => { el.innerHTML = INGR[el.dataset.ingr]; });
+
+  // ---------- Steunkleur ----------
+  const namen = { '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  const zetKleur = k => {
+    if (!namen[k]) k = '#00B884';
+    document.documentElement.style.setProperty('--accent', k);
+    $('#kk-naam').textContent = namen[k] + ' ' + k;
+    $$('#kk-knoppen button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.kleur === k)));
+    opslag.set('ms-kleur', k);
+  };
+  $$('#kk-knoppen button').forEach(b => b.addEventListener('click', () => zetKleur(b.dataset.kleur)));
+  zetKleur(opslag.get('ms-kleur') || '#00B884');
+  const kleurPaneel = $('#kk-kleuren'), kleurKnop = $('#kk-kleur');
+  kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
+  document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
+  const kk = $('#kk'), kkOpen = $('#kk-open');
+  const toonKk = aan => { kk.hidden = !aan; kkOpen.hidden = aan; opslag.set('ms-kk-dicht', aan ? '0' : '1'); };
+  $('#kk-dicht').addEventListener('click', () => toonKk(false));
+  kkOpen.addEventListener('click', () => toonKk(true));
+  toonKk(opslag.get('ms-kk-dicht') !== '1');
+
+  // ---------- 61% telt op als hij in beeld komt ----------
+  const stat = $('[data-tel]');
+  if (stat && !rust && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      const doel = +stat.dataset.tel, t0 = performance.now();
+      const stap = t => { const p = Math.min(1, (t - t0) / 1400); stat.textContent = Math.round(doel * (1 - Math.pow(1 - p, 3))) + '%'; if (p < 1) requestAnimationFrame(stap); };
+      requestAnimationFrame(stap);
+    }, { threshold: .6 });
+    io.observe(stat);
+  }
+
+  // ---------- Toneel: schalen en diepte ----------
+  const toneel = $('#toneel'), toneelIn = $('#toneel-in');
+  let schaal = 1;
+  const meet = () => { schaal = toneel.clientWidth / 560; toneelIn.style.setProperty('--s', schaal); };
+  if ('ResizeObserver' in window) new ResizeObserver(meet).observe(toneel);
+  meet();
+  if (!rust && matchMedia('(pointer: fine)').matches) {
+    const hero = $('.cover');
+    hero.addEventListener('pointermove', e => {
+      const r = toneel.getBoundingClientRect();
+      toneelIn.style.setProperty('--px', Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 1.4))).toFixed(3));
+      toneelIn.style.setProperty('--py', Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 1.4))).toFixed(3));
+    });
+    hero.addEventListener('pointerleave', () => { toneelIn.style.setProperty('--px', 0); toneelIn.style.setProperty('--py', 0); });
+  }
+
+  // ---------- Telefoon: Instagram-DM met duim ----------
+  const draad = $('#draad');
+  const sjablonen = [...draad.children].map(n => n.cloneNode(true));
+  const chat = $('#ig-chat'), invoer = $('#ig-invoer'), veld = $('#ig-veld'), getypt = $('#getypt'), stuur = $('#ig-stuur');
+  const scherm = $('#scherm'), tel = $('.tel'), pop = $('#pop'), bestel = $('#bestel');
+  const duim = $('#duim'), duimS = $('#duim-schaduw'), duimSPos = $('#duim-schaduw-pos');
+  const SPIL = { x: 330, y: 560 }, LENGTE = 134;
+  const RUST = { a: -14, s: .92, d: 0 };
+  const staat = { ...RUST };
+  let scrollY = 0;
+
+  const zetDuim = () => {
+    duim.setAttribute('transform', `rotate(${staat.a.toFixed(2)}) scale(${(1 - staat.d * .035).toFixed(3)} ${staat.s.toFixed(3)})`);
+    duimS.setAttribute('transform', `rotate(${staat.a.toFixed(2)}) scale(1 ${staat.s.toFixed(3)})`);
+    const o = 16 - staat.d * 12;
+    duimSPos.setAttribute('transform', `translate(${(SPIL.x + o * .5).toFixed(1)} ${(SPIL.y + o).toFixed(1)})`);
+    duimS.style.opacity = (1 - staat.d * .35).toFixed(2);
+  };
+  const glad = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
+  const uit = p => 1 - Math.pow(1 - p, 3);
+  const beweeg = (naar, ms, ease = glad) => new Promise(res => {
+    const van = { ...staat }, t0 = performance.now();
+    const stap = t => {
+      const p = Math.min(1, (t - t0) / ms), e = ease(p);
+      for (const k in naar) staat[k] = van[k] + (naar[k] - van[k]) * e;
+      zetDuim();
+      p < 1 ? requestAnimationFrame(stap) : res();
+    };
+    requestAnimationFrame(stap);
+  });
+  const richt = (x, y) => {
+    const dx = x - SPIL.x, dy = y - SPIL.y;
+    return { a: Math.atan2(dx, -dy) * 180 / Math.PI, s: Math.max(.6, Math.min(1.2, Math.hypot(dx, dy) / LENGTE)) };
+  };
+  const inTel = el => {
+    let x = 0, y = 0, n = el;
+    while (n && n !== tel) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    return { x, y, w: el.offsetWidth, h: el.offsetHeight };
+  };
+  const rimpel = (x, y) => {
+    const r = document.createElement('span');
+    r.className = 'rimpel'; r.style.left = x + 'px'; r.style.top = y + 'px';
+    tel.appendChild(r);
+    setTimeout(() => r.remove(), 700);
+  };
+  const tik = async (x, y, opDruk) => {
+    await beweeg({ ...richt(x, y), d: 0 }, 560);
+    await beweeg({ d: 1 }, 110);
+    rimpel(x, y);
+    if (opDruk) opDruk();
+    await beweeg({ d: 0 }, 170);
+  };
+  const naarRust = () => beweeg(RUST, 520);
+
+  let isZichtbaar = true, wachtrij = [];
+  if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
+    isZichtbaar = e.isIntersecting;
+    if (isZichtbaar) { wachtrij.forEach(f => f()); wachtrij = []; }
+  }).observe(toneel);
+  const pauze = async ms => {
+    await wacht(ms);
+    if (!isZichtbaar || document.hidden) await new Promise(r => {
+      wachtrij.push(r);
+      const c = () => { if (!document.hidden && isZichtbaar) { document.removeEventListener('visibilitychange', c); r(); } };
+      document.addEventListener('visibilitychange', c);
+    });
+  };
+
+  const scrollNaarOnder = () => {
+    scrollY = Math.max(0, draad.offsetHeight - chat.clientHeight);
+    draad.style.transform = `translateY(${-scrollY}px)`;
+  };
+  const voegToe = (i, extra = []) => {
+    const n = sjablonen[i].cloneNode(true);
+    n.classList.add('in-anim', ...extra);
+    draad.appendChild(n);
+    return n;
+  };
+  const typtIndicator = async ms => {
+    const n = document.createElement('div');
+    n.className = 'typen in-anim';
+    n.innerHTML = '<i></i><i></i><i></i>';
+    draad.appendChild(n);
+    scrollNaarOnder();
+    await pauze(ms);
+    n.remove();
+  };
+  const kies = async (opts, tekst, antwoord) => {
+    const knop = [...opts.children].find(o => o.textContent === tekst);
+    const k = inTel(knop);
+    await tik(k.x + k.w / 2, k.y - scrollY + k.h / 2, () => knop.classList.add('gekozen'));
+    await wacht(160);
+    opts.classList.add('weg');
+    await wacht(320);
+    opts.remove();
+    voegToe(antwoord);
+    scrollNaarOnder();
+    naarRust();
+  };
+  const typ = async tekst => {
+    veld.classList.add('actief');
+    for (const ch of tekst) {
+      getypt.textContent += ch;
+      invoer.classList.add('tekst');
+      await wacht(60 + Math.random() * 75);
+    }
+    await pauze(260);
+  };
+  const verstuur = async i => {
+    const a = inTel(stuur);
+    await tik(a.x + a.w * .55, a.y + a.h / 2, () => { stuur.classList.remove('tik'); void stuur.offsetWidth; stuur.classList.add('tik'); });
+    getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
+    voegToe(i);
+    scrollNaarOnder();
+    naarRust();
+  };
+  const veeg = async () => {
+    const start = richt(222, 486), eind = richt(268, 404);
+    await beweeg({ ...start, d: 0 }, 420);
+    await beweeg({ d: 1 }, 110);
+    scrollNaarOnder();
+    await beweeg({ ...eind }, 640, uit);
+    await beweeg({ d: 0 }, 150);
+    await naarRust();
+  };
+  const vonken = (x, y) => {
+    const kleuren = ['var(--accent)', '#FFC23D', '#E8412C', '#FFFFFF', '#2E9E45'];
+    for (let i = 0; i < 14; i++) {
+      const v = document.createElement('span');
+      v.className = 'vonk';
+      v.style.left = x + 'px'; v.style.top = y + 'px';
+      v.style.background = kleuren[i % kleuren.length];
+      const hoek = (i / 14) * Math.PI * 2 + Math.random() * .4, af = 100 + Math.random() * 90, sch = .5 + Math.random();
+      toneelIn.appendChild(v);
+      v.animate([
+        { transform: 'translate(0,0) scale(0)', opacity: 1 },
+        { transform: `translate(${Math.cos(hoek) * af * .7}px, ${Math.sin(hoek) * af * .7}px) scale(${sch})`, opacity: 1, offset: .5 },
+        { transform: `translate(${Math.cos(hoek) * af}px, ${Math.sin(hoek) * af + 30}px) scale(0)`, opacity: 0 },
+      ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' }).onfinish = () => v.remove();
+    }
+  };
+  // De pizza draait uit de video op de persoonlijke pagina het toneel op.
+  const EIND = { x: 0, y: 70 };
+  const vlieg = () => {
+    const tin = toneelIn.getBoundingClientRect();
+    const b = $('.pagina .pizzakaart', scherm).getBoundingClientRect();
+    const d = Math.min(b.width, b.height) * .8;
+    const bx = (b.left + (b.width - d) / 2 - tin.left) / schaal, by = (b.top + (b.height - d) * .62 - tin.top) / schaal, k = (d / schaal) / 220;
+    pop.classList.remove('geland');
+    pop.animate([
+      { transform: `translate(${bx}px, ${by}px) rotate(0deg) scale(${k})`, opacity: 0 },
+      { opacity: 1, offset: .12 },
+      { transform: `translate(${EIND.x - 20}px, ${EIND.y - 50}px) rotate(-250deg) scale(1.1)`, opacity: 1, offset: .7 },
+      { transform: `translate(${EIND.x}px, ${EIND.y}px) rotate(-372deg) scale(1)`, opacity: 1 },
+    ], { duration: 1300, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
+    setTimeout(() => { pop.classList.add('geland'); vonken(EIND.x + 110, EIND.y + 110); }, 1000);
+  };
+  const terug = () => {
+    pop.classList.remove('geland');
+    return pop.animate([{ opacity: 1 }, { transform: `translate(${EIND.x + 140}px, ${EIND.y + 260}px) rotate(-460deg) scale(.35)`, opacity: 0 }], { duration: 650, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
+  };
+  const leeg = () => {
+    draad.style.transition = 'none';
+    draad.innerHTML = '';
+    scrollY = 0;
+    draad.style.transform = 'translateY(0)';
+    void draad.offsetWidth;
+    draad.style.transition = '';
+  };
+
+  const gesprek = async () => {
+    await wacht(1900);
+    while (true) {
+      await pauze(600);
+      await typtIndicator(1000);
+      voegToe(0); const o1 = voegToe(1); scrollNaarOnder();
+      await pauze(1500);
+      await kies(o1, 'Italiaans dun', 2);
+      await pauze(400);
+      await typtIndicator(900);
+      voegToe(3); scrollNaarOnder();
+      await pauze(900);
+      await typ('Nduja en hot honey');
+      await verstuur(4);
+      await pauze(400);
+      await typtIndicator(900);
+      voegToe(5); const o2 = voegToe(6); scrollNaarOnder();
+      await pauze(1300);
+      await kies(o2, 'Tomaat', 7);
+      await pauze(400);
+      await typtIndicator(1300);
+      voegToe(8); scrollNaarOnder();
+      await pauze(700);
+      const kaart = voegToe(9, ['genereren']);
+      await pauze(1600);
+      kaart.classList.remove('genereren');
+      await pauze(900);
+      await veeg();
+      await pauze(500);
+      const k = inTel(kaart);
+      await tik(k.x + k.w * .7, k.y - scrollY + k.h * .55, () => scherm.classList.add('op-pagina'));
+      await naarRust();
+      await pauze(900);
+      vlieg();
+      await pauze(2200);
+      const b = inTel(bestel);
+      await tik(b.x + b.w * .72, b.y + b.h / 2, () => bestel.classList.add('ingedrukt'));
+      setTimeout(() => bestel.classList.remove('ingedrukt'), 280);
+      await naarRust();
+      await pauze(3600);
+      await terug();
+      scherm.classList.remove('op-pagina');
+      await wacht(700);
+      draad.style.transition = 'opacity .45s';
+      draad.style.opacity = '0';
+      await wacht(480);
+      leeg();
+      draad.style.opacity = '';
+    }
+  };
+
+  zetDuim();
+  if (rust) scrollNaarOnder();
+  else { leeg(); gesprek(); }
+})();
+
+</script>

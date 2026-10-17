@@ -694,10 +694,10 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
 
 /* Boven de vouw: het toneel krimpt mee met de schermhoogte, zodat de band op het eerste scherm staat */
 @media (min-width: 960px) {
-  .toneel { max-width: min(540px, calc((100svh - 64px - 112px - 34px) * 560 / 760)); }
+  .toneel { max-width: min(540px, calc((100svh - 64px - 120px - 34px) * 560 / 760)); }
   .cover .wrap { padding-top: clamp(12px, 2vw, 28px); }
   .cover-tekst { padding-bottom: 40px; gap: 20px; }
-  .band { padding-block: 12px; }
+  .band { padding-block: 16px; }
   .band-rij { gap: 34px; }
   .band-pizza { width: auto; grid-template-columns: 88px 128px; align-items: center; gap: 12px; padding: 0; font-size: 12.5px; text-align: left; }
   .band-pizza .pizza { width: 88px; }

@@ -35,3 +35,15 @@ Na een art-directorreview:
 - Afsluiter: waaier van drie zakken in plaats van dezelfde mangozak als het vlaggenschip.
 - Werkwijze met voortgangsringen, minder wit bij Werkwijze en Vragen.
 - Overgeslagen (vraag voor de gebruiker): stembalkjes in de live-lijst.
+
+## Ronde 2, pizza (gepubliceerd)
+
+Na een art-directorreview:
+- Band "Kies een pizza" volledig op het eerste scherm (1440x900, 1366x768, 1280x720, 1024x768); bandpizza's op desktop naast hun naam.
+- Pizza kiezen toont meteen de pizzapagina in de telefoon; na 4,5 s begint het gesprek opnieuw.
+- Presentatiebalk: op mobiel ingeklapt, op desktop schuift hij boven de band.
+- Mobiel: metachips in één scrollrij, fases als swipe-carrousel, tegels in twee kolommen.
+- Wat het oplevert: gezichten, pizzaschijfjes en een grote nduja in de zwarte kaart.
+- Volgende stap: Big T-foto met Thomas als badge (geen herhaling van finale.webp).
+- Schaal en landen naast de kop, Het idee met lichtere voordelen.
+- Bekend: in donker valt de zwarte kaart 7 weg tegen de achtergrond.

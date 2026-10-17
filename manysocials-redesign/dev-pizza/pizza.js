@@ -118,7 +118,7 @@
   const bandEl = $('#band');
   const tilKk = () => {
     const r = bandEl.getBoundingClientRect(), onder = innerHeight - 70;
-    const til = r.top < innerHeight && r.bottom > onder && r.top > innerHeight * .4 ? innerHeight - r.top + 10 : 0;
+    const til = innerWidth >= 960 && r.top < innerHeight && r.bottom > onder && r.top > innerHeight * .4 ? innerHeight - r.top + 10 : 0;
     document.documentElement.style.setProperty('--kk-til', til + 'px');
   };
   window.addEventListener('scroll', tilKk, { passive: true });

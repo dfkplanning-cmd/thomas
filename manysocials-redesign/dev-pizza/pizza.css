@@ -8,7 +8,9 @@
   --lijn: #E1E1DA;
   --accent: #00B884;
   --op-accent: #0F0F0E;
-  --heet: #E8412C;
+  --heet: #D93825;
+  --accent-tekst: color-mix(in srgb, var(--accent) 64%, #0F0F0E);
+  --accent-groot: color-mix(in srgb, var(--accent) 82%, #0F0F0E);
   --paneel: #121211;
   --op-paneel: #F3F3EF;
   --paneel-zacht: #A6A69E;
@@ -38,6 +40,7 @@
 :root.donker {
   --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
   --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
+  --accent-tekst: var(--accent); --accent-groot: var(--accent);
   --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
   color-scheme: dark;
 }
@@ -563,7 +566,7 @@ sup a:hover { text-decoration: underline; }
 .pijl-l { width: 56px; height: 56px; stroke: var(--accent); }
 
 /* Wie doet wat */
-.team-foto { border-radius: 28px; aspect-ratio: 16 / 7; background: center 55% / cover no-repeat; margin-bottom: 14px; }
+.team-foto { border-radius: 28px; aspect-ratio: 16 / 7; background: center 15% / cover no-repeat; margin-bottom: 14px; }
 .wie { display: grid; gap: 12px; }
 .wie > div { background: var(--vlak); border: 1px solid var(--lijn); border-radius: 22px; padding: 22px; }
 .wie h3 { font-size: 21px; margin-bottom: 8px; text-transform: none; }
@@ -655,11 +658,31 @@ button.opt { font-family: inherit; cursor: pointer; }
 /* Mening: kop boven, foto eronder met het cijfer erop */
 .mening-s mark { background: var(--heet); color: #fff; padding: .04em .22em; border-radius: .14em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .mening-s .voetregel { margin: 0; color: inherit; font-size: clamp(17px, 1.5vw, 21px); line-height: 1.45; max-width: 34ch; }
-.mening-foto { position: relative; margin-top: clamp(22px, 3vw, 36px); border-radius: 28px; aspect-ratio: 16 / 8; background: #1a1210 center 25% / cover no-repeat; overflow: hidden; }
+.mening-foto { position: relative; margin-top: clamp(22px, 3vw, 36px); border-radius: 28px; aspect-ratio: 16 / 8; background: #1a1210 center 35% / cover no-repeat; overflow: hidden; }
 .mening-onder { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(18px, 3vw, 40px); margin-top: clamp(16px, 2vw, 24px); }
 .mening-onder .stat-bol { justify-self: auto; box-shadow: none; }
-@media (max-width: 700px) { .mening-foto { aspect-ratio: 4 / 3; background-position: 35% 20%; } }
+@media (max-width: 700px) { .mening-foto { aspect-ratio: 4 / 3; background-position: 40% center; } }
 
 /* Label groeit naar rechts, zodat lange namen niet links buiten beeld vallen */
 .p-label { left: 14px; translate: 0 0; }
 .scherm.live .ig-chat { touch-action: pan-x; }
+
+/* Nachtronde: afwerking. Leesbare groen op licht, nette regelval, minder lege ruimte op mobiel */
+sup a, .sub b, .src li i { color: var(--accent-tekst); }
+.zeven-t li:not(.accent):not(.breed) i { color: var(--accent-groot); }
+.kopgroep .sub, .zeven-t b, .tegel-i b { text-wrap: balance; }
+@media (min-width: 640px) and (max-width: 1099px) { .zeven-t .breed { grid-column: 1 / -1; } }
+@media (max-width: 639px) { .zeven-t li { min-height: 0; padding-block: 18px; } .zeven-t i { font-size: 40px; } }
+@media (min-width: 700px) { .contact-rij { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 700px) { .team-foto { aspect-ratio: 16 / 10; } }
+@media (max-width: 460px) {
+  .cover .strip { font-size: 13px; }
+  .landen-v { gap: 12px; }
+  .cc.groot { width: 104px; height: 72px; font-size: 32px; border-radius: 18px; }
+  .landen-v .cc.later { width: 80px; height: 56px; font-size: 24px; border-radius: 14px; }
+  .pijl-l { width: 40px; height: 40px; }
+}
+.ig-invoer:has(.ig-input:focus-visible) { box-shadow: 0 0 0 2px var(--ig-blauw); }
+.opts .opt:focus-visible { outline: 2px solid var(--ig-blauw); outline-offset: 1px; }
+.conf { color: color-mix(in srgb, var(--heet) 88%, #0F0F0E); }
+.donker :is(.conf, .meta .rood, .meta-chips .rood) { color: #FF6B57; }

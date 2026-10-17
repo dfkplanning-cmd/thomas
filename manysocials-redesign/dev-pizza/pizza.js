@@ -444,16 +444,17 @@
   // ---------- Zelf typen: een echte DM met de pizza-agent ----------
   // Claude antwoordt via de sample-capability; zonder die (of zonder toestemming) neemt een eenvoudig script het over.
   const invoerVeld = $('#ig-input'), hint = $('#zelf-hint');
-  const GROET = 'Hoi! Wij maken jouw eigen pizza. Hoe heet je?';
+  const GROET = 'Hoi! Hier bedenk je je eigen pizza. Hoe heet je?';
   const REGELS = `Je bent de DM-assistent van New York Pizza op Instagram (@newyorkpizza_nl) in de campagne "De Pizza van Nederland": iedereen bedenkt via de DM zijn eigen pizza en de beste komt echt op de kaart.
-Schrijf kort en informeel Nederlands, hooguit twee zinnen, hooguit één emoji. Vraag één ding tegelijk, in deze volgorde: voornaam (de eerste vraag is al gesteld), bodem (New York Style, Italiaans dun of Bloemkool), toppings, saus.
-Zodra bodem, toppings en saus bekend zijn: bedenk een persoonlijke pizzanaam van twee of drie woorden met de voornaam erin (speels, zoals "Citroen Marije" of "Big T Hot Honey"), zeg dat ze meedoen en zo een kortingscode ontvangen, en geef de pizza mee. Daarna mag de klant een nieuwe pizza bedenken.
-Blijf bij pizza en deze campagne; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste toppings weiger je met humor.
+Schrijf kort en informeel Nederlands, hooguit drie korte zinnen, hooguit één emoji. Vraag één ding tegelijk, in deze volgorde: voornaam (de eerste vraag is al gesteld; wil iemand geen naam geven, ga dan door zonder naam en gebruik "Jouw pizza"), bodem (New York Style, Italiaans dun of Bloemkool), toppings, saus (Tomaat, BBQ of Crème fraîche).
+Zodra bodem, toppings en saus bekend zijn: bedenk een speelse pizzanaam van twee of drie woorden met de voornaam erin (zoals "Citroen Marije" of "Peer Pressure Lars"). Zeg dat de klant meedoet en zo een kortingscode ontvangt, en vul "pizza" in. Iedere klant doet mee met één pizza; wil iemand er nog een, leg dan vriendelijk uit dat dat in de campagne één keer kan.
+Blijf bij pizza en deze campagne; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste toppings weiger je met humor. Zet nooit tekst tussen [ ] in je bericht.
 Antwoord met alleen JSON in deze vorm:
-{"tekst": "je bericht", "opties": ["max 3 korte snelknoppen, of leeg"], "pizza": null}
+{"tekst": "je bericht", "opties": ["New York Style", "Italiaans dun", "Bloemkool"], "pizza": null}
+"opties" bevat hooguit 3 korte snelknoppen, of is een lege lijst [].
 of, als de pizza af is:
 {"tekst": "je bericht", "opties": [], "pizza": {"titel": "Citroen Marije", "persoon": "Marije", "toppings": "Ricotta, courgette & citroen", "foto": "ricotta"}}
-Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees), parmaham (ham, burrata, rucola), mortadella (mortadella, pistache, romig), bresaola (rundvlees, rucola, Parmezaan), gorgonzola (kaas, peer, noten, zoet), ricotta (groente, vegetarisch, citroen, fris).`;
+Kies bij "foto" de foto die het meest lijkt: nduja (pittig, salami, nduja, vlees), parmaham (ham, burrata, rucola), mortadella (mortadella, pistache, romig), bresaola (rundvlees, rucola, Parmezaan), gorgonzola (kaas, peer, noten, zoet), ricotta (groente, vegetarisch, citroen, fris).`;
   const TREF = [
     ['daan', ['nduja', 'salami', 'pepperoni', 'chorizo', 'chili', 'jalape', 'pittig', 'worst', 'kip', 'gehakt', 'spek']],
     ['mortadella', ['mortadella', 'pistache']],
@@ -485,7 +486,8 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
     scrollNaarOnder();
   };
   const maakPizza = p => {
-    const key = KEUZES.some(k => k.key === p.foto) ? p.foto : 'daan';
+    const foto = p.foto === 'nduja' ? 'daan' : p.foto;
+    const key = KEUZES.some(k => k.key === foto) ? foto : 'daan';
     const naam = String(p.toppings || '').slice(0, 60) || 'Jouw pizza';
     keuze = { key, titel: String(p.titel || 'Jouw pizza').slice(0, 40), persoon: String(p.persoon || recept.naam || '').slice(0, 30), gezicht: null, naam, toppings: naam, bestel: 'Bestel je eigen pizza' };
     zetKeuzeInBeeld();
@@ -498,15 +500,15 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
 
   const scriptAgent = () => {
     const t = beurten[beurten.length - 1].content;
-    if (stap === -1) { recept.naam = t.split(/[\s,.!]+/).filter(Boolean).pop() || t; recept.naam = recept.naam.charAt(0).toUpperCase() + recept.naam.slice(1); stap = 0; return { tekst: `Leuk ${recept.naam}! Eerst: welke bodem?`, opties: ['New York Style', 'Italiaans dun', 'Bloemkool'] }; }
+    if (stap === -1) { recept.naam = t.split(/[\s,.!]+/).filter(Boolean).pop() || t; recept.naam = recept.naam.charAt(0).toUpperCase() + recept.naam.slice(1); stap = 0; return { tekst: `Leuk, ${recept.naam}! Eerst: welke bodem?`, opties: ['New York Style', 'Italiaans dun', 'Bloemkool'] }; }
     if (stap === 0) { recept.bodem = t; stap = 1; return { tekst: 'Lekker. En wat moet erop?' }; }
     if (stap === 1) { recept.toppings = t; stap = 2; return { tekst: 'Welke saus eronder?', opties: ['Tomaat', 'BBQ', 'Crème fraîche'] }; }
     stap = 0;
     const l = recept.toppings.toLowerCase();
     const foto = (TREF.find(([, w]) => w.some(x => l.includes(x))) || ['daan'])[0];
     const toppings = recept.toppings.charAt(0).toUpperCase() + recept.toppings.slice(1);
-    const VOOR = { daan: 'Hot Honey', parmaham: 'La Dolce', mortadella: 'Pistache', bresaola: 'Royale', gorgonzola: 'Peer Pressure', ricotta: 'Citroen' };
-    const naamPizza = recept.naam ? `${VOOR[foto]} ${recept.naam}` : 'Jouw pizza';
+    const NAAM = { daan: n => `Hot Honey ${n}`, parmaham: n => `La Dolce ${n}`, mortadella: n => `Pistache ${n}`, bresaola: n => `${n} Royale`, gorgonzola: n => `Peer Pressure ${n}`, ricotta: n => `Citroen ${n}` };
+    const naamPizza = recept.naam ? NAAM[foto](recept.naam) : 'Jouw pizza';
     return { tekst: `Super dat je meedeed, ${recept.naam || 'topper'}! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.`, pizza: { titel: naamPizza, persoon: recept.naam, toppings, foto } };
   };
   const vraagAgent = async () => {

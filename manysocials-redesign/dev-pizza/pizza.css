@@ -563,7 +563,7 @@ sup a:hover { text-decoration: underline; }
 .pijl-l { width: 56px; height: 56px; stroke: var(--accent); }
 
 /* Wie doet wat */
-.team-foto { border-radius: 28px; aspect-ratio: 16 / 7; background: center 40% / cover no-repeat; margin-bottom: 14px; }
+.team-foto { border-radius: 28px; aspect-ratio: 16 / 7; background: center 55% / cover no-repeat; margin-bottom: 14px; }
 .wie { display: grid; gap: 12px; }
 .wie > div { background: var(--vlak); border: 1px solid var(--lijn); border-radius: 22px; padding: 22px; }
 .wie h3 { font-size: 21px; margin-bottom: 8px; text-transform: none; }

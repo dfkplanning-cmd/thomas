@@ -1499,6 +1499,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
         setTimeout(() => knop.classList.remove('ingedrukt'), 260);
         await pauze(4200);
         await verbergPop(false);
+        if (mijn !== run) throw AFGEBROKEN;
         draad.style.transition = 'opacity .45s';
         draad.style.opacity = '0';
         await pauze(480);

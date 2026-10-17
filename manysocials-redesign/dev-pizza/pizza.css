@@ -631,3 +631,6 @@ button.opt { font-family: inherit; cursor: pointer; }
 .scherm.op-pagina .zelf-hint { display: none; }
 @keyframes hintDobber { 0%, 100% { translate: -50% 0; } 50% { translate: -50% -5px; } }
 @media (prefers-reduced-motion: reduce) { .zelf-hint { animation: none; } }
+
+/* Eén zwevende pizza is genoeg: de pizza uit de telefoon landt op de keuzeplek */
+.pop { display: none; }

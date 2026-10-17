@@ -370,7 +370,7 @@
         const k = inScherm(kaart);
         await tik(k.x + k.w * .6, k.y - scrollY + k.h * .55, () => scherm.classList.add('op-pagina'));
         await pauze(1100);
-        vlieg();
+        toonKeuze(paginaKaart);
         await pauze(2200);
         const b = inScherm(bestel);
         await tik(b.x + b.w / 2, b.y + b.h / 2, () => bestel.classList.add('ingedrukt'));
@@ -394,8 +394,7 @@
   const herstart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
   const toonKeuze = bron => {
     const doel = $('#p-keuze'), label = $('#p-label');
-    if (bron.classList.contains('band-pizza')) herstart(bron, 'net');
-    herstart(scherm, 'wissel');
+    if (bron.classList.contains('band-pizza')) { herstart(bron, 'net'); herstart(scherm, 'wissel'); }
     const land = () => { herstart(doel, 'land'); herstart(doel.parentElement, 'knal'); herstart(label, 'wissel'); };
     // Midden en echte breedte: de pizza's draaien, dus de bounding box is groter dan de schijf.
     const vanEl = bron.querySelector('.pizza') || bron, vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
@@ -555,7 +554,7 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
       if (matchMedia('(pointer: fine)').matches) invoerVeld.focus({ preventScroll: true });
       return;
     }
-    if (e.target.closest('.pizzakaart')) { scherm.classList.add('op-pagina'); vlieg(); }
+    if (e.target.closest('.pizzakaart')) { scherm.classList.add('op-pagina'); toonKeuze(paginaKaart); }
   });
   $('.adres', scherm).addEventListener('click', () => { if (live) { verbergPop(false); scherm.classList.remove('op-pagina'); } });
   chat.addEventListener('wheel', e => {

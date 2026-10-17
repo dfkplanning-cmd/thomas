@@ -61,7 +61,7 @@
   };
   $$('[data-pizza]').forEach(el => zetPizza(el, el.dataset.pizza));
 
-  // De pizza's die je in de band kunt kiezen. Nduja is Daans pizza uit het voorstel.
+  // De pizza's die je in de band kunt kiezen. Nduja is de pizza uit het voorstel.
   const KEUZES = [
     { key: 'daan',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
     { key: 'parmaham',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
@@ -168,6 +168,7 @@
     sjablonen[4].textContent = keuze.toppings;
     [sjablonen[9], paginaKaart].forEach(kaart => {
       kaart.style.setProperty('--img', `url(${fotoVan(keuze)})`);
+      $('.n', kaart).textContent = keuze.key === 'daan' ? 'NDUJA PIZZA' : keuze.naam.split(',')[0].toUpperCase() + ' PIZZA';
       $('.s', kaart).textContent = keuze.naam;
     });
     bestel.textContent = keuze.bestel;

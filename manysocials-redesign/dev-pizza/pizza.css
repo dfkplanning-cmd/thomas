@@ -1,5 +1,6 @@
 /* Layout: een voorstel als doorlopend toneel. Elke slide uit het deck wordt een eigen set; bovenaan de telefoon in de hand waarin Daan zijn pizza bedenkt. */
 :root {
+  color-scheme: light;
   --bg: #F3F3EF;
   --vlak: #FFFFFF;
   --ink: #0F0F0E;
@@ -34,15 +35,7 @@
   --veer: cubic-bezier(.2, .9, .25, 1.15);
   --zacht-uit: cubic-bezier(.16, 1, .3, 1);
 }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
-    --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
-    --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
-    color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
+:root.donker {
   --bg: #0E0F0E; --vlak: #171816; --ink: #F0F0EA; --zacht: #A3A39B; --lijn: #2A2B28;
   --paneel: #1B1C1A; --op-paneel: #F0F0EA; --paneel-zacht: #A3A39B; --schaduw: 0, 0, 0;
   --ig-bg: #000000; --ig-in: #262626; --ig-tekst: #F5F5F5; --ig-sub: #A8A8A8; --ig-rand: #262626; --ig-veld: #262626;
@@ -572,3 +565,9 @@ sup a:hover { text-decoration: underline; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+
+/* Licht of donker: licht is de standaard, de knop in de werkbalk wisselt */
+.kk-icoon .maan { fill: currentColor; stroke: none; }
+.kk-icoon .zon { display: none; fill: currentColor; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.donker .kk-icoon .zon { display: block; }
+.donker .kk-icoon .maan { display: none; }

@@ -8,6 +8,7 @@
   // Intro: de animaties staan klaar maar wachten tot de lettertypes er zijn (of hooguit 1,4 s).
   (() => {
     const r = document.documentElement;
+    try { if (localStorage.getItem('ms-thema') === 'donker') r.classList.add('donker'); } catch (e) {}
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     r.classList.add('intro');
     const start = () => r.classList.add('start');
@@ -441,6 +442,7 @@
     <div class="kk-knoppen" id="kk-knoppen"><button type="button" data-kleur="#00B884" title="Mint (nu) #00B884" aria-label="Mint (nu) #00B884" style="background:#00B884"></button><button type="button" data-kleur="#FFE600" title="Signaalgeel #FFE600" aria-label="Signaalgeel #FFE600" style="background:#FFE600"></button><button type="button" data-kleur="#FFD45C" title="Boter #FFD45C" aria-label="Boter #FFD45C" style="background:#FFD45C"></button><button type="button" data-kleur="#C6F432" title="Lime #C6F432" aria-label="Lime #C6F432" style="background:#C6F432"></button><button type="button" data-kleur="#B8E986" title="Pistache #B8E986" aria-label="Pistache #B8E986" style="background:#B8E986"></button><button type="button" data-kleur="#3FD0C9" title="Turquoise #3FD0C9" aria-label="Turquoise #3FD0C9" style="background:#3FD0C9"></button><button type="button" data-kleur="#7FD1FF" title="IJsblauw #7FD1FF" aria-label="IJsblauw #7FD1FF" style="background:#7FD1FF"></button><button type="button" data-kleur="#5AA9FF" title="Hemelsblauw #5AA9FF" aria-label="Hemelsblauw #5AA9FF" style="background:#5AA9FF"></button><button type="button" data-kleur="#FF9EC4" title="Roze #FF9EC4" aria-label="Roze #FF9EC4" style="background:#FF9EC4"></button><button type="button" data-kleur="#B9A7FF" title="Lavendel #B9A7FF" aria-label="Lavendel #B9A7FF" style="background:#B9A7FF"></button><button type="button" data-kleur="#E6D3AE" title="Zand #E6D3AE" aria-label="Zand #E6D3AE" style="background:#E6D3AE"></button></div>
   </div>
   <button type="button" class="kk-icoon kk-kleur" id="kk-kleur" aria-expanded="false" aria-controls="kk-kleuren" aria-label="Steunkleur kiezen" title="Steunkleur kiezen"><i></i></button>
+  <button type="button" class="kk-icoon" id="kk-thema" aria-pressed="false" aria-label="Donkere modus" title="Donkere modus"><svg class="maan" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4z"/></svg><svg class="zon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.2M10 16v2.2M1.8 10H4M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6" fill="none"/></svg></button>
   <button type="button" class="kk-icoon" id="kk-dicht" aria-label="Kleurkiezer verbergen" title="Verbergen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-width="1.8" stroke-linecap="round"/></svg></button>
 </div>
 <button type="button" class="kk-open" id="kk-open" aria-label="Kleurkiezer tonen" title="Kleurkiezer tonen" hidden><i></i></button>

@@ -83,6 +83,19 @@
   kkOpen.addEventListener('click', () => toonKk(true));
   toonKk(opslag.get('ms-kk-dicht') !== '1');
 
+  // Licht of donker. Licht is de standaard, ook als het systeem op donker staat.
+  const themaKnop = $('#kk-thema');
+  const zetThema = donker => {
+    document.documentElement.classList.toggle('donker', donker);
+    themaKnop.setAttribute('aria-pressed', String(donker));
+    const label = donker ? 'Lichte modus' : 'Donkere modus';
+    themaKnop.setAttribute('aria-label', label);
+    themaKnop.title = label;
+    opslag.set('ms-thema', donker ? 'donker' : 'licht');
+  };
+  themaKnop.addEventListener('click', () => zetThema(!document.documentElement.classList.contains('donker')));
+  zetThema(opslag.get('ms-thema') === 'donker');
+
   const dlg = $('#overzicht');
   $('#kk-alle').addEventListener('click', () => { if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', ''); });
   $('#ov-sluit').addEventListener('click', () => dlg.close());

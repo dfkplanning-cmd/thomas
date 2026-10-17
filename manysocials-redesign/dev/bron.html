@@ -14,6 +14,7 @@
   // Intro: de animaties staan klaar maar wachten tot de lettertypes er zijn (of hooguit 1,4 s).
   (() => {
     const r = document.documentElement;
+    try { if (localStorage.getItem('ms-thema') === 'donker') r.classList.add('donker'); } catch (e) {}
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     r.classList.add('intro');
     const start = () => r.classList.add('start');
@@ -250,6 +251,7 @@
   </div>
   <button type="button" class="kk-icoon" id="kk-alle" aria-label="Alle drie de voorstellen naast elkaar" title="Alle drie de voorstellen naast elkaar"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3" width="4" height="14" rx="1.4"/><rect x="8" y="3" width="4" height="14" rx="1.4"/><rect x="13.5" y="3" width="4" height="14" rx="1.4"/></svg></button>
   <button type="button" class="kk-icoon kk-kleur" id="kk-kleur" aria-expanded="false" aria-controls="kk-kleuren" aria-label="Steunkleur kiezen" title="Steunkleur kiezen"><i></i></button>
+  <button type="button" class="kk-icoon" id="kk-thema" aria-pressed="false" aria-label="Donkere modus" title="Donkere modus"><svg class="maan" viewBox="0 0 20 20" aria-hidden="true"><path d="M15.8 12.6A6.6 6.6 0 0 1 7.4 4.2a6.6 6.6 0 1 0 8.4 8.4z"/></svg><svg class="zon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.6"/><path d="M10 1.8v2.2M10 16v2.2M1.8 10H4M16 10h2.2M4.2 4.2l1.6 1.6M14.2 14.2l1.6 1.6M4.2 15.8l1.6-1.6M14.2 5.8l1.6-1.6" fill="none"/></svg></button>
   <button type="button" class="kk-icoon" id="kk-dicht" aria-label="Ontwerpkeuzes verbergen" title="Verbergen"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 5.5l9 9M14.5 5.5l-9 9" stroke-width="1.8" stroke-linecap="round"/></svg></button>
 </div>
 <button type="button" class="kk-open" id="kk-open" aria-label="Ontwerpkeuzes tonen" title="Ontwerpkeuzes tonen" hidden><span class="mini" data-mini="actief"></span></button>

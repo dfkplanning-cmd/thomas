@@ -793,7 +793,7 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
 
 <div class="band" id="band">
   <span class="band-label" aria-hidden="true">Kies een pizza</span>
-  <div class="band-rij" id="band-rij" role="list" aria-label="Kies een pizza"></div>
+  <div class="band-rij" id="band-rij" role="group" aria-label="Kies een pizza"></div>
 </div>
 
 <section class="dia idee" id="idee">
@@ -854,7 +854,7 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
       <h2 class="kop">Iedereen heeft een mening over pizza.</h2>
       <p class="sub"><mark>Tijd dat een pizzamerk het aan iedereen vraagt.</mark></p>
     </div>
-    <div class="mening-foto opbouw" style="background-image:url(img/keuken.webp)" aria-hidden="true"></div>
+    <div class="mening-foto opbouw" style="background-image:url(img/keuken-licht.webp)" role="img" aria-label="Een pizzabakker gooit deeg op terwijl iemand hem filmt met een telefoon"></div>
     <div class="mening-onder opbouw">
       <div class="stat-bol"><b data-tel="61">61%</b><span>van de jongeren zegt dat merkcontent hun aankoop beïnvloedt<sup><a href="#bron-1">1</a></sup></span></div>
       <p class="voetregel">Stëlz<sup><a href="#bron-9">9</a></sup>, KFC<sup><a href="#bron-2">2</a> <a href="#bron-3">3</a></sup> en Domino's<sup><a href="#bron-4">4</a></sup> lieten een handvol fans meedenken. Hier doet iedere klant mee.</p>
@@ -948,7 +948,7 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
       <h2 class="kop">Wie doet wat.</h2>
       <p class="sub">New York Pizza houdt de regie over merk en verhaal. Wij leveren de campagnemachine erachter.</p>
     </div>
-    <div class="team-foto opbouw" style="background-image:url(img/mening-iphone.webp)" aria-hidden="true"></div>
+    <div class="team-foto opbouw" style="background-image:url(img/mening-iphone.webp)" role="img" aria-label="Vier vrienden op de bank met pizza, lachend om een telefoon"></div>
     <div class="wie opbouw">
       <div><h3>New York Pizza</h3><ul class="rl"><li>Merk en beeldstijl</li><li>Kortingscodes en bestelknop</li><li>Finalisten en de prijs</li></ul></div>
       <div class="wij"><h3>manysocials</h3><ul class="rl"><li>Het gesprek in de DM</li><li>Beeld en video per deelnemer</li><li>Pagina's, codes en dashboard</li></ul></div>
@@ -1090,7 +1090,6 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
     b.type = 'button';
     b.className = 'band-pizza';
     b.dataset.keuze = k.key;
-    b.setAttribute('role', 'listitem');
     b.setAttribute('aria-pressed', String(k === keuze));
     if (set > 0) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
     b.innerHTML = `<span class="pizza"></span><span class="naam"><b class="bijnaam">${k.titel}</b>${k.naam.replace(/&/g, '&amp;')}</span>`;

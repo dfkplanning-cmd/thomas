@@ -78,7 +78,6 @@
     b.type = 'button';
     b.className = 'band-pizza';
     b.dataset.keuze = k.key;
-    b.setAttribute('role', 'listitem');
     b.setAttribute('aria-pressed', String(k === keuze));
     if (set > 0) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
     b.innerHTML = `<span class="pizza"></span><span class="naam"><b class="bijnaam">${k.titel}</b>${k.naam.replace(/&/g, '&amp;')}</span>`;

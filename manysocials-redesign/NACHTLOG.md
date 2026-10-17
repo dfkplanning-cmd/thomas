@@ -15,3 +15,12 @@ Per ronde: wat de agents vonden, wat is aangepast en gepubliceerd.
 - Focus pauzeert de band; bandknoppen weer als knop aangekondigd (role group i.p.v. list).
 - Minder wit tussen "Ons vlaggenschip" en de live-inzendingen.
 - Voor de gebruiker: in donker is het vlaggenschippaneel donker op donker (leesbaar, minder opvallend).
+
+## Ronde 1, pizza (gepubliceerd)
+
+- Foto's omgewisseld op verzoek: keuken bovenaan bij "mening", vrienden op de bank bij "Wie doet wat". Uitsnede zo dat er geen gezichten wegvallen.
+- Regels die op één woord eindigden gebalanceerd; "Wat het oplevert" zonder lege cel op 1024; contactblok 2x2; hero-label en landenrij passen op mobiel.
+- Contrast: donkerder groen voor kleine tekst op licht, rood #D93825, "Vertrouwelijk" leesbaar in licht en donker.
+- Toegankelijkheid: bandknoppen weer echte knoppen, beschrijvingen bij de twee foto's, focusring op invoerveld en snelknoppen.
+- Lichtere beelden: mening-iphone.webp (354 KB), keuken-licht.webp (341 KB).
+- Voor de gebruiker: bij reduced motion staat "Probeer het zelf" over de onderkant van de pizzakaart; de kleurkiezer linksonder dekt op mobiel het begin van de band.

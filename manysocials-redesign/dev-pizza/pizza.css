@@ -284,7 +284,7 @@ sup a:hover { text-decoration: underline; }
 /* Band met pizza's */
 .band { position: relative; z-index: 2; background: var(--paneel); overflow: hidden; padding-block: 26px; }
 .band-rij { display: flex; align-items: center; gap: 40px; width: max-content; animation: band 50s linear infinite; }
-.band:hover .band-rij { animation-play-state: paused; }
+@media (hover: hover) { .band:hover .band-rij { animation-play-state: paused; } }
 .band .pizza { width: 116px; flex: none; animation: draaien 30s linear infinite; }
 .band .pizza:nth-child(even) { animation-direction: reverse; width: 96px; }
 @keyframes band { to { transform: translateX(-50%); } }
@@ -774,3 +774,10 @@ sup a, .sub b, .src li i { color: var(--accent-tekst); }
   .landen-s .landen-v { align-self: end; }
   .landen-s .wrap > .sub { align-self: start; }
 }
+
+/* Ronde 3: zonder beweging scrolt de band zijwaarts, zodat elke pizza bereikbaar blijft */
+@media (prefers-reduced-motion: reduce) {
+  .band-rij { width: auto; overflow-x: auto; scrollbar-width: none; padding-left: 190px; padding-right: 24px; }
+  .band-rij::-webkit-scrollbar { display: none; }
+}
+@media (max-width: 560px) and (prefers-reduced-motion: reduce) { .band-rij { padding-left: 150px; } }

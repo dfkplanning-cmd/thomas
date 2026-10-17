@@ -27,7 +27,7 @@
     const vooruit = ['ArrowDown', 'PageDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey);
     const terug = ['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey);
     if (!vooruit && !terug) return;
-    const y = window.scrollY + 72;
+    const y = window.scrollY + 60;
     const tops = secties.map(s => s.getBoundingClientRect().top + window.scrollY);
     const doel = vooruit ? tops.find(t => t > y + 4) : [...tops].reverse().find(t => t < y - 4);
     if (doel === undefined) return;
@@ -394,9 +394,9 @@
         await pauze(400);
         await typtIndicator(1300);
         voegToe(8); scrollNaarOnder();
+        scherm.classList.add('beeld');
         await pauze(700);
         f = 1;
-        scherm.classList.add('beeld');
         const kaart = voegToe(9, ['genereren']);
         await pauze(1600);
         kaart.classList.remove('genereren');

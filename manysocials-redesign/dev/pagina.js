@@ -91,6 +91,16 @@
   toonKk(kkKeuze ? kkKeuze === 'open' : !matchMedia('(max-width: 700px)').matches, false);
 
   // Licht of donker. Licht is de standaard, ook als het systeem op donker staat.
+  // Staat de band onderin beeld, dan schuift de werkbalk erboven zodat hij de zakken niet afdekt.
+  const bandEl = $('#band');
+  const tilKk = () => {
+    const r = bandEl.getBoundingClientRect(), onder = innerHeight - 70;
+    const til = innerWidth >= 960 && r.top < innerHeight && r.bottom > onder && r.top > innerHeight * .4 ? innerHeight - r.top + 10 : 0;
+    document.documentElement.style.setProperty('--kk-til', til + 'px');
+  };
+  window.addEventListener('scroll', tilKk, { passive: true });
+  window.addEventListener('resize', tilKk);
+  tilKk();
   const themaKnop = $('#kk-thema');
   const zetThema = donker => {
     document.documentElement.classList.toggle('donker', donker);
@@ -380,7 +390,7 @@
     if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
     landPop();
     if (rust) { sjablonen.forEach((s, i) => { const n = s.cloneNode(true); draad.appendChild(n); vulZakken(n, false); }); scrollNaarOnder(); }
-    else gesprek(run, 2500);
+    else gesprek(run, 300);
   });
 
   zetSmaakInBeeld();

@@ -1,5 +1,21 @@
 # Nachtlog
 
+## Samenvatting voor de ochtend
+
+Drie rondes agents, alles gepubliceerd op de vaste links en gecommit.
+- Pizza: https://claude.ai/artifact/4G6Huvy3whRoZUNE1e5xU1
+- Chips: https://claude.ai/artifact/HTv6TvxifX55dgBCHyb2Ef
+
+Belangrijkste verschil met gisteravond: de keuzeband staat op beide pagina's op het eerste scherm, en een keuze is direct zichtbaar (pizzapagina in de telefoon, chipszak met vonken). Foto's bij "mening" en "Wie doet wat" zijn omgewisseld. Mobiel is veel korter door swipe-rijen en twee kolommen.
+
+Nog voor de gebruiker:
+1. De vijf open beslissingen in OVERDRACHT.md (award, winnaar/winnaars, contactadres, vier keer "iedereen", kopie zonder beelden verwijderen).
+2. Stembalkjes in de live-lijst van de chipspagina (suggereert data die niet in de tekst staat).
+3. Chips: de zak landt nu kleiner links van de telefoon. Liever de oude plek? Eén instelling (`EIND` in pagina.js).
+4. Donker thema: vlaggenschippaneel (chips) en zwarte kaart 7 (pizza) vallen weg tegen de achtergrond.
+5. Pizza op 390 px: het ingeklapte werkbalkknopje ligt over het label "Jouw pizza".
+6. De live agent is alleen met het script getest; de echte Claude-agent werkt pas op claude.ai.
+
 Per ronde: wat de agents vonden, wat is aangepast en gepubliceerd.
 
 ## Ronde 0 (avond)
@@ -47,3 +63,14 @@ Na een art-directorreview:
 - Volgende stap: Big T-foto met Thomas als badge (geen herhaling van finale.webp).
 - Schaal en landen naast de kop, Het idee met lichtere voordelen.
 - Bekend: in donker valt de zwarte kaart 7 weg tegen de achtergrond.
+
+## Ronde 3, regressie (gepubliceerd)
+
+Volledige test op 5 schermmaten, licht/donker, reduced motion: geen fouten, geen overloop, niets blijft onzichtbaar. Opgelost:
+- Pizza: terug met pijltjes/PageUp werkte niet (rekenfout in de sectienavigatie).
+- Pizza: zonder beweging waren 1 tot 4 bandpizza's onbereikbaar; band scrolt nu zijwaarts.
+- Beide: op touch bleef de band stilstaan na een tik (hover-pauze alleen nog op apparaten met muis).
+- Chips: link "Werkwijze" zette de kop onder de navigatie (scroll-padding).
+- Chips: chat bleef 5 s leeg na een smaakklik; start nu meteen.
+- Chips: werkbalk schuift boven de band, zoals op de pizzapagina.
+- Pizza: "Probeer het zelf" verdwijnt direct als het laatste bericht komt.

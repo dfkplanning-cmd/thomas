@@ -248,7 +248,8 @@ mark { background: none; color: inherit; }
 /* Band met de vijf smaken */
 .band { position: relative; z-index: 2; background: var(--paneel); overflow: hidden; padding-block: 30px; }
 .band-rij { display: flex; align-items: center; gap: 46px; width: max-content; animation: band 46s linear infinite; }
-.band:hover .band-rij, .band:focus-within .band-rij { animation-play-state: paused; }
+@media (hover: hover) { .band:hover .band-rij { animation-play-state: paused; } }
+.band:has(:focus-visible) .band-rij { animation-play-state: paused; }
 .band-zak { width: 112px; flex: none; transition: transform .4s var(--veer); background: none; border: 0; padding: 0; cursor: pointer; display: grid; justify-items: center; gap: 8px; color: var(--op-paneel); font: 600 12px/1.2 var(--tekst); }
 .band-zak .zak-svg { filter: drop-shadow(0 16px 14px rgba(0,0,0,.35)); }
 .band-zak .naam { opacity: .7; text-align: center; max-width: 12ch; }
@@ -639,3 +640,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 }
 /* Na een klik op het rondje meteen tonen, zonder de vertraagde intro */
 .intro .kk.los { animation: none; }
+
+/* Ronde 3: ankers niet onder de vaste navigatie; werkbalk schuift boven de band */
+html { scroll-padding-top: 88px; }
+.kk, .kk-open { translate: 0 calc(-1 * var(--kk-til, 0px)); transition: translate .35s var(--zacht-uit); }

@@ -622,9 +622,9 @@ sup a:hover { text-decoration: underline; }
 @keyframes schermFlits { 0% { filter: brightness(1.35) saturate(.6); } 100% { filter: none; } }
 
 /* Mening: de foto staat boven, de tekst onderin */
-.beeldsectie.mening { background-position: center 34%; min-height: min(94vh, 880px); display: flex; align-items: flex-end; padding-block: clamp(220px, 30vw, 420px) clamp(40px, 5vw, 72px); }
+.beeldsectie.mening { background-position: center 22%; min-height: min(94vh, 880px); display: flex; align-items: flex-end; padding-block: clamp(220px, 30vw, 420px) clamp(40px, 5vw, 72px); }
 .beeldsectie.mening > .wrap { width: 100%; }
-.beeldsectie.mening::before { background: linear-gradient(0deg, rgba(12, 9, 8, .94) 0%, rgba(12, 9, 8, .72) 30%, rgba(12, 9, 8, .1) 62%, rgba(12, 9, 8, .28) 100%), linear-gradient(90deg, rgba(12, 9, 8, .35), transparent 55%); }
+.beeldsectie.mening::before { background: linear-gradient(0deg, rgba(12, 9, 8, .94) 0%, rgba(12, 9, 8, .72) 30%, rgba(12, 9, 8, .04) 62%, rgba(12, 9, 8, .06) 100%), linear-gradient(90deg, rgba(12, 9, 8, .3), transparent 50%); }
 @media (max-width: 700px) { .beeldsectie.mening { background-size: auto 62%; background-position: 62% 0; background-color: #0c0908; padding-top: 52vw; } }
 
 /* Naam van de pizza: verschijnt zodra je kiest */
@@ -792,7 +792,7 @@ button.opt { font-family: inherit; cursor: pointer; }
   </div>
 </section>
 
-<section class="beeldsectie mening" id="mening" style="--foto:url(img/mening.jpg)">
+<section class="beeldsectie mening" id="mening" style="--foto:url(img/mening-iphone.jpg)">
   <div class="wrap">
     <div class="beeld-tekst opbouw">
       <div class="kicker licht">Iedereen doet mee</div>

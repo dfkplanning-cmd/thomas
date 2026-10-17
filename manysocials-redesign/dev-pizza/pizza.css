@@ -607,3 +607,9 @@ sup a:hover { text-decoration: underline; }
 .beeldsectie.mening > .wrap { width: 100%; }
 .beeldsectie.mening::before { background: linear-gradient(0deg, rgba(12, 9, 8, .94) 0%, rgba(12, 9, 8, .72) 30%, rgba(12, 9, 8, .1) 62%, rgba(12, 9, 8, .28) 100%), linear-gradient(90deg, rgba(12, 9, 8, .35), transparent 55%); }
 @media (max-width: 700px) { .beeldsectie.mening { background-size: auto 62%; background-position: 62% 0; background-color: #0c0908; padding-top: 52vw; } }
+
+/* Naam van de pizza: verschijnt zodra je kiest */
+.p-label b { font: 800 15px/1.1 var(--kop); }
+.p-label small { font: 500 11.5px/1.2 var(--tekst); opacity: .7; }
+.band-pizza .bijnaam { display: block; font: 800 14px/1.15 var(--kop); color: #fff; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s var(--veer), opacity .3s, margin .3s; }
+.band-pizza[aria-pressed="true"] .bijnaam { max-height: 2.4em; opacity: 1; margin-bottom: 3px; }

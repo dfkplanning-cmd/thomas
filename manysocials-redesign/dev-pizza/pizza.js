@@ -63,12 +63,12 @@
 
   // De pizza's die je in de band kunt kiezen. Nduja is de pizza uit het voorstel.
   const KEUZES = [
-    { key: 'daan',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
-    { key: 'parmaham',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
-    { key: 'mortadella', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
-    { key: 'bresaola',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
-    { key: 'gorgonzola', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
-    { key: 'ricotta',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
+    { key: 'daan', titel: 'Hot Honey Hustle',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
+    { key: 'parmaham', titel: 'La Dolce Burrata',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
+    { key: 'mortadella', titel: 'Pistache Paradiso', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
+    { key: 'bresaola', titel: 'Rucola Royale',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
+    { key: 'gorgonzola', titel: 'Peer Pressure', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
+    { key: 'ricotta', titel: 'Citroen Crush',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
   ];
   let keuze = KEUZES[0];
 
@@ -81,7 +81,7 @@
     b.setAttribute('role', 'listitem');
     b.setAttribute('aria-pressed', String(k === keuze));
     if (set > 0) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
-    b.innerHTML = `<span class="pizza"></span><span class="naam">${k.naam.replace(/&/g, '&amp;')}</span>`;
+    b.innerHTML = `<span class="pizza"></span><span class="naam"><b class="bijnaam">${k.titel}</b>${k.naam.replace(/&/g, '&amp;')}</span>`;
     zetPizza(b.firstElementChild, k.key);
     band.appendChild(b);
   });
@@ -168,7 +168,7 @@
     sjablonen[4].textContent = keuze.toppings;
     [sjablonen[9], paginaKaart].forEach(kaart => {
       kaart.style.setProperty('--img', `url(${fotoVan(keuze)})`);
-      $('.n', kaart).textContent = keuze.key === 'daan' ? 'NDUJA PIZZA' : keuze.naam.split(',')[0].toUpperCase() + ' PIZZA';
+      $('.n', kaart).textContent = keuze.titel.toUpperCase();
       $('.s', kaart).textContent = keuze.naam;
     });
     bestel.textContent = keuze.bestel;
@@ -176,6 +176,8 @@
     $('#pop-naam').textContent = keuze.naam;
     zetPizza($('#p-keuze'), keuze.key);
     $('#p-naam').textContent = keuze.naam;
+    $('#p-titel').textContent = keuze.titel;
+    $('#pop-titel').textContent = keuze.titel;
     $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
   };
 

@@ -627,6 +627,12 @@ sup a:hover { text-decoration: underline; }
 .beeldsectie.mening::before { background: linear-gradient(0deg, rgba(12, 9, 8, .94) 0%, rgba(12, 9, 8, .72) 30%, rgba(12, 9, 8, .1) 62%, rgba(12, 9, 8, .28) 100%), linear-gradient(90deg, rgba(12, 9, 8, .35), transparent 55%); }
 @media (max-width: 700px) { .beeldsectie.mening { background-size: auto 62%; background-position: 62% 0; background-color: #0c0908; padding-top: 52vw; } }
 
+/* Naam van de pizza: verschijnt zodra je kiest */
+.p-label b { font: 800 15px/1.1 var(--kop); }
+.p-label small { font: 500 11.5px/1.2 var(--tekst); opacity: .7; }
+.band-pizza .bijnaam { display: block; font: 800 14px/1.15 var(--kop); color: #fff; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .4s var(--veer), opacity .3s, margin .3s; }
+.band-pizza[aria-pressed="true"] .bijnaam { max-height: 2.4em; opacity: 1; margin-bottom: 3px; }
+
 </style>
 
 <header class="balk" id="balk">
@@ -651,7 +657,7 @@ sup a:hover { text-decoration: underline; }
       <div class="toneel-in" id="toneel-in">
         <div class="diep schijf" aria-hidden="true"><span><i></i><i></i><i></i></span></div>
         <div class="diep story" aria-hidden="true"><div class="laag"><div class="story-kaart" style="background-image:url(img/daan-telefoon.jpg)"><div class="story-balkjes"><i></i><i></i><i></i></div><span class="story-av"></span></div></div></div>
-        <div class="diep p2" aria-hidden="true"><div class="laag"><div class="pizza" data-pizza="daan" id="p-keuze"></div><span class="p-label" id="p-label"><i>Jouw pizza</i><b id="p-naam">Nduja &amp; hot honey</b></span></div></div>
+        <div class="diep p2" aria-hidden="true"><div class="laag"><div class="pizza" data-pizza="daan" id="p-keuze"></div><span class="p-label" id="p-label"><i>Jouw pizza</i><b id="p-titel">Hot Honey Hustle</b><small id="p-naam">Nduja &amp; hot honey</small></span></div></div>
         <div class="diep kruimel k1" aria-hidden="true" style="--kx:-120px;--ky:260px"><i><span data-ingr="basilicum"></span></i></div>
         <div class="diep kruimel k2" aria-hidden="true" style="--kx:-160px;--ky:60px"><i><span data-ingr="peper"></span></i></div>
         <div class="diep kruimel k3" aria-hidden="true" style="--kx:220px;--ky:20px"><i><span data-ingr="salami"></span></i></div>
@@ -682,7 +688,7 @@ sup a:hover { text-decoration: underline; }
                           <div class="opts"><span class="opt">Tomaat</span><span class="opt">BBQ</span></div>
                           <div class="bub uit">Tomaat</div>
                           <div class="bub in met-av">Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.</div>
-                          <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">NDUJA PIZZA</div><div class="s">Nduja &amp; hot honey</div></div><span class="gloed" aria-hidden="true"></span><span class="maak" aria-hidden="true"></span></div>
+                          <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">HOT HONEY HUSTLE</div><div class="s">Nduja &amp; hot honey</div></div><span class="gloed" aria-hidden="true"></span><span class="maak" aria-hidden="true"></span></div>
                         </div>
                       </div>
                       <div class="ig-invoer" id="ig-invoer" aria-hidden="true">
@@ -694,7 +700,7 @@ sup a:hover { text-decoration: underline; }
                     </div>
                     <div class="pagina" id="pagina" aria-hidden="true">
                       <div class="adres"><svg viewBox="0 0 24 24"><path d="M7 10V8a5 5 0 0 1 10 0v2h1v11H6V10zm2 0h6V8a3 3 0 0 0-6 0z"/></svg>newyorkpizza.nl/jouwpizza</div>
-                      <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">NDUJA PIZZA</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div><div class="voortgang"><i></i></div></div>
+                      <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">HOT HONEY HUSTLE</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div><div class="voortgang"><i></i></div></div>
                       <div class="knoppen"><span class="btn g" id="bestel">Bestel Pepperoni Hot Honey</span><span class="btn">Opslaan &amp; delen</span><span class="ai-regel">Deze video bevat AI-gegenereerde beelden</span></div>
                     </div>
                   </div>
@@ -705,7 +711,7 @@ sup a:hover { text-decoration: underline; }
           </div>
         </div>
 
-        <div class="pop" id="pop" aria-hidden="true"><div class="pizza" data-pizza="daan" id="pop-pizza"></div><div class="pop-label"><b>Jouw pizza</b> · <span id="pop-naam">Nduja &amp; hot honey</span></div></div>
+        <div class="pop" id="pop" aria-hidden="true"><div class="pizza" data-pizza="daan" id="pop-pizza"></div><div class="pop-label"><b id="pop-titel">Hot Honey Hustle</b> · <span id="pop-naam">Nduja &amp; hot honey</span></div></div>
       </div>
     </div>
   </div>
@@ -747,7 +753,7 @@ sup a:hover { text-decoration: underline; }
           <div class="ig-kop"><span class="av" aria-hidden="true">NYP</span><span class="ig-naam">newyorkpizza_nl</span></div>
           <div class="ig-chat"><div class="ig-draad">
             <div class="bub in met-av">Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.</div>
-            <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">NDUJA PIZZA</div><div class="s">Nduja &amp; hot honey</div></div></div>
+            <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">HOT HONEY HUSTLE</div><div class="s">Nduja &amp; hot honey</div></div></div>
           </div></div>
         </div></div><span class="eiland" aria-hidden="true"></span></div>
         <div class="mini-bij"><span class="nr">2</span><span>Binnen een minuut in beeld</span></div>
@@ -755,7 +761,7 @@ sup a:hover { text-decoration: underline; }
       <div class="mini">
         <div class="mini-tel"><div class="scherm"><div class="pagina">
           <div class="adres">newyorkpizza.nl/jouwpizza</div>
-          <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">NDUJA PIZZA</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div></div>
+          <div class="pizzakaart" style="--img:url(img/pizza-nduja.jpg)"><span class="foto"></span><div class="t"><div class="n">HOT HONEY HUSTLE</div><div class="s">Nduja &amp; hot honey</div></div><div class="speel"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M7 4l13 8-13 8z" fill="#111"/></svg></div></div>
           <div class="knoppen"><span class="btn g">Bestel Pepperoni Hot Honey</span><span class="btn">Opslaan &amp; delen</span><span class="ai-regel">Deze video bevat AI-gegenereerde beelden</span></div>
         </div></div><span class="eiland" aria-hidden="true"></span></div>
         <div class="mini-bij"><span class="nr">3</span><span>Delen of direct bestellen</span></div>
@@ -878,7 +884,7 @@ sup a:hover { text-decoration: underline; }
   <div class="wrap">
     <div class="tekst opbouw">
       <div class="kicker">Volgende stap</div>
-      <h2>Een uur.<br>Eén telefoon.<br><span>Jullie eigen pizza.</span></h2>
+      <h2>3 minuten.<br>Eén telefoon.<br><span>Je eigen pizza.</span></h2>
       <p>We laten De Pizza van Nederland live zien op een telefoon, met een eigen pizza in de stijl van New York Pizza.</p>
       <div class="contact">
         <div class="naam">Maarten van Gennip <span>· manysocials</span></div>
@@ -992,12 +998,12 @@ sup a:hover { text-decoration: underline; }
 
   // De pizza's die je in de band kunt kiezen. Nduja is de pizza uit het voorstel.
   const KEUZES = [
-    { key: 'daan',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
-    { key: 'parmaham',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
-    { key: 'mortadella', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
-    { key: 'bresaola',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
-    { key: 'gorgonzola', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
-    { key: 'ricotta',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
+    { key: 'daan', titel: 'Hot Honey Hustle',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
+    { key: 'parmaham', titel: 'La Dolce Burrata',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
+    { key: 'mortadella', titel: 'Pistache Paradiso', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
+    { key: 'bresaola', titel: 'Rucola Royale',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
+    { key: 'gorgonzola', titel: 'Peer Pressure', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
+    { key: 'ricotta', titel: 'Citroen Crush',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
   ];
   let keuze = KEUZES[0];
 
@@ -1010,7 +1016,7 @@ sup a:hover { text-decoration: underline; }
     b.setAttribute('role', 'listitem');
     b.setAttribute('aria-pressed', String(k === keuze));
     if (set > 0) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
-    b.innerHTML = `<span class="pizza"></span><span class="naam">${k.naam.replace(/&/g, '&amp;')}</span>`;
+    b.innerHTML = `<span class="pizza"></span><span class="naam"><b class="bijnaam">${k.titel}</b>${k.naam.replace(/&/g, '&amp;')}</span>`;
     zetPizza(b.firstElementChild, k.key);
     band.appendChild(b);
   });
@@ -1097,7 +1103,7 @@ sup a:hover { text-decoration: underline; }
     sjablonen[4].textContent = keuze.toppings;
     [sjablonen[9], paginaKaart].forEach(kaart => {
       kaart.style.setProperty('--img', `url(${fotoVan(keuze)})`);
-      $('.n', kaart).textContent = keuze.key === 'daan' ? 'NDUJA PIZZA' : keuze.naam.split(',')[0].toUpperCase() + ' PIZZA';
+      $('.n', kaart).textContent = keuze.titel.toUpperCase();
       $('.s', kaart).textContent = keuze.naam;
     });
     bestel.textContent = keuze.bestel;
@@ -1105,6 +1111,8 @@ sup a:hover { text-decoration: underline; }
     $('#pop-naam').textContent = keuze.naam;
     zetPizza($('#p-keuze'), keuze.key);
     $('#p-naam').textContent = keuze.naam;
+    $('#p-titel').textContent = keuze.titel;
+    $('#pop-titel').textContent = keuze.titel;
     $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
   };
 

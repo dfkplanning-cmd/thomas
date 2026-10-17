@@ -1,0 +1,27 @@
+<title>De Pizza van Nederland</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap">
+<script>
+  // Intro: de animaties staan klaar maar wachten tot de lettertypes er zijn (of hooguit 1,4 s).
+  (() => {
+    const r = document.documentElement;
+    try { if (localStorage.getItem('ms-thema') === 'donker') r.classList.add('donker'); } catch (e) {}
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    r.classList.add('intro');
+    const start = () => r.classList.add('start');
+    setTimeout(start, 1400);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => setTimeout(start, 60));
+  })();
+</script>
+<link rel="stylesheet" href="pizza.css"><!--CSS-->
+
+<header class="balk" id="balk">
+  <div class="wrap">
+    <a class="balk-merk" href="#top"><svg viewBox="0 -3 100 106" aria-hidden="true"><path fill="currentColor" d="M2.0 56.5 L96.0 53.5 L96.0 46.5 L2.0 43.5Z M6.4 30.3 L95.2 49.4 L96.8 42.6 L9.6 17.7Z M19.0 9.8 L94.4 45.1 L97.6 38.9 L25.0 -1.8Z M9.6 82.3 L96.8 57.4 L95.2 50.6 L6.4 69.7Z M25.0 101.8 L97.6 61.1 L94.4 54.9 L19.0 90.2Z"/></svg><span><b>manysocials.</b> &nbsp;<span>De Pizza van Nederland</span></span></a>
+    <div class="balk-rechts"><span class="conf">Vertrouwelijk</span><span class="balk-nr" id="balk-nr" aria-hidden="true"></span></div>
+  </div>
+</header>
+

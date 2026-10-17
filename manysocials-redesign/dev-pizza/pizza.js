@@ -1,4 +1,4 @@
-// De Pizza van Nederland: balk met paginanummer, pizza's uit de foto's, de telefoon met Instagram-DM en duim, en de steunkleur.
+// De Pizza van Nederland: voortgangsbalk, pizza's uit de foto's, kies een pizza in de band, en de Instagram-DM in de hand.
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
@@ -9,36 +9,35 @@
     set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} },
   };
 
-  // ---------- Balk: rand bij scrollen en het slidenummer van de sectie in beeld ----------
-  const balk = $('#balk'), nr = $('#balk-nr');
-  const randje = () => balk.classList.toggle('scroll', window.scrollY > 8);
-  window.addEventListener('scroll', randje, { passive: true });
-  randje();
-  const secties = $$('section[data-nr]');
-  if ('IntersectionObserver' in window) {
-    const zichtbaar = new Map();
-    const io = new IntersectionObserver(items => {
-      items.forEach(i => zichtbaar.set(i.target, i.intersectionRatio));
-      let beste = null, max = 0;
-      zichtbaar.forEach((r, s) => { if (r > max) { max = r; beste = s; } });
-      if (beste) nr.textContent = beste.dataset.nr;
-    }, { threshold: [0, .15, .3, .5, .7, .9] });
-    secties.forEach(s => io.observe(s));
-  }
+  // ---------- Balk: rand en voortgang bij scrollen ----------
+  const balk = $('#balk'), voortgang = $('#balk-voortgang');
+  const opScroll = () => {
+    balk.classList.toggle('scroll', window.scrollY > 8);
+    const max = document.documentElement.scrollHeight - innerHeight;
+    voortgang.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+  };
+  window.addEventListener('scroll', opScroll, { passive: true });
+  window.addEventListener('resize', opScroll);
+  opScroll();
 
-  // Presenteren met het toetsenbord: pijl omlaag of PageDown naar de volgende sectie.
+  // Presenteren met het toetsenbord: pijl omlaag of PageDown naar het volgende onderdeel.
+  const secties = $$('main > section, main > .band');
   document.addEventListener('keydown', e => {
-    if (e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, button, a, [contenteditable]')) return;
+    if (e.altKey || e.ctrlKey || e.metaKey || e.target.closest('input, textarea, select, button, a, summary, [contenteditable]')) return;
     const vooruit = ['ArrowDown', 'PageDown'].includes(e.key) || (e.key === ' ' && !e.shiftKey);
     const terug = ['ArrowUp', 'PageUp'].includes(e.key) || (e.key === ' ' && e.shiftKey);
     if (!vooruit && !terug) return;
     const y = window.scrollY + 72;
     const tops = secties.map(s => s.getBoundingClientRect().top + window.scrollY);
-    let doel = vooruit ? tops.find(t => t > y + 4) : [...tops].reverse().find(t => t < y - 4);
+    const doel = vooruit ? tops.find(t => t > y + 4) : [...tops].reverse().find(t => t < y - 4);
     if (doel === undefined) return;
     e.preventDefault();
     window.scrollTo({ top: Math.max(0, doel - 60), behavior: rust ? 'auto' : 'smooth' });
   });
+
+  // Voetnoten openen de ingeklapte bronnen.
+  const bronnen = $('.bronnen-d');
+  $$('a[href^="#bron-"]').forEach(a => a.addEventListener('click', () => { bronnen.open = true; }));
 
   // ---------- Pizza's: elke foto zo schalen dat de pizza precies de cirkel vult ----------
   const MAP = 'img/voor/new-york-pizza/';
@@ -53,7 +52,7 @@
   };
   const zetPizza = (el, key) => {
     const p = PIZZA[key];
-    const S = p.w / (2 * p.r * p.w);            // fotobreedte gedeeld door cirkeldiameter
+    const S = 1 / (2 * p.r);                     // fotobreedte gedeeld door cirkeldiameter
     const H = S * p.h / p.w;                      // fotohoogte gedeeld door cirkeldiameter
     const lx = .5 - p.cx * S, ly = .5 - p.cy * H; // verschuiving als deel van de cirkel
     el.style.backgroundImage = `url(${p.src})`;
@@ -61,9 +60,31 @@
     el.style.backgroundPosition = `${(lx / (1 - S) * 100).toFixed(2)}% ${(ly / (1 - H) * 100).toFixed(2)}%`;
   };
   $$('[data-pizza]').forEach(el => zetPizza(el, el.dataset.pizza));
+
+  // De pizza's die je in de band kunt kiezen. Nduja is Daans pizza uit het voorstel.
+  const KEUZES = [
+    { key: 'daan',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
+    { key: 'parmaham',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
+    { key: 'mortadella', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
+    { key: 'bresaola',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
+    { key: 'gorgonzola', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
+    { key: 'ricotta',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
+  ];
+  let keuze = KEUZES[0];
+
   const band = $('#band-rij');
-  const volgorde = ['nduja', 'parmaham', 'mortadella', 'daan', 'bresaola', 'gorgonzola', 'ricotta'];
-  for (let set = 0; set < 4; set++) volgorde.forEach(k => { const d = document.createElement('div'); d.className = 'pizza'; zetPizza(d, k); band.appendChild(d); });
+  for (let set = 0; set < 3; set++) KEUZES.forEach(k => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'band-pizza';
+    b.dataset.keuze = k.key;
+    b.setAttribute('role', 'listitem');
+    b.setAttribute('aria-pressed', String(k === keuze));
+    if (set > 0) { b.tabIndex = -1; b.setAttribute('aria-hidden', 'true'); }
+    b.innerHTML = `<span class="pizza"></span><span class="naam">${k.naam.replace(/&/g, '&amp;')}</span>`;
+    zetPizza(b.firstElementChild, k.key);
+    band.appendChild(b);
+  });
 
   // Losse ingrediënten voor het decor.
   const INGR = {
@@ -73,7 +94,7 @@
   };
   $$('[data-ingr]').forEach(el => { el.innerHTML = INGR[el.dataset.ingr]; });
 
-  // ---------- Steunkleur ----------
+  // ---------- Steunkleur, licht en donker ----------
   const namen = { '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
   const zetKleur = k => {
     if (!namen[k]) k = '#00B884';
@@ -92,8 +113,6 @@
   $('#kk-dicht').addEventListener('click', () => toonKk(false));
   kkOpen.addEventListener('click', () => toonKk(true));
   toonKk(opslag.get('ms-kk-dicht') !== '1');
-
-  // Licht of donker. Licht is de standaard, ook als het systeem op donker staat.
   const themaKnop = $('#kk-thema');
   const zetThema = donker => {
     document.documentElement.classList.toggle('donker', donker);
@@ -135,72 +154,55 @@
     hero.addEventListener('pointerleave', () => { toneelIn.style.setProperty('--px', 0); toneelIn.style.setProperty('--py', 0); });
   }
 
-  // ---------- Telefoon: Instagram-DM met duim ----------
+  // ---------- Telefoon: Instagram-DM ----------
   const draad = $('#draad');
   const sjablonen = [...draad.children].map(n => n.cloneNode(true));
   const chat = $('#ig-chat'), invoer = $('#ig-invoer'), veld = $('#ig-veld'), getypt = $('#getypt'), stuur = $('#ig-stuur');
-  const scherm = $('#scherm'), tel = $('.tel'), pop = $('#pop'), bestel = $('#bestel');
-  const duim = $('#duim'), duimS = $('#duim-schaduw'), duimSPos = $('#duim-schaduw-pos');
-  const SPIL = { x: 330, y: 560 }, LENGTE = 134;
-  const RUST = { a: -14, s: .92, d: 0 };
-  const staat = { ...RUST };
+  const scherm = $('#scherm'), pop = $('#pop'), bestel = $('#bestel');
+  const paginaKaart = $('.pagina .pizzakaart', scherm);
   let scrollY = 0;
 
-  const zetDuim = () => {
-    duim.setAttribute('transform', `rotate(${staat.a.toFixed(2)}) scale(${(1 - staat.d * .035).toFixed(3)} ${staat.s.toFixed(3)})`);
-    duimS.setAttribute('transform', `rotate(${staat.a.toFixed(2)}) scale(1 ${staat.s.toFixed(3)})`);
-    const o = 16 - staat.d * 12;
-    duimSPos.setAttribute('transform', `translate(${(SPIL.x + o * .5).toFixed(1)} ${(SPIL.y + o).toFixed(1)})`);
-    duimS.style.opacity = (1 - staat.d * .35).toFixed(2);
+  // Het gekozen recept in de sjablonen, de pagina en de zwevende pizza zetten.
+  const fotoVan = k => PIZZA[k.key].src;
+  const zetKeuzeInBeeld = () => {
+    sjablonen[4].textContent = keuze.toppings;
+    [sjablonen[9], paginaKaart].forEach(kaart => {
+      kaart.style.setProperty('--img', `url(${fotoVan(keuze)})`);
+      $('.s', kaart).textContent = keuze.naam;
+    });
+    bestel.textContent = keuze.bestel;
+    zetPizza($('#pop-pizza'), keuze.key);
+    $('#pop-naam').textContent = keuze.naam;
+    $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
   };
-  const glad = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-  const uit = p => 1 - Math.pow(1 - p, 3);
-  const beweeg = (naar, ms, ease = glad) => new Promise(res => {
-    const van = { ...staat }, t0 = performance.now();
-    const stap = t => {
-      const p = Math.min(1, (t - t0) / ms), e = ease(p);
-      for (const k in naar) staat[k] = van[k] + (naar[k] - van[k]) * e;
-      zetDuim();
-      p < 1 ? requestAnimationFrame(stap) : res();
-    };
-    requestAnimationFrame(stap);
-  });
-  const richt = (x, y) => {
-    const dx = x - SPIL.x, dy = y - SPIL.y;
-    return { a: Math.atan2(dx, -dy) * 180 / Math.PI, s: Math.max(.6, Math.min(1.2, Math.hypot(dx, dy) / LENGTE)) };
-  };
-  const inTel = el => {
+
+  // Aanraakpunt in plaats van een duim: zo zie je waar er getikt en geveegd wordt.
+  const vinger = document.createElement('span');
+  vinger.className = 'vinger';
+  vinger.setAttribute('aria-hidden', 'true');
+  scherm.appendChild(vinger);
+  const inScherm = el => {
     let x = 0, y = 0, n = el;
-    while (n && n !== tel) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    while (n && n !== scherm) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
     return { x, y, w: el.offsetWidth, h: el.offsetHeight };
   };
-  const rimpel = (x, y) => {
-    const r = document.createElement('span');
-    r.className = 'rimpel'; r.style.left = x + 'px'; r.style.top = y + 'px';
-    tel.appendChild(r);
-    setTimeout(() => r.remove(), 700);
-  };
-  const tik = async (x, y, opDruk) => {
-    await beweeg({ ...richt(x, y), d: 0 }, 560);
-    await beweeg({ d: 1 }, 110);
-    rimpel(x, y);
-    if (opDruk) opDruk();
-    await beweeg({ d: 0 }, 170);
-  };
-  const naarRust = () => beweeg(RUST, 520);
+  const plaats = (x, y) => { vinger.style.left = x + 'px'; vinger.style.top = y + 'px'; };
 
+  let run = 0;
+  const AFGEBROKEN = Symbol('afgebroken');
   let isZichtbaar = true, wachtrij = [];
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
     isZichtbaar = e.isIntersecting;
     if (isZichtbaar) { wachtrij.forEach(f => f()); wachtrij = []; }
   }).observe(toneel);
-  const pauze = async ms => {
+  const maakPauze = mijn => async ms => {
     await wacht(ms);
     if (!isZichtbaar || document.hidden) await new Promise(r => {
       wachtrij.push(r);
       const c = () => { if (!document.hidden && isZichtbaar) { document.removeEventListener('visibilitychange', c); r(); } };
       document.addEventListener('visibilitychange', c);
     });
+    if (mijn !== run) throw AFGEBROKEN;
   };
 
   const scrollNaarOnder = () => {
@@ -213,53 +215,25 @@
     draad.appendChild(n);
     return n;
   };
-  const typtIndicator = async ms => {
-    const n = document.createElement('div');
-    n.className = 'typen in-anim';
-    n.innerHTML = '<i></i><i></i><i></i>';
-    draad.appendChild(n);
-    scrollNaarOnder();
-    await pauze(ms);
-    n.remove();
+  const rimpel = (x, y) => {
+    const r = document.createElement('span');
+    r.className = 'rimpel'; r.style.left = x + 'px'; r.style.top = y + 'px';
+    scherm.appendChild(r);
+    setTimeout(() => r.remove(), 700);
   };
-  const kies = async (opts, tekst, antwoord) => {
-    const knop = [...opts.children].find(o => o.textContent === tekst);
-    const k = inTel(knop);
-    await tik(k.x + k.w / 2, k.y - scrollY + k.h / 2, () => knop.classList.add('gekozen'));
-    await wacht(160);
-    opts.classList.add('weg');
-    await wacht(320);
-    opts.remove();
-    voegToe(antwoord);
-    scrollNaarOnder();
-    naarRust();
-  };
-  const typ = async tekst => {
-    veld.classList.add('actief');
-    for (const ch of tekst) {
-      getypt.textContent += ch;
-      invoer.classList.add('tekst');
-      await wacht(60 + Math.random() * 75);
-    }
-    await pauze(260);
-  };
-  const verstuur = async i => {
-    const a = inTel(stuur);
-    await tik(a.x + a.w * .55, a.y + a.h / 2, () => { stuur.classList.remove('tik'); void stuur.offsetWidth; stuur.classList.add('tik'); });
+  const leeg = () => {
+    draad.style.transition = 'none';
+    draad.innerHTML = '';
+    scrollY = 0;
+    draad.style.transform = 'translateY(0)';
+    void draad.offsetWidth;
+    draad.style.transition = '';
     getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
-    voegToe(i);
-    scrollNaarOnder();
-    naarRust();
+    scherm.classList.remove('op-pagina');
+    vinger.classList.remove('aan', 'druk', 'sleep');
   };
-  const veeg = async () => {
-    const start = richt(222, 486), eind = richt(268, 404);
-    await beweeg({ ...start, d: 0 }, 420);
-    await beweeg({ d: 1 }, 110);
-    scrollNaarOnder();
-    await beweeg({ ...eind }, 640, uit);
-    await beweeg({ d: 0 }, 150);
-    await naarRust();
-  };
+
+  const EIND = { x: 0, y: 70 };
   const vonken = (x, y) => {
     const kleuren = ['var(--accent)', '#FFC23D', '#E8412C', '#FFFFFF', '#2E9E45'];
     for (let i = 0; i < 14; i++) {
@@ -276,11 +250,9 @@
       ], { duration: 900 + Math.random() * 400, easing: 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' }).onfinish = () => v.remove();
     }
   };
-  // De pizza draait uit de video op de persoonlijke pagina het toneel op.
-  const EIND = { x: 0, y: 70 };
   const vlieg = () => {
     const tin = toneelIn.getBoundingClientRect();
-    const b = $('.pagina .pizzakaart', scherm).getBoundingClientRect();
+    const b = paginaKaart.getBoundingClientRect();
     const d = Math.min(b.width, b.height) * .8;
     const bx = (b.left + (b.width - d) / 2 - tin.left) / schaal, by = (b.top + (b.height - d) * .62 - tin.top) / schaal, k = (d / schaal) / 220;
     pop.classList.remove('geland');
@@ -292,71 +264,146 @@
     ], { duration: 1300, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
     setTimeout(() => { pop.classList.add('geland'); vonken(EIND.x + 110, EIND.y + 110); }, 1000);
   };
-  const terug = () => {
+  const verbergPop = (snel) => {
     pop.classList.remove('geland');
-    return pop.animate([{ opacity: 1 }, { transform: `translate(${EIND.x + 140}px, ${EIND.y + 260}px) rotate(-460deg) scale(.35)`, opacity: 0 }], { duration: 650, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
-  };
-  const leeg = () => {
-    draad.style.transition = 'none';
-    draad.innerHTML = '';
-    scrollY = 0;
-    draad.style.transform = 'translateY(0)';
-    void draad.offsetWidth;
-    draad.style.transition = '';
+    return pop.animate([{ opacity: snel ? 0 : 1 }, { transform: `translate(${EIND.x + 140}px, ${EIND.y + 260}px) rotate(-460deg) scale(.35)`, opacity: 0 }], { duration: snel ? 1 : 650, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
   };
 
-  const gesprek = async () => {
-    await wacht(1900);
-    while (true) {
-      await pauze(600);
-      await typtIndicator(1000);
-      voegToe(0); const o1 = voegToe(1); scrollNaarOnder();
-      await pauze(1500);
-      await kies(o1, 'Italiaans dun', 2);
-      await pauze(400);
-      await typtIndicator(900);
-      voegToe(3); scrollNaarOnder();
-      await pauze(900);
-      await typ('Nduja en hot honey');
-      await verstuur(4);
-      await pauze(400);
-      await typtIndicator(900);
-      voegToe(5); const o2 = voegToe(6); scrollNaarOnder();
-      await pauze(1300);
-      await kies(o2, 'Tomaat', 7);
-      await pauze(400);
-      await typtIndicator(1300);
-      voegToe(8); scrollNaarOnder();
-      await pauze(700);
-      const kaart = voegToe(9, ['genereren']);
-      await pauze(1600);
-      kaart.classList.remove('genereren');
-      await pauze(900);
-      await veeg();
-      await pauze(500);
-      const k = inTel(kaart);
-      await tik(k.x + k.w * .7, k.y - scrollY + k.h * .55, () => scherm.classList.add('op-pagina'));
-      await naarRust();
-      await pauze(900);
-      vlieg();
-      await pauze(2200);
-      const b = inTel(bestel);
-      await tik(b.x + b.w * .72, b.y + b.h / 2, () => bestel.classList.add('ingedrukt'));
-      setTimeout(() => bestel.classList.remove('ingedrukt'), 280);
-      await naarRust();
-      await pauze(3600);
-      await terug();
-      scherm.classList.remove('op-pagina');
-      await wacht(700);
-      draad.style.transition = 'opacity .45s';
-      draad.style.opacity = '0';
-      await wacht(480);
-      leeg();
-      draad.style.opacity = '';
+  const gesprek = async (mijn, eersteWacht) => {
+    const pauze = maakPauze(mijn);
+    const tik = async (x, y, opDruk) => {
+      plaats(x, y);
+      vinger.classList.add('aan');
+      await pauze(260);
+      vinger.classList.add('druk');
+      rimpel(x, y);
+      if (opDruk) opDruk();
+      await pauze(170);
+      vinger.classList.remove('druk');
+      await pauze(160);
+      vinger.classList.remove('aan');
+    };
+    const typtIndicator = async ms => {
+      const n = document.createElement('div');
+      n.className = 'typen in-anim';
+      n.innerHTML = '<i></i><i></i><i></i>';
+      draad.appendChild(n);
+      scrollNaarOnder();
+      try { await pauze(ms); } finally { n.remove(); }
+    };
+    const kies = async (opts, tekst, antwoord) => {
+      const knop = [...opts.children].find(o => o.textContent === tekst);
+      const k = inScherm(knop);
+      await tik(k.x + k.w / 2, k.y - scrollY + k.h / 2, () => knop.classList.add('gekozen'));
+      opts.classList.add('weg');
+      await pauze(320);
+      opts.remove();
+      voegToe(antwoord);
+      scrollNaarOnder();
+    };
+    const typ = async tekst => {
+      veld.classList.add('actief');
+      for (const ch of tekst) {
+        getypt.textContent += ch;
+        invoer.classList.add('tekst');
+        await pauze(55 + Math.random() * 60);
+      }
+      await pauze(240);
+    };
+    const verstuur = async i => {
+      const a = inScherm(stuur);
+      await tik(a.x + a.w / 2, a.y + a.h / 2, () => { stuur.classList.remove('tik'); void stuur.offsetWidth; stuur.classList.add('tik'); });
+      getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
+      voegToe(i);
+      scrollNaarOnder();
+    };
+    const veeg = async () => {
+      const x = chat.offsetLeft + chat.clientWidth * .62;
+      const y0 = chat.offsetTop + chat.clientHeight * .78, y1 = chat.offsetTop + chat.clientHeight * .36;
+      vinger.classList.add('sleep');
+      plaats(x, y0);
+      vinger.classList.add('aan');
+      await pauze(240);
+      vinger.classList.add('druk');
+      scrollNaarOnder();
+      plaats(x, y1);
+      await pauze(720);
+      vinger.classList.remove('druk', 'aan');
+      await pauze(200);
+      vinger.classList.remove('sleep');
+    };
+
+    try {
+      await pauze(eersteWacht);
+      while (true) {
+        await pauze(600);
+        await typtIndicator(1000);
+        voegToe(0); const o1 = voegToe(1); scrollNaarOnder();
+        await pauze(1500);
+        await kies(o1, 'Italiaans dun', 2);
+        await pauze(400);
+        await typtIndicator(900);
+        voegToe(3); scrollNaarOnder();
+        await pauze(900);
+        await typ(keuze.toppings);
+        await verstuur(4);
+        await pauze(400);
+        await typtIndicator(900);
+        voegToe(5); const o2 = voegToe(6); scrollNaarOnder();
+        await pauze(1300);
+        await kies(o2, 'Tomaat', 7);
+        await pauze(400);
+        await typtIndicator(1300);
+        voegToe(8); scrollNaarOnder();
+        await pauze(700);
+        const kaart = voegToe(9, ['genereren']);
+        await pauze(1600);
+        kaart.classList.remove('genereren');
+        await pauze(900);
+        await veeg();
+        await pauze(500);
+        const k = inScherm(kaart);
+        await tik(k.x + k.w * .6, k.y - scrollY + k.h * .55, () => scherm.classList.add('op-pagina'));
+        await pauze(1100);
+        vlieg();
+        await pauze(2200);
+        const b = inScherm(bestel);
+        await tik(b.x + b.w / 2, b.y + b.h / 2, () => bestel.classList.add('ingedrukt'));
+        setTimeout(() => bestel.classList.remove('ingedrukt'), 280);
+        await pauze(3600);
+        await verbergPop(false);
+        scherm.classList.remove('op-pagina');
+        await pauze(700);
+        draad.style.transition = 'opacity .45s';
+        draad.style.opacity = '0';
+        await pauze(480);
+        leeg();
+        draad.style.opacity = '';
+      }
+    } catch (e) {
+      if (e !== AFGEBROKEN) throw e;
     }
   };
 
-  zetDuim();
+  // Kies een pizza in de band: het gesprek begint opnieuw met die pizza.
+  band.addEventListener('click', e => {
+    const b = e.target.closest('.band-pizza');
+    if (!b) return;
+    const nieuw = KEUZES.find(k => k.key === b.dataset.keuze);
+    if (!nieuw) return;
+    keuze = nieuw;
+    run++;
+    draad.style.opacity = '';
+    verbergPop(true);
+    leeg();
+    zetKeuzeInBeeld();
+    const r = toneel.getBoundingClientRect();
+    if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
+    if (rust) { sjablonen.forEach((s, i) => { if (i !== 1 && i !== 6) draad.appendChild(s.cloneNode(true)); }); scrollNaarOnder(); }
+    else gesprek(run, 300);
+  });
+
+  zetKeuzeInBeeld();
   if (rust) scrollNaarOnder();
-  else { leeg(); gesprek(); }
+  else { leeg(); gesprek(run, 1900); }
 })();

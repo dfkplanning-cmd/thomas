@@ -1,4 +1,4 @@
-// manysocials: merkkeuze, telefoon met live gesprek en duim, band, live-lijst en de ontwerpwerkbalk.
+// manysocials: merkkeuze, telefoon met live Instagram-DM, kiesbare smaken, live-lijst en de ontwerpwerkbalk.
 (() => {
   const $ = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
@@ -25,6 +25,7 @@
   let merk = opslag.get('ms-merk');
   if (!Zak.MERKEN[merk]) merk = 'knap';
   const STUDIO = { knap: ['#FFF3D6', '#FFC870'], zilt: ['#F3EBDD', '#D8C3A1'], golf: ['#FFEFD2', '#FFC266'] };
+  let smaak = 0; // gekozen smaak in de band, standaard mango met chili
 
   const vulZakken = (root, wissel) => {
     $$('[data-zak]', root).forEach(el => {
@@ -39,7 +40,10 @@
   const band = $('#band-rij');
   const vulBand = () => {
     let h = '';
-    for (let set = 0; set < 4; set++) for (let i = 0; i < 5; i++) h += `<div class="band-zak">${Zak.svg(merk, i, { label: '' })}</div><div class="band-chip">${Zak.chip(i * 7 - 10)}</div>`;
+    for (let set = 0; set < 4; set++) for (let i = 0; i < 5; i++) {
+      const verborgen = set ? ' tabindex="-1" aria-hidden="true"' : '';
+      h += `<button type="button" class="band-zak" role="listitem" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
+    }
     band.innerHTML = h;
   };
 
@@ -49,6 +53,7 @@
     vulZakken(document, wissel);
     vulBand();
     $('#av').innerHTML = Zak.logo(m);
+    document.documentElement.style.setProperty('--av-logo', `url("data:image/svg+xml,${encodeURIComponent(Zak.logo(m).replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" '))}")`);
     $$('.kk-merk').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.merk === m)));
     $$('.ov-merk').forEach(r => r.classList.toggle('actief', r.dataset.merk === m));
     $$('[data-kies]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.kies === m)));
@@ -130,117 +135,82 @@
     rijen.prepend(laatste);
   }, 2600);
 
-  // ---------- Telefoon: gesprek met duim ----------
-  const chat = $('#wa-chat'), invoer = $('#wa-invoer'), veld = $('#wa-veld'), getypt = $('#wa-getypt');
-  const actie = $('#wa-actie'), sub = $('#wa-sub'), tel = $('.tel'), pop = $('#pop');
-  const duim = $('#duim'), duimS = $('#duim-schaduw'), duimSPos = $('#duim-schaduw-pos');
-  const SPIL = { x: 330, y: 560 }, LENGTE = 134;
-  const RUST = { a: -14, s: .92, d: 0 };
-  const staat = { ...RUST };
+  // ---------- Telefoon: Instagram-DM ----------
+  const chat = $('#ig-chat'), invoer = $('#ig-invoer'), veld = $('#ig-veld'), getypt = $('#getypt'), stuur = $('#ig-stuur');
+  const scherm = $('#scherm'), pop = $('#pop');
   let scrollY = 0;
 
-  const zetDuim = () => {
-    duim.setAttribute('transform', `rotate(${staat.a.toFixed(2)}) scale(${(1 - staat.d * .035).toFixed(3)} ${staat.s.toFixed(3)})`);
-    duimS.setAttribute('transform', `rotate(${staat.a.toFixed(2)}) scale(1 ${staat.s.toFixed(3)})`);
-    const o = 16 - staat.d * 12;
-    duimSPos.setAttribute('transform', `translate(${(SPIL.x + o * .5).toFixed(1)} ${(SPIL.y + o).toFixed(1)})`);
-    duimS.style.opacity = (1 - staat.d * .35).toFixed(2);
+  // De gekozen smaak in de sjablonen en de zwevende zak zetten.
+  const zetSmaakInBeeld = () => {
+    const s = Zak.SMAKEN[smaak];
+    sjablonen[2].textContent = s.naam;
+    const zak = $('[data-zak]', sjablonen[3]);
+    zak.dataset.zak = smaak;
+    zak.dataset.label = `Een zak chips met de smaak ${s.naam.toLowerCase()}`;
+    $('.et b', sjablonen[3]).textContent = s.naam;
+    $('[data-zak]', pop).dataset.zak = smaak;
+    vulZakken(pop, false);
+    $('.pop-label b', pop).textContent = s.naam;
+    $$('.band-zak').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.smaak === smaak)));
   };
-  const glad = p => p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2;
-  const uit = p => 1 - Math.pow(1 - p, 3);
-  const beweeg = (naar, ms, ease = glad) => new Promise(res => {
-    const van = { ...staat }, t0 = performance.now();
-    const stap = t => {
-      const p = Math.min(1, (t - t0) / ms), e = ease(p);
-      for (const k in naar) staat[k] = van[k] + (naar[k] - van[k]) * e;
-      zetDuim();
-      p < 1 ? requestAnimationFrame(stap) : res();
-    };
-    requestAnimationFrame(stap);
-  });
-  const richt = (x, y) => {
-    const dx = x - SPIL.x, dy = y - SPIL.y;
-    return { a: Math.atan2(dx, -dy) * 180 / Math.PI, s: Math.max(.6, Math.min(1.2, Math.hypot(dx, dy) / LENGTE)) };
-  };
-  // Positie van een element in telefooncoördinaten (zonder transforms, dus los van draaiing en schaal).
-  const inTel = el => {
+
+  // Aanraakpunt: zo zie je waar er getikt en geveegd wordt.
+  const vinger = document.createElement('span');
+  vinger.className = 'vinger';
+  vinger.setAttribute('aria-hidden', 'true');
+  scherm.appendChild(vinger);
+  const inScherm = el => {
     let x = 0, y = 0, n = el;
-    while (n && n !== tel) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+    while (n && n !== scherm) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
     return { x, y, w: el.offsetWidth, h: el.offsetHeight };
   };
+  const plaats = (x, y) => { vinger.style.left = x + 'px'; vinger.style.top = y + 'px'; };
   const rimpel = (x, y) => {
     const r = document.createElement('span');
     r.className = 'rimpel'; r.style.left = x + 'px'; r.style.top = y + 'px';
-    tel.appendChild(r);
+    scherm.appendChild(r);
     setTimeout(() => r.remove(), 700);
   };
-  const tik = async (x, y, opDruk) => {
-    await beweeg({ ...richt(x, y), d: 0 }, 560);
-    await beweeg({ d: 1 }, 110);
-    rimpel(x, y);
-    if (opDruk) opDruk();
-    await beweeg({ d: 0 }, 170);
-  };
-  const naarRust = () => beweeg(RUST, 520);
 
-  // Zichtbaarheid: het gesprek pauzeert buiten beeld.
-  let zichtbaar = true, wachtrij = [];
+  let run = 0;
+  const AFGEBROKEN = Symbol('afgebroken');
+  let isZichtbaar = true, wachtrij = [];
   if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
-    zichtbaar = e.isIntersecting;
-    if (zichtbaar) { wachtrij.forEach(f => f()); wachtrij = []; }
+    isZichtbaar = e.isIntersecting;
+    if (isZichtbaar) { wachtrij.forEach(f => f()); wachtrij = []; }
   }).observe(toneel);
-  const pauze = async ms => { await wacht(ms); if (!zichtbaar || document.hidden) await new Promise(r => { wachtrij.push(r); const c = () => { if (!document.hidden && zichtbaar) { document.removeEventListener('visibilitychange', c); r(); } }; document.addEventListener('visibilitychange', c); }); };
+  const maakPauze = mijn => async ms => {
+    await wacht(ms);
+    if (!isZichtbaar || document.hidden) await new Promise(r => {
+      wachtrij.push(r);
+      const c = () => { if (!document.hidden && isZichtbaar) { document.removeEventListener('visibilitychange', c); r(); } };
+      document.addEventListener('visibilitychange', c);
+    });
+    if (mijn !== run) throw AFGEBROKEN;
+  };
 
   const scrollNaarOnder = () => {
     scrollY = Math.max(0, draad.offsetHeight - chat.clientHeight);
     draad.style.transform = `translateY(${-scrollY}px)`;
   };
-  const voegToe = (i, extra) => {
+  const voegToe = (i, extra = []) => {
     const n = sjablonen[i].cloneNode(true);
-    n.classList.add('in');
-    if (extra) n.classList.add(...extra);
+    n.classList.add('in-anim', ...extra);
     draad.appendChild(n);
     vulZakken(n, false);
     return n;
   };
-  const typtIndicator = async ms => {
-    sub.textContent = 'typt…'; sub.classList.add('typt');
-    const n = document.createElement('div');
-    n.className = 'msg bot typen in';
-    n.innerHTML = '<p><i></i><i></i><i></i></p>';
-    draad.appendChild(n);
-    scrollNaarOnder();
-    await pauze(ms);
-    n.remove();
-    sub.textContent = 'online'; sub.classList.remove('typt');
-  };
-  const typ = async tekst => {
-    veld.classList.add('actief');
-    for (const ch of tekst) {
-      getypt.textContent += ch;
-      invoer.classList.add('tekst');
-      await wacht(60 + Math.random() * 75);
-    }
-    await pauze(260);
-  };
-  const verstuur = async i => {
-    const a = inTel(actie);
-    await tik(a.x + a.w * .62, a.y + a.h / 2, () => { actie.classList.remove('tik'); void actie.offsetWidth; actie.classList.add('tik'); });
+  const leeg = () => {
+    draad.style.transition = 'none';
+    draad.innerHTML = '';
+    scrollY = 0;
+    draad.style.transform = 'translateY(0)';
+    void draad.offsetWidth;
+    draad.style.transition = '';
     getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
-    const n = voegToe(i);
-    scrollNaarOnder();
-    naarRust();
-    return n;
+    vinger.classList.remove('aan', 'druk', 'sleep');
   };
-  const veeg = async () => {
-    const start = richt(222, 486), eind = richt(268, 404);
-    await beweeg({ ...start, d: 0 }, 420);
-    await beweeg({ d: 1 }, 110);
-    scrollNaarOnder();
-    await beweeg({ ...eind }, 640, uit);
-    await beweeg({ d: 0 }, 150);
-    await naarRust();
-  };
+
   const vonken = (x, y) => {
     const kleuren = ['var(--accent)', '#FFC23D', '#FF5A1F', '#FFFFFF', '#6C3BF5'];
     for (let i = 0; i < 14; i++) {
@@ -271,62 +241,122 @@
     ], { duration: 1150, easing: 'cubic-bezier(.22,.9,.25,1)', fill: 'forwards' });
     setTimeout(() => { pop.classList.add('geland'); vonken(EIND.x + 115, EIND.y + 150); }, 900);
   };
-  const terug = () => {
+  const verbergPop = snel => {
     pop.classList.remove('geland');
-    return pop.animate([{ opacity: 1 }, { transform: `translate(${EIND.x + 120}px, ${EIND.y + 220}px) rotate(-2deg) scale(.4)`, opacity: 0 }], { duration: 600, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
-  };
-  const leeg = () => {
-    draad.style.transition = 'none';
-    draad.innerHTML = '';
-    scrollY = 0;
-    draad.style.transform = 'translateY(0)';
-    void draad.offsetWidth;
-    draad.style.transition = '';
+    return pop.animate([{ opacity: snel ? 0 : 1 }, { transform: `translate(${EIND.x + 120}px, ${EIND.y + 220}px) rotate(-2deg) scale(.4)`, opacity: 0 }], { duration: snel ? 1 : 600, easing: 'cubic-bezier(.5,0,.75,0)', fill: 'forwards' }).finished;
   };
 
-  const gesprek = async () => {
-    await wacht(1900);
-    while (true) {
-      await pauze(700);
-      await typ('WIN');
-      const m1 = await verstuur(0);
-      await pauze(600);
-      $('.t', m1)?.classList.add('gelezen');
-      await typtIndicator(1300);
-      voegToe(1); scrollNaarOnder();
-      await pauze(1700);
-      await typ('Mango met chili');
-      const m2 = await verstuur(2);
-      await pauze(500);
-      $('.t', m2)?.classList.add('gelezen');
-      await typtIndicator(1000);
-      const media = voegToe(3, ['genereren']);
-      await pauze(1500);
-      media.classList.remove('genereren'); media.classList.add('klaar');
-      await pauze(1000);
-      await veeg();
-      await pauze(450);
-      const knop = voegToe(4); scrollNaarOnder();
-      await pauze(1000);
-      const k = inTel(knop.firstElementChild);
-      await tik(k.x + k.w * .74, k.y - scrollY + k.h / 2, () => { knop.classList.add('ingedrukt'); vlieg(); });
-      setTimeout(() => knop.classList.remove('ingedrukt'), 260);
-      await naarRust();
-      await pauze(4200);
-      await terug();
-      draad.style.transition = 'opacity .45s';
-      draad.style.opacity = '0';
-      await wacht(480);
-      leeg();
-      draad.style.opacity = '';
+  const gesprek = async (mijn, eersteWacht) => {
+    const pauze = maakPauze(mijn);
+    const tik = async (x, y, opDruk) => {
+      plaats(x, y);
+      vinger.classList.add('aan');
+      await pauze(260);
+      vinger.classList.add('druk');
+      rimpel(x, y);
+      if (opDruk) opDruk();
+      await pauze(170);
+      vinger.classList.remove('druk');
+      await pauze(160);
+      vinger.classList.remove('aan');
+    };
+    const typtIndicator = async ms => {
+      const n = document.createElement('div');
+      n.className = 'typen in-anim';
+      n.innerHTML = '<i></i><i></i><i></i>';
+      draad.appendChild(n);
+      scrollNaarOnder();
+      try { await pauze(ms); } finally { n.remove(); }
+    };
+    const typ = async tekst => {
+      veld.classList.add('actief');
+      for (const ch of tekst) {
+        getypt.textContent += ch;
+        invoer.classList.add('tekst');
+        await pauze(55 + Math.random() * 65);
+      }
+      await pauze(240);
+    };
+    const verstuur = async i => {
+      const a = inScherm(stuur);
+      await tik(a.x + a.w / 2, a.y + a.h / 2, () => { stuur.classList.remove('tik'); void stuur.offsetWidth; stuur.classList.add('tik'); });
+      getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
+      voegToe(i);
+      scrollNaarOnder();
+    };
+    const veeg = async () => {
+      const x = chat.offsetLeft + chat.clientWidth * .62;
+      const y0 = chat.offsetTop + chat.clientHeight * .78, y1 = chat.offsetTop + chat.clientHeight * .36;
+      vinger.classList.add('sleep');
+      plaats(x, y0);
+      vinger.classList.add('aan');
+      await pauze(240);
+      vinger.classList.add('druk');
+      scrollNaarOnder();
+      plaats(x, y1);
+      await pauze(720);
+      vinger.classList.remove('druk', 'aan');
+      await pauze(200);
+      vinger.classList.remove('sleep');
+    };
+
+    try {
+      await pauze(eersteWacht);
+      while (true) {
+        await pauze(700);
+        await typ('WIN');
+        await verstuur(0);
+        await pauze(500);
+        await typtIndicator(1300);
+        voegToe(1); scrollNaarOnder();
+        await pauze(1700);
+        await typ(Zak.SMAKEN[smaak].naam);
+        await verstuur(2);
+        await pauze(400);
+        await typtIndicator(1000);
+        const media = voegToe(3, ['genereren']);
+        await pauze(1500);
+        media.classList.remove('genereren'); media.classList.add('klaar');
+        await pauze(800);
+        voegToe(4);
+        await pauze(500);
+        await veeg();
+        await pauze(450);
+        const knop = voegToe(5); scrollNaarOnder();
+        await pauze(1000);
+        const k = inScherm(knop.firstElementChild);
+        await tik(k.x + k.w / 2, k.y - scrollY + k.h / 2, () => { knop.classList.add('ingedrukt'); vlieg(); });
+        setTimeout(() => knop.classList.remove('ingedrukt'), 260);
+        await pauze(4200);
+        await verbergPop(false);
+        draad.style.transition = 'opacity .45s';
+        draad.style.opacity = '0';
+        await pauze(480);
+        leeg();
+        draad.style.opacity = '';
+      }
+    } catch (e) {
+      if (e !== AFGEBROKEN) throw e;
     }
   };
 
-  zetDuim();
-  if (rust) {
-    scrollNaarOnder();
-  } else {
+  // Kies een smaak in de band: het gesprek begint opnieuw met die smaak.
+  band.addEventListener('click', e => {
+    const b = e.target.closest('.band-zak');
+    if (!b) return;
+    smaak = +b.dataset.smaak;
+    run++;
+    draad.style.opacity = '';
+    verbergPop(true);
     leeg();
-    gesprek();
-  }
+    zetSmaakInBeeld();
+    const r = toneel.getBoundingClientRect();
+    if (r.top < -r.height * .35 || r.bottom > innerHeight + r.height * .6) toneel.scrollIntoView({ behavior: rust ? 'auto' : 'smooth', block: 'center' });
+    if (rust) { sjablonen.forEach((s, i) => { const n = s.cloneNode(true); draad.appendChild(n); vulZakken(n, false); }); scrollNaarOnder(); }
+    else gesprek(run, 300);
+  });
+
+  zetSmaakInBeeld();
+  if (rust) scrollNaarOnder();
+  else { leeg(); gesprek(run, 1900); }
 })();

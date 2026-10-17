@@ -1,0 +1,24 @@
+// node klik.mjs <html> <prefix> <scheme>
+import { chromium } from '/opt/node22/lib/node_modules/playwright/index.mjs';
+const [,, html, pre, scheme] = process.argv;
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome', proxy: { server: process.env.HTTPS_PROXY } });
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, colorScheme: scheme });
+const logs = []; page.on('pageerror', e => logs.push('pageerror: ' + e.message));
+await page.goto('file://' + html);
+await page.waitForTimeout(2500);
+await page.click('.kk-merk[data-merk="zilt"]');
+await page.waitForTimeout(16500);
+await page.screenshot({ path: pre + '-zilt.png' });
+await page.click('.kk-merk[data-merk="golf"]');
+await page.waitForTimeout(700);
+await page.screenshot({ path: pre + '-golf.png' });
+await page.click('#kk-alle');
+await page.waitForTimeout(900);
+await page.screenshot({ path: pre + '-alle.png' });
+await page.keyboard.press('Escape');
+await page.click('#kk-kleur');
+await page.click('#kk-knoppen button[data-kleur="#FF9EC4"]');
+await page.waitForTimeout(400);
+await page.screenshot({ path: pre + '-roze.png' });
+if (logs.length) console.log(logs.join('\n'));
+await browser.close();

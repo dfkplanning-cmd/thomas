@@ -634,3 +634,5 @@ button.opt { font-family: inherit; cursor: pointer; }
 
 /* Eén zwevende pizza is genoeg: de pizza uit de telefoon landt op de keuzeplek */
 .pop { display: none; }
+.zelf-hint { transition: opacity .3s; }
+.scherm.beeld .zelf-hint { opacity: 0; pointer-events: none; }

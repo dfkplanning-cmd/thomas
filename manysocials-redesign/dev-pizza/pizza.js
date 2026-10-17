@@ -234,7 +234,7 @@
     void draad.offsetWidth;
     draad.style.transition = '';
     getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
-    scherm.classList.remove('op-pagina');
+    scherm.classList.remove('op-pagina', 'beeld');
     vinger.classList.remove('aan', 'druk', 'sleep');
   };
 
@@ -275,7 +275,10 @@
   };
 
   const gesprek = async (mijn, eersteWacht) => {
-    const pauze = maakPauze(mijn);
+    // Het gesprek zelf duurt zo'n 3 seconden (tempo f), daarna krijgen de beelden de tijd.
+    const echtePauze = maakPauze(mijn);
+    let f = 1;
+    const pauze = ms => echtePauze(ms * f);
     const tik = async (x, y, opDruk) => {
       plaats(x, y);
       vinger.classList.add('aan');
@@ -341,6 +344,7 @@
     try {
       await pauze(eersteWacht);
       while (true) {
+        f = .2;
         await pauze(600);
         await typtIndicator(1000);
         voegToe(0); const o1 = voegToe(1); scrollNaarOnder();
@@ -361,6 +365,8 @@
         await typtIndicator(1300);
         voegToe(8); scrollNaarOnder();
         await pauze(700);
+        f = 1;
+        scherm.classList.add('beeld');
         const kaart = voegToe(9, ['genereren']);
         await pauze(1600);
         kaart.classList.remove('genereren');
@@ -587,5 +593,5 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
 
   zetKeuzeInBeeld();
   if (rust) scrollNaarOnder();
-  else { leeg(); gesprek(run, 1900); }
+  else { leeg(); gesprek(run, 900); }
 })();

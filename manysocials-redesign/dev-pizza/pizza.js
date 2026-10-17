@@ -173,6 +173,8 @@
     bestel.textContent = keuze.bestel;
     zetPizza($('#pop-pizza'), keuze.key);
     $('#pop-naam').textContent = keuze.naam;
+    zetPizza($('#p-keuze'), keuze.key);
+    $('#p-naam').textContent = keuze.naam;
     $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
   };
 
@@ -385,6 +387,33 @@
     }
   };
 
+  // Meteen zien dat je kiest: de pizza vliegt uit de band naar het toneel en landt met een knal.
+  const herstart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  const toonKeuze = knop => {
+    const doel = $('#p-keuze'), label = $('#p-label');
+    herstart(knop, 'net');
+    herstart(scherm, 'wissel');
+    const land = () => { herstart(doel, 'land'); herstart(doel.parentElement, 'knal'); herstart(label, 'wissel'); };
+    // Midden en echte breedte: de pizza's draaien, dus de bounding box is groter dan de schijf.
+    const vanEl = knop.querySelector('.pizza'), vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
+    const vw = vanEl.offsetWidth, nw = doel.offsetWidth * schaal;
+    const vx = vr.left + vr.width / 2, vy = vr.top + vr.height / 2, nx = nr.left + nr.width / 2, ny = nr.top + nr.height / 2;
+    const zichtbaar = ny > 0 && ny < innerHeight && vy < innerHeight;
+    if (rust || !zichtbaar || !doel.animate) { land(); return; }
+    const vlieg = document.createElement('div');
+    vlieg.className = 'vlieg-pizza';
+    Object.assign(vlieg.style, { left: nx - nw / 2 + 'px', top: ny - nw / 2 + 'px', width: nw + 'px', height: nw + 'px' });
+    zetPizza(vlieg, keuze.key);
+    document.body.appendChild(vlieg);
+    doel.style.visibility = 'hidden';
+    const dx = vx - nx, dy = vy - ny, k = vw / nw;
+    vlieg.animate([
+      { transform: `translate(${dx}px, ${dy}px) scale(${k}) rotate(0deg)` },
+      { transform: `translate(${dx * .45}px, ${dy * .45 - 140}px) scale(${(k + 1.25) / 2}) rotate(200deg)`, offset: .55 },
+      { transform: 'translate(0, 0) scale(1) rotate(360deg)' },
+    ], { duration: 720, easing: 'cubic-bezier(.45, 0, .2, 1)' }).onfinish = () => { vlieg.remove(); doel.style.visibility = ''; land(); };
+  };
+
   // Kies een pizza in de band: het gesprek begint opnieuw met die pizza.
   band.addEventListener('click', e => {
     const b = e.target.closest('.band-pizza');
@@ -393,6 +422,7 @@
     if (!nieuw) return;
     keuze = nieuw;
     run++;
+    toonKeuze(b);
     draad.style.opacity = '';
     verbergPop(true);
     leeg();

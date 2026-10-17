@@ -141,7 +141,7 @@ sup a:hover { text-decoration: underline; }
 .pizza { border-radius: 50%; background-repeat: no-repeat; aspect-ratio: 1; width: 100%; box-shadow: 0 26px 34px -20px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.06); }
 .p1 { left: -6px; top: 64px; width: 150px; --d: 18; }
 .p1 .pizza, .p2 .pizza { animation: draaien 40s linear infinite; }
-.p2 { left: 8px; top: 520px; width: 126px; --d: 22; }
+.p2 { left: -14px; top: 470px; width: 168px; --d: 22; z-index: 3; }
 .p2 .pizza { animation-direction: reverse; animation-duration: 52s; }
 .p1 > .laag, .p2 > .laag { display: block; animation: dobber 8s ease-in-out infinite; }
 .p2 > .laag { animation-delay: -4s; }
@@ -604,6 +604,29 @@ sup a:hover { text-decoration: underline; }
 .bronnen-d .src li a { font-size: 12.5px; }
 .dia.cover { padding-block: 0; background: none; }
 
+/* Pizza kiezen: de keuze vliegt van de band naar het toneel */
+.p2 .laag { position: relative; }
+.p-label { position: absolute; left: 50%; top: calc(100% + 10px); translate: -50% 0; display: grid; justify-items: center; gap: 2px; padding: 8px 14px; border-radius: 14px; background: var(--paneel); color: var(--op-paneel); box-shadow: 0 14px 30px -14px rgba(0,0,0,.5); white-space: nowrap; font: 700 13px/1.15 var(--tekst); }
+.p-label i { font: 600 9.5px/1 var(--mono, monospace); letter-spacing: .14em; text-transform: uppercase; font-style: normal; color: var(--accent-licht, var(--accent)); }
+.p-label.wissel { animation: labelWissel .6s var(--veer) both; }
+@keyframes labelWissel { 0% { scale: .6; opacity: 0; } 100% { scale: 1; opacity: 1; } }
+.p2 .pizza.land { animation: pizzaLand .7s var(--veer) both, draaien 52s linear .7s infinite reverse; }
+@keyframes pizzaLand { 0% { transform: scale(.4) rotate(-160deg); } 60% { transform: scale(1.12) rotate(8deg); } 100% { transform: scale(1) rotate(0); } }
+.p2 .laag::after { content: ""; position: absolute; left: 50%; top: 0; width: 168px; aspect-ratio: 1; translate: -50% 0; border-radius: 50%; border: 3px solid var(--accent); opacity: 0; pointer-events: none; }
+.p2 .laag.knal::after { animation: knal .8s ease-out .45s both; }
+@keyframes knal { 0% { opacity: .9; scale: .9; } 100% { opacity: 0; scale: 1.7; } }
+.vlieg-pizza { position: fixed; z-index: 60; border-radius: 50%; pointer-events: none; background-repeat: no-repeat; box-shadow: 0 40px 50px -24px rgba(0,0,0,.6); }
+.band-pizza.net .pizza { animation: tik .5s var(--veer), draaien 30s linear infinite; }
+@keyframes tik { 0% { scale: 1; } 40% { scale: .82; } 100% { scale: 1.08; } }
+.scherm.wissel { animation: schermFlits .55s ease-out; }
+@keyframes schermFlits { 0% { filter: brightness(1.35) saturate(.6); } 100% { filter: none; } }
+
+/* Mening: de foto staat boven, de tekst onderin */
+.beeldsectie.mening { background-position: center 34%; min-height: min(94vh, 880px); display: flex; align-items: flex-end; padding-block: clamp(220px, 30vw, 420px) clamp(40px, 5vw, 72px); }
+.beeldsectie.mening > .wrap { width: 100%; }
+.beeldsectie.mening::before { background: linear-gradient(0deg, rgba(12, 9, 8, .94) 0%, rgba(12, 9, 8, .72) 30%, rgba(12, 9, 8, .1) 62%, rgba(12, 9, 8, .28) 100%), linear-gradient(90deg, rgba(12, 9, 8, .35), transparent 55%); }
+@media (max-width: 700px) { .beeldsectie.mening { background-size: auto 62%; background-position: 62% 0; background-color: #0c0908; padding-top: 52vw; } }
+
 </style>
 
 <header class="balk" id="balk">
@@ -628,7 +651,7 @@ sup a:hover { text-decoration: underline; }
       <div class="toneel-in" id="toneel-in">
         <div class="diep schijf" aria-hidden="true"><span><i></i><i></i><i></i></span></div>
         <div class="diep story" aria-hidden="true"><div class="laag"><div class="story-kaart" style="background-image:url(img/daan-telefoon.jpg)"><div class="story-balkjes"><i></i><i></i><i></i></div><span class="story-av"></span></div></div></div>
-        <div class="diep p2" aria-hidden="true"><div class="laag"><div class="pizza" data-pizza="mortadella"></div></div></div>
+        <div class="diep p2" aria-hidden="true"><div class="laag"><div class="pizza" data-pizza="daan" id="p-keuze"></div><span class="p-label" id="p-label"><i>Jouw pizza</i><b id="p-naam">Nduja &amp; hot honey</b></span></div></div>
         <div class="diep kruimel k1" aria-hidden="true" style="--kx:-120px;--ky:260px"><i><span data-ingr="basilicum"></span></i></div>
         <div class="diep kruimel k2" aria-hidden="true" style="--kx:-160px;--ky:60px"><i><span data-ingr="peper"></span></i></div>
         <div class="diep kruimel k3" aria-hidden="true" style="--kx:220px;--ky:20px"><i><span data-ingr="salami"></span></i></div>
@@ -744,7 +767,7 @@ sup a:hover { text-decoration: underline; }
   </div>
 </section>
 
-<section class="beeldsectie mening" id="mening" style="--foto:url(img/bank.jpg)">
+<section class="beeldsectie mening" id="mening" style="--foto:url(img/mening.jpg)">
   <div class="wrap">
     <div class="beeld-tekst opbouw">
       <div class="kicker licht">Iedereen doet mee</div>
@@ -1079,6 +1102,8 @@ sup a:hover { text-decoration: underline; }
     bestel.textContent = keuze.bestel;
     zetPizza($('#pop-pizza'), keuze.key);
     $('#pop-naam').textContent = keuze.naam;
+    zetPizza($('#p-keuze'), keuze.key);
+    $('#p-naam').textContent = keuze.naam;
     $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
   };
 
@@ -1291,6 +1316,33 @@ sup a:hover { text-decoration: underline; }
     }
   };
 
+  // Meteen zien dat je kiest: de pizza vliegt uit de band naar het toneel en landt met een knal.
+  const herstart = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
+  const toonKeuze = knop => {
+    const doel = $('#p-keuze'), label = $('#p-label');
+    herstart(knop, 'net');
+    herstart(scherm, 'wissel');
+    const land = () => { herstart(doel, 'land'); herstart(doel.parentElement, 'knal'); herstart(label, 'wissel'); };
+    // Midden en echte breedte: de pizza's draaien, dus de bounding box is groter dan de schijf.
+    const vanEl = knop.querySelector('.pizza'), vr = vanEl.getBoundingClientRect(), nr = doel.getBoundingClientRect();
+    const vw = vanEl.offsetWidth, nw = doel.offsetWidth * schaal;
+    const vx = vr.left + vr.width / 2, vy = vr.top + vr.height / 2, nx = nr.left + nr.width / 2, ny = nr.top + nr.height / 2;
+    const zichtbaar = ny > 0 && ny < innerHeight && vy < innerHeight;
+    if (rust || !zichtbaar || !doel.animate) { land(); return; }
+    const vlieg = document.createElement('div');
+    vlieg.className = 'vlieg-pizza';
+    Object.assign(vlieg.style, { left: nx - nw / 2 + 'px', top: ny - nw / 2 + 'px', width: nw + 'px', height: nw + 'px' });
+    zetPizza(vlieg, keuze.key);
+    document.body.appendChild(vlieg);
+    doel.style.visibility = 'hidden';
+    const dx = vx - nx, dy = vy - ny, k = vw / nw;
+    vlieg.animate([
+      { transform: `translate(${dx}px, ${dy}px) scale(${k}) rotate(0deg)` },
+      { transform: `translate(${dx * .45}px, ${dy * .45 - 140}px) scale(${(k + 1.25) / 2}) rotate(200deg)`, offset: .55 },
+      { transform: 'translate(0, 0) scale(1) rotate(360deg)' },
+    ], { duration: 720, easing: 'cubic-bezier(.45, 0, .2, 1)' }).onfinish = () => { vlieg.remove(); doel.style.visibility = ''; land(); };
+  };
+
   // Kies een pizza in de band: het gesprek begint opnieuw met die pizza.
   band.addEventListener('click', e => {
     const b = e.target.closest('.band-pizza');
@@ -1299,6 +1351,7 @@ sup a:hover { text-decoration: underline; }
     if (!nieuw) return;
     keuze = nieuw;
     run++;
+    toonKeuze(b);
     draad.style.opacity = '';
     verbergPop(true);
     leeg();

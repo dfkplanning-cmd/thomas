@@ -636,3 +636,17 @@ button.opt { font-family: inherit; cursor: pointer; }
 .pop { display: none; }
 .zelf-hint { transition: opacity .3s; }
 .scherm.beeld .zelf-hint { opacity: 0; pointer-events: none; }
+
+/* Persoonlijk: het gezicht bij de pizza */
+.kaart-av, .p-av { flex: none; border-radius: 50%; background: var(--accent) center 30% / cover no-repeat; color: #fff; display: grid; place-items: center; font: 800 12px/1 var(--kop); }
+.kaart-av { position: absolute; right: 11px; top: 11px; z-index: 1; width: 34px; height: 34px; box-shadow: 0 0 0 2px #fff, 0 6px 14px -4px rgba(0,0,0,.5); transition: opacity .5s .45s; }
+.pizzakaart.genereren .kaart-av { opacity: 0; }
+.pizzakaart .t { right: 52px; }
+.mini .kaart-av { width: 26px; height: 26px; right: 9px; top: 9px; }
+.p-label { display: flex; align-items: center; gap: 10px; text-align: left; padding: 7px 8px 7px 14px; }
+.p-tekst { display: grid; justify-items: start; gap: 2px; }
+.p-av { width: 38px; height: 38px; box-shadow: 0 0 0 2px var(--accent); }
+.story-kaart { background-position: center 30%; }
+.story-kaart.wissel { animation: storyWissel .6s var(--veer); }
+@keyframes storyWissel { 0% { filter: brightness(1.6) blur(6px); scale: .94; } 100% { filter: none; scale: 1; } }
+.story-kaart::after { content: attr(data-initialen); position: absolute; inset: 0; display: grid; place-items: center; color: #fff; font: 800 44px/1 var(--kop); }

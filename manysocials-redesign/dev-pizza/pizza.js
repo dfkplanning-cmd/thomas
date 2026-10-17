@@ -63,12 +63,12 @@
 
   // De pizza's die je in de band kunt kiezen. Nduja is de pizza uit het voorstel.
   const KEUZES = [
-    { key: 'daan', titel: 'Hot Honey Hustle',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
-    { key: 'parmaham', titel: 'La Dolce Burrata',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
-    { key: 'mortadella', titel: 'Pistache Paradiso', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
-    { key: 'bresaola', titel: 'Rucola Royale',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
-    { key: 'gorgonzola', titel: 'Peer Pressure', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
-    { key: 'ricotta', titel: 'Citroen Crush',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
+    { key: 'daan', titel: 'Big T Hot Honey', gezicht: 'img/gezicht-thomas.webp',       naam: 'Nduja & hot honey',              toppings: 'Nduja en hot honey',              bestel: 'Bestel Pepperoni Hot Honey' },
+    { key: 'parmaham', titel: 'La Dolce Sanne', gezicht: 'img/gezicht-sanne.webp',   naam: 'Parmaham, burrata & rucola',     toppings: 'Parmaham, burrata en rucola',     bestel: 'Bestel je eigen pizza' },
+    { key: 'mortadella', titel: 'Pistache Jesse', gezicht: 'img/gezicht-jesse.webp', naam: 'Mortadella, pistache & burrata', toppings: 'Mortadella, pistache en burrata', bestel: 'Bestel je eigen pizza' },
+    { key: 'bresaola', titel: 'Noor Royale', gezicht: 'img/gezicht-noor.webp',   naam: 'Bresaola, rucola & Parmezaan',   toppings: 'Bresaola, rucola en Parmezaan',   bestel: 'Bestel je eigen pizza' },
+    { key: 'gorgonzola', titel: 'Peer Pressure Lars', gezicht: 'img/gezicht-lars.webp', naam: 'Gorgonzola, peer & walnoot',     toppings: 'Gorgonzola, peer en walnoot',     bestel: 'Bestel je eigen pizza' },
+    { key: 'ricotta', titel: 'Citroen Marije', gezicht: 'img/gezicht-marije.webp',    naam: 'Ricotta, courgette & citroen',   toppings: 'Ricotta, courgette en citroen',   bestel: 'Bestel je eigen pizza' },
   ];
   let keuze = KEUZES[0];
 
@@ -164,6 +164,23 @@
 
   // Het gekozen recept in de sjablonen, de pagina en de zwevende pizza zetten.
   const fotoVan = k => PIZZA[k.key].src;
+  // Het gezicht bij de pizza: rechtsboven in de story, op de kaart en in het label. Zonder foto (live) de initialen.
+  const storyKaart = $('#story-kaart');
+  const zetGezicht = () => {
+    const doelen = [$('#p-av'), ...[sjablonen[9], paginaKaart].map(k => $('.kaart-av', k))];
+    const initialen = (keuze.persoon || '').split(/\s+/).map(w => w[0] || '').join('').slice(0, 2).toUpperCase();
+    doelen.forEach(el => {
+      el.style.backgroundImage = keuze.gezicht ? `url(${keuze.gezicht})` : 'none';
+      el.textContent = keuze.gezicht ? '' : initialen;
+    });
+    const beeld = keuze.gezicht ? `url(${keuze.gezicht})` : 'linear-gradient(160deg, var(--accent), #0b5e45)';
+    storyKaart.dataset.initialen = keuze.gezicht ? '' : initialen;
+    if (storyKaart.dataset.beeld !== beeld) {
+      storyKaart.dataset.beeld = beeld;
+      storyKaart.style.backgroundImage = beeld;
+      storyKaart.classList.remove('wissel'); void storyKaart.offsetWidth; storyKaart.classList.add('wissel');
+    }
+  };
   const zetKeuzeInBeeld = () => {
     sjablonen[4].textContent = keuze.toppings;
     [sjablonen[9], paginaKaart].forEach(kaart => {
@@ -177,6 +194,7 @@
     zetPizza($('#p-keuze'), keuze.key);
     $('#p-naam').textContent = keuze.naam;
     $('#p-titel').textContent = keuze.titel;
+    zetGezicht();
     $('#pop-titel').textContent = keuze.titel;
     $$('.band-pizza').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.keuze === keuze.key)));
   };
@@ -426,15 +444,15 @@
   // ---------- Zelf typen: een echte DM met de pizza-agent ----------
   // Claude antwoordt via de sample-capability; zonder die (of zonder toestemming) neemt een eenvoudig script het over.
   const invoerVeld = $('#ig-input'), hint = $('#zelf-hint');
-  const GROET = 'Welke pizza moeten wij nog maken? Eerst: welke bodem?';
+  const GROET = 'Hoi! Wij maken jouw eigen pizza. Hoe heet je?';
   const REGELS = `Je bent de DM-assistent van New York Pizza op Instagram (@newyorkpizza_nl) in de campagne "De Pizza van Nederland": iedereen bedenkt via de DM zijn eigen pizza en de beste komt echt op de kaart.
-Schrijf kort en informeel Nederlands, hooguit twee zinnen, hooguit één emoji. Vraag één ding tegelijk, in deze volgorde: bodem (New York Style, Italiaans dun of Bloemkool), toppings, saus.
-Zodra bodem, toppings en saus bekend zijn: bedenk een pakkende pizzanaam van twee of drie woorden (Engels of Nederlands, speels), zeg dat ze meedoen en zo een kortingscode ontvangen, en geef de pizza mee. Daarna mag de klant een nieuwe pizza bedenken.
+Schrijf kort en informeel Nederlands, hooguit twee zinnen, hooguit één emoji. Vraag één ding tegelijk, in deze volgorde: voornaam (de eerste vraag is al gesteld), bodem (New York Style, Italiaans dun of Bloemkool), toppings, saus.
+Zodra bodem, toppings en saus bekend zijn: bedenk een persoonlijke pizzanaam van twee of drie woorden met de voornaam erin (speels, zoals "Citroen Marije" of "Big T Hot Honey"), zeg dat ze meedoen en zo een kortingscode ontvangen, en geef de pizza mee. Daarna mag de klant een nieuwe pizza bedenken.
 Blijf bij pizza en deze campagne; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste toppings weiger je met humor.
 Antwoord met alleen JSON in deze vorm:
 {"tekst": "je bericht", "opties": ["max 3 korte snelknoppen, of leeg"], "pizza": null}
 of, als de pizza af is:
-{"tekst": "je bericht", "opties": [], "pizza": {"titel": "Naam Van De Pizza", "toppings": "Nduja & hot honey", "foto": "daan"}}
+{"tekst": "je bericht", "opties": [], "pizza": {"titel": "Citroen Marije", "persoon": "Marije", "toppings": "Ricotta, courgette & citroen", "foto": "ricotta"}}
 Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees), parmaham (ham, burrata, rucola), mortadella (mortadella, pistache, romig), bresaola (rundvlees, rucola, Parmezaan), gorgonzola (kaas, peer, noten, zoet), ricotta (groente, vegetarisch, citroen, fris).`;
   const TREF = [
     ['daan', ['nduja', 'salami', 'pepperoni', 'chorizo', 'chili', 'jalape', 'pittig', 'worst', 'kip', 'gehakt', 'spek']],
@@ -469,7 +487,7 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
   const maakPizza = p => {
     const key = KEUZES.some(k => k.key === p.foto) ? p.foto : 'daan';
     const naam = String(p.toppings || '').slice(0, 60) || 'Jouw pizza';
-    keuze = { key, titel: String(p.titel || 'Jouw pizza').slice(0, 40), naam, toppings: naam, bestel: 'Bestel je eigen pizza' };
+    keuze = { key, titel: String(p.titel || 'Jouw pizza').slice(0, 40), persoon: String(p.persoon || recept.naam || '').slice(0, 30), gezicht: null, naam, toppings: naam, bestel: 'Bestel je eigen pizza' };
     zetKeuzeInBeeld();
     const kaart = sjablonen[9].cloneNode(true);
     kaart.classList.add('in-anim', 'genereren');
@@ -480,13 +498,16 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
 
   const scriptAgent = () => {
     const t = beurten[beurten.length - 1].content;
+    if (stap === -1) { recept.naam = t.split(/[\s,.!]+/).filter(Boolean).pop() || t; recept.naam = recept.naam.charAt(0).toUpperCase() + recept.naam.slice(1); stap = 0; return { tekst: `Leuk ${recept.naam}! Eerst: welke bodem?`, opties: ['New York Style', 'Italiaans dun', 'Bloemkool'] }; }
     if (stap === 0) { recept.bodem = t; stap = 1; return { tekst: 'Lekker. En wat moet erop?' }; }
     if (stap === 1) { recept.toppings = t; stap = 2; return { tekst: 'Welke saus eronder?', opties: ['Tomaat', 'BBQ', 'Crème fraîche'] }; }
     stap = 0;
     const l = recept.toppings.toLowerCase();
     const foto = (TREF.find(([, w]) => w.some(x => l.includes(x))) || ['daan'])[0];
     const toppings = recept.toppings.charAt(0).toUpperCase() + recept.toppings.slice(1);
-    return { tekst: 'Super dat je meedeed! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.', pizza: { titel: KEUZES.find(k => k.key === foto).titel, toppings, foto } };
+    const VOOR = { daan: 'Hot Honey', parmaham: 'La Dolce', mortadella: 'Pistache', bresaola: 'Royale', gorgonzola: 'Peer Pressure', ricotta: 'Citroen' };
+    const naamPizza = recept.naam ? `${VOOR[foto]} ${recept.naam}` : 'Jouw pizza';
+    return { tekst: `Super dat je meedeed, ${recept.naam || 'topper'}! Je ontvangt zo een kortingscode. Hier alvast een afbeelding van je pizza.`, pizza: { titel: naamPizza, persoon: recept.naam, toppings, foto } };
   };
   const vraagAgent = async () => {
     if (agent) {
@@ -531,9 +552,8 @@ Kies bij "foto" de foto die het meest lijkt: daan (pittig, salami, nduja, vlees)
     leeg();
     scherm.classList.add('live');
     beurten = [{ role: 'assistant', content: GROET }];
-    stap = 0; recept = {};
+    stap = -1; recept = {};
     bubbel(GROET, 'in');
-    snelknoppen(['New York Style', 'Italiaans dun', 'Bloemkool']);
   };
   function stopLive() {
     if (!live) return;

@@ -94,16 +94,24 @@
   $$('[data-ingr]').forEach(el => { el.innerHTML = INGR[el.dataset.ingr]; });
 
   // ---------- Steunkleur, licht en donker ----------
-  const namen = { '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  const namen = { '#A3141E': 'Tomatenrood (voorstel)', '#7A1022': 'Wijnrood', '#C2381B': 'Steenoven', '#00B884': 'Mint', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  // Donkere steunkleur krijgt witte tekst; bij een rode steunkleur wordt het signaalrood zwart, zodat er niet twee roden botsen.
+  const STANDAARD = '#A3141E';
   const zetKleur = k => {
-    if (!namen[k]) k = '#00B884';
-    document.documentElement.style.setProperty('--accent', k);
+    if (!namen[k]) k = STANDAARD;
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(k.slice(i, i + 2), 16) / 255).map(c => c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4);
+    const licht = .2126 * r + .7152 * g + .0722 * b;
+    const rood = r > g * 3 && r > b * 3;
+    const root = document.documentElement.style;
+    root.setProperty('--accent', k);
+    root.setProperty('--op-accent', licht < .2 ? '#FFFFFF' : '#0F0F0E');
+    if (rood) root.setProperty('--heet', '#0F0F0E'); else root.removeProperty('--heet');
     $('#kk-naam').textContent = namen[k] + ' ' + k;
     $$('#kk-knoppen button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.kleur === k)));
-    opslag.set('ms-kleur', k);
+    opslag.set('ms-kleur-2', k);
   };
   $$('#kk-knoppen button').forEach(b => b.addEventListener('click', () => zetKleur(b.dataset.kleur)));
-  zetKleur(opslag.get('ms-kleur') || '#00B884');
+  zetKleur(opslag.get('ms-kleur-2') || STANDAARD);
   const kleurPaneel = $('#kk-kleuren'), kleurKnop = $('#kk-kleur');
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });

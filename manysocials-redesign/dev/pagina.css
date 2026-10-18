@@ -692,3 +692,39 @@ html { scroll-padding-top: 88px; }
 
 /* KNAP-fotozak: de foto heeft zijn eigen vorm, geen extra rand */
 .zak-foto { overflow: visible; }
+
+/* ---------- Foto's in iPhone-stijl, zoals op de pizzapagina ---------- */
+.team-foto { border-radius: 28px; aspect-ratio: 16 / 7; background: #1a1412 center 30% / cover no-repeat; margin-top: clamp(24px, 3vw, 36px); }
+@media (max-width: 700px) { .team-foto { aspect-ratio: 16 / 10; background-position: 50% 30%; } }
+
+.fase-rij { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
+.fase-kaart { position: relative; border-radius: 26px; overflow: hidden; background: var(--paneel); color: #fff; min-height: 430px; display: flex; flex-direction: column; justify-content: flex-end; isolation: isolate; }
+.fk-foto { position: absolute; inset: 0; z-index: -2; background: center 30% / cover no-repeat; transition: transform 1.2s var(--zacht-uit); }
+.fk-foto.f-dm { background-position: 30% 40%; }
+.fase-kaart:hover .fk-foto { transform: scale(1.06); }
+.fase-kaart::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(10, 6, 6, .86) 100%); }
+.fk-tekst { padding: 22px; display: grid; gap: 8px; justify-items: start; }
+.fk-nr { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); color: var(--op-accent); display: grid; place-items: center; font: 800 17px/1 var(--kop); }
+.fase-kaart.fin .fk-nr { background: #FFC20E; color: #1B1410; }
+.fk-tekst h3 { font-size: 30px; line-height: 1; }
+.fk-tekst p { font-size: 15.5px; color: rgba(255, 255, 255, .88); }
+@media (min-width: 640px) { .fase-rij { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1100px) { .fase-rij { grid-template-columns: repeat(4, 1fr); } .fase-kaart { min-height: 480px; } }
+@media (max-width: 639px) {
+  .fase-rij { grid-auto-flow: column; grid-auto-columns: 80%; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: calc(-1 * var(--gutter)) calc(-1 * var(--gutter-r)); padding-inline: var(--gutter) var(--gutter-r); scroll-padding-inline: var(--gutter); scrollbar-width: none; overscroll-behavior-x: contain; }
+  .fase-rij::-webkit-scrollbar { display: none; }
+  .fase-kaart { scroll-snap-align: start; min-height: 400px; }
+}
+
+.mening-foto { border-radius: 28px; aspect-ratio: 16 / 8; background: #1a1210 center 40% / cover no-repeat; }
+@media (min-width: 900px) { .bewijs .mening-foto { grid-column: 1 / -1; } }
+@media (max-width: 700px) { .mening-foto { aspect-ratio: 16 / 10; background-position: 55% center; } }
+
+.foto-paneel { position: relative; border-radius: 28px; overflow: hidden; background: #222 center 22% / cover no-repeat; }
+.faq-kop { display: grid; gap: 22px; align-content: start; }
+.faq-kop .foto-paneel { aspect-ratio: 1; max-width: 330px; background-position: center 30%; }
+@media (max-width: 899px) { .faq-kop .foto-paneel { aspect-ratio: 16 / 11; max-width: none; background-position: center 26%; } }
+
+.slot-beeld.slot-foto { width: min(380px, 100%); aspect-ratio: 4 / 5; border-radius: 28px; background: #3a1f6e center 62% / cover no-repeat; box-shadow: 0 30px 60px -30px rgba(0,0,0,.45); }
+.slot-foto .et { bottom: 18px; }
+.stap-gezicht { position: absolute; top: 18px; right: 18px; width: 56px; height: 56px; border-radius: 50%; background: #ccc center 30% / cover no-repeat; box-shadow: 0 0 0 3px #fff, 0 12px 24px -8px rgba(0,0,0,.5); }

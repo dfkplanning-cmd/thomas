@@ -1,13 +1,20 @@
-// Chipszakken als SVG: drie merkvoorstellen, elk met dezelfde vijf smaken.
-// Zak.svg(merk, smaak, { naam }) geeft een losse <svg> terug (viewBox 240×320).
+// Chipszakken: drie merkvoorstellen, elk met dezelfde vijf smaken. KNAP is de gekozen fotozak, ZILT en golf. zijn getekend.
+// Zak.svg(merk, smaak, { naam }) geeft een losse <svg> terug (viewBox 240×320). Met een naam krijgt de zak een "van <naam>"-sticker.
 (() => {
   const SMAKEN = [
-    { key: 'mango',   naam: 'Mango met chili',    r1: 'Mango',   r2: 'met chili' },
-    { key: 'truffel', naam: 'Truffel en zeezout', r1: 'Truffel', r2: 'en zeezout' },
-    { key: 'paprika', naam: 'Pittige paprika',    r1: 'Pittige', r2: 'paprika' },
-    { key: 'honing',  naam: 'Honing en mosterd',  r1: 'Honing',  r2: 'en mosterd' },
-    { key: 'limoen',  naam: 'Limoen en jalapeño', r1: 'Limoen',  r2: 'en jalapeño' },
+    { key: 'mango',   naam: 'Mango met chili',    r1: 'Mango',   r2: 'met chili',   maker: 'Sanne' },
+    { key: 'truffel', naam: 'Truffel en zeezout', r1: 'Truffel', r2: 'en zeezout',  maker: 'Jesse' },
+    { key: 'paprika', naam: 'Pittige paprika',    r1: 'Pittige', r2: 'paprika',     maker: 'Noor' },
+    { key: 'honing',  naam: 'Honing en mosterd',  r1: 'Honing',  r2: 'en mosterd',  maker: 'Marije' },
+    { key: 'limoen',  naam: 'Limoen en jalapeño', r1: 'Limoen',  r2: 'en jalapeño', maker: 'Lars' },
   ];
+
+  // Gezichten bij de makers. Een naam zonder foto krijgt een gekleurd rondje met de beginletter.
+  const GEZICHTEN = {
+    sanne: 'img/knap/sanne.jpg', jesse: 'img/gezicht-jesse.webp', noor: 'img/gezicht-noor.webp',
+    marije: 'img/gezicht-marije.webp', lars: 'img/gezicht-lars.webp', thomas: 'img/gezicht-thomas.webp',
+  };
+  const gezicht = naam => GEZICHTEN[String(naam || '').trim().toLowerCase()] || '';
 
   const MERKEN = {
     knap: {
@@ -206,13 +213,6 @@
     },
   };
 
-  // Eén chip met ribbels, in contourstijl voor KNAP.
-  const chipVol = (x, y, r, s) => `
-    <g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">
-      <path d="M-24 -6 C -22 -20 -6 -26 8 -22 C 22 -18 28 -4 24 8 C 20 20 4 26 -10 22 C -22 18 -26 6 -24 -6 Z" fill="#FFC23D" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>
-      <path d="M-18 -10 C -10 -6 -4 -14 4 -10 C 12 -6 16 -14 20 -10 M-20 0 C -12 4 -6 -4 2 0 C 10 4 14 -4 22 0 M-18 10 C -10 14 -4 6 4 10 C 12 14 16 6 18 10" stroke="#D98A1C" stroke-width="2" fill="none" stroke-linecap="round"/>
-    </g>`;
-
   // Gedeelde schaduw, glans, seal-ribbels en kreukels.
   const afwerking = (p, glans) => `
     <rect width="240" height="320" fill="url(#${p}h)"/>
@@ -257,42 +257,31 @@
       <rect width="1.3" height="10" fill="#000" fill-opacity=".2"/><rect x="1.9" width=".9" height="10" fill="#fff" fill-opacity=".2"/>
     </pattern>`;
 
-  // ---------- KNAP: luid, vrolijk, stickers ----------
-  const knap = (s, i, k, p, naam) => `
-    <rect width="240" height="320" fill="${k.bg}"/>
-    <pattern id="${p}d" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="2.1" fill="${k.stip}"/></pattern>
-    <path d="M120 40 L240 40 L240 150 C 200 120 160 110 120 40 Z" fill="url(#${p}d)" opacity=".7"/>
-    <path d="M-10 168 C 30 140 70 190 120 164 C 170 138 206 150 250 136 L250 330 L-10 330 Z" fill="${k.blob}"/>
-    <g transform="rotate(-6 120 74)">
-      <text x="123.5" y="88" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="64" fill="${INK}">KNAP</text>
-      <text x="120" y="84" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="64" fill="${CREME}" stroke="${INK}" stroke-width="3" paint-order="stroke" stroke-linejoin="round">KNAP</text>
-    </g>
-    <g transform="translate(120 106) rotate(-6)">
-      <rect x="-44" y="-9" width="88" height="17" rx="8.5" fill="${INK}"/>
-      <text y="3.4" text-anchor="middle" font-family="'DM Mono', ui-monospace, monospace" font-size="8.4" letter-spacing="1.6" fill="${CREME}">CHIPS · 150 G</text>
-    </g>
-    ${chipVol(50, 206, -18, .92)}
-    <g transform="translate(118 184) scale(.82)">${INGR[s.key]('vol')}</g>
-    ${chipVol(192, 200, 24, .8)}
-    <g transform="translate(120 252) rotate(3)">
-      <rect x="-86" y="-24" width="172" height="50" rx="12" fill="${CREME}" stroke="${INK}" stroke-width="3"/>
-      <text y="-2" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="21" fill="${INK}">${s.r1.toUpperCase()}</text>
-      <text y="18" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="15" fill="${k.blob === '#C8F23C' ? '#128A3E' : k.bg === '#FFD400' ? '#E07000' : k.bg}">${s.r2.toUpperCase()}</text>
-    </g>
-    ${naam ? `<g class="zak-naam" transform="translate(194 134) rotate(12)"><g class="zak-naam-in">
-      <path d="${ster(34, 26, 14)}" fill="${CREME}" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>
-      <text y="-5" text-anchor="middle" font-family="'Caveat', 'Comic Sans MS', cursive" font-weight="700" font-size="14" fill="${INK}">van</text>
-      <text y="12" text-anchor="middle" font-family="'Caveat', 'Comic Sans MS', cursive" font-weight="700" font-size="21" fill="${INK}">${naam}</text>
-    </g></g>` : ''}`;
-
-  const ster = (R, r, n) => {
-    let d = '';
-    for (let i = 0; i < n * 2; i++) {
-      const t = (Math.PI / n) * i - Math.PI / 2, rr = i % 2 ? r : R;
-      d += (i ? ' L' : 'M') + f(Math.cos(t) * rr) + ' ' + f(Math.sin(t) * rr);
-    }
-    return d + ' Z';
+  // ---------- KNAP: fotozak (vrijstaand, 3:4) met een ronde "van <naam>"-sticker ----------
+  const RONDJE = ['#FF5A1F', '#6C3BF5', '#00B884', '#E8412C', '#0095F6'];
+  const sticker = (p, naam) => {
+    const foto = gezicht(naam);
+    const tekst = 'van ' + naam;
+    const fs = f(Math.min(15.5, 66 / (.43 * tekst.length)));
+    const kleur = RONDJE[[...naam].reduce((t, c) => t + c.charCodeAt(0), 0) % RONDJE.length];
+    return `<g class="zak-naam" transform="translate(184 156) rotate(9)"><g class="zak-naam-in">
+      <circle r="37" fill="${CREME}" stroke="${INK}" stroke-width="1.4" filter="url(#${p}s)"/>
+      ${foto
+        ? `<image href="${foto}" x="-21" y="-29" width="42" height="42" preserveAspectRatio="xMidYMid slice" clip-path="url(#${p}o)"/>`
+        : `<circle cy="-8" r="21" fill="${kleur}"/><text y="1" text-anchor="middle" font-family="'Bricolage Grotesque', 'Arial Black', sans-serif" font-weight="800" font-size="25" fill="#fff">${naam.charAt(0).toUpperCase()}</text>`}
+      <circle cy="-8" r="21" fill="none" stroke="${INK}" stroke-width="1.2"/>
+      <text text-anchor="middle" font-family="'Caveat', 'Comic Sans MS', cursive" font-weight="700" font-size="${fs}" fill="${INK}"><textPath href="#${p}b" xlink:href="#${p}b" startOffset="50%">${tekst}</textPath></text>
+    </g></g>`;
   };
+  const knapFoto = (s, p, naam, label) => `<svg class="zak-svg zak-foto" viewBox="0 0 240 320" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'} xmlns="http://www.w3.org/2000/svg">
+      ${naam ? `<defs>
+        <filter id="${p}s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="2.6" flood-color="#000" flood-opacity=".32"/></filter>
+        <clipPath id="${p}o"><circle cy="-8" r="21"/></clipPath>
+        <path id="${p}b" d="M-27.6 12.9 A30.5 30.5 0 0 0 27.6 12.9" fill="none"/>
+      </defs>` : ''}
+      <image href="img/knap/${s.key}.webp" width="240" height="320" preserveAspectRatio="xMidYMid meet"/>
+      ${naam ? sticker(p, naam) : ''}
+    </svg>`;
 
   // ---------- ZILT: mat, goudfolie, lijntekening ----------
   const zilt = (s, i, k, p, naam) => `
@@ -355,13 +344,14 @@
       <text x="11" y="14.6" font-family="'Unbounded', 'Arial Black', sans-serif" font-weight="600" font-size="9" fill="${k.bg}">van ${naam.toLowerCase()}</text>
     </g></g>` : ''}`;
 
-  const TEKEN = { knap, zilt, golf };
+  const TEKEN = { zilt, golf };
 
   const svg = (merk, i, opts = {}) => {
     const M = MERKEN[merk], s = SMAKEN[i], k = M.kleuren[i];
     const p = 'z' + (++teller) + '-';
     const naam = opts.naam ? String(opts.naam).replace(/[<>&"]/g, '') : '';
     const label = opts.label ?? `Een zak chips met de smaak ${s.naam.toLowerCase()}`;
+    if (merk === 'knap') return knapFoto(s, p, naam, label);
     return `<svg class="zak-svg" viewBox="0 0 240 320" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'} xmlns="http://www.w3.org/2000/svg">
       <defs>${defs(p)}</defs>
       <g clip-path="url(#${p}c)">${TEKEN[merk](s, i, k, p, naam)}${afwerking(p, M.glans)}</g>
@@ -381,8 +371,8 @@
   const logo = (merk) => {
     if (merk === 'zilt') return `<svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg${++teller}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8913F"/><stop offset=".5" stop-color="#F4DE9C"/><stop offset="1" stop-color="#A88337"/></linearGradient></defs><rect width="40" height="40" fill="#22211E"/><text x="20" y="27.5" text-anchor="middle" font-family="'Instrument Serif', Georgia, serif" font-size="22" fill="url(#lg${teller})">Z</text></svg>`;
     if (merk === 'golf') return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#FF9F1C"/><circle cx="27" cy="26" r="8" fill="#FF4B1F"/><text x="8" y="25" font-family="'Unbounded', 'Arial Black', sans-serif" font-weight="800" font-size="15" letter-spacing="-.8" fill="#1B1410">g.</text></svg>`;
-    return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#FFB000"/><text x="21" y="29" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="23" fill="${INK}">K</text><text x="20" y="28" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="23" fill="${CREME}" stroke="${INK}" stroke-width="1.6" paint-order="stroke">K</text></svg>`;
+    return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#FFC20E"/><text x="20" y="26.6" text-anchor="middle" font-family="'Bricolage Grotesque', 'Arial Black', sans-serif" font-weight="800" font-size="12.5" letter-spacing="-.6" fill="#1B1410">KNAP</text></svg>`;
   };
 
-  window.Zak = { SMAKEN, MERKEN, svg, chip, logo };
+  window.Zak = { SMAKEN, MERKEN, svg, chip, logo, gezicht };
 })();

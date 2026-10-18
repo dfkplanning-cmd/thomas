@@ -436,7 +436,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .kk-merk:hover .mini, .kk-merk[aria-pressed="true"] .mini { transform: rotate(-10deg) scale(1.08); }
 .kk-merk .mini .zak-svg { width: 100%; display: block; }
 .kk-merk b { font-size: 13.5px; line-height: 1; }
-.kk-merk[data-merk="knap"] b { font-family: "Bagel Fat One", var(--kop); font-weight: 400; letter-spacing: .02em; }
+.kk-merk[data-merk="knap"] b { font-family: var(--kop); font-weight: 800; letter-spacing: -.04em; }
 .kk-merk[data-merk="zilt"] b { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 16px; letter-spacing: .18em; }
 .kk-merk[data-merk="golf"] b { font-family: "Unbounded", var(--kop); font-weight: 800; letter-spacing: -.04em; }
 .kk-icoon { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: transparent; color: #F4F4EF; cursor: pointer; display: grid; place-items: center; transition: background-color .2s; }
@@ -469,7 +469,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .ov-merk.actief { border-color: var(--ink); }
 .ov-merk-kop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 20px; }
 .ov-merk-kop h3 { font-size: 30px; line-height: 1; }
-.ov-merk[data-merk="knap"] h3 { font-family: "Bagel Fat One", var(--kop); font-weight: 400; letter-spacing: .01em; }
+.ov-merk[data-merk="knap"] h3 { justify-self: start; align-self: start; font-family: var(--kop); font-weight: 800; letter-spacing: -.05em; background: #FFC20E; color: #1B1410; padding: 6px 10px 5px; border-radius: 6px; }
 .ov-merk[data-merk="zilt"] h3 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: .24em; font-size: 34px; }
 .ov-merk[data-merk="golf"] h3 { font-family: "Unbounded", var(--kop); font-weight: 800; letter-spacing: -.05em; }
 .ov-merk-kop p { color: var(--zacht); max-width: 58ch; font-size: 15.5px; flex: 1 1 280px; }
@@ -644,3 +644,51 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 /* Ronde 3: ankers niet onder de vaste navigatie; werkbalk schuift boven de band */
 html { scroll-padding-top: 88px; }
 .kk, .kk-open { translate: 0 calc(-1 * var(--kk-til, 0px)); transition: translate .35s var(--zacht-uit); }
+
+/* ---------- Van de pizzapagina: persoonlijke zakken, zelf typen in de DM, tempo ---------- */
+
+/* Band: elke smaak hoort bij een maker, met gezicht */
+.band-zak .naam { display: grid; justify-items: center; gap: 3px; max-width: 14ch; }
+.band-zak .naam b { font-weight: 600; }
+.band-zak .maker { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; opacity: .85; white-space: nowrap; }
+.band-zak .maker i { width: 18px; height: 18px; flex: none; border-radius: 50%; background: #444 center 30% / cover no-repeat; box-shadow: 0 0 0 1.5px var(--paneel), 0 0 0 2.5px rgba(255,255,255,.35); }
+.band-zak[aria-pressed="true"] .maker i { box-shadow: 0 0 0 1.5px var(--paneel), 0 0 0 3px var(--accent); }
+.band-zak[aria-pressed="true"] .zak-svg { outline: 0; filter: drop-shadow(0 0 0 transparent) drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 75%, transparent)) drop-shadow(0 16px 14px rgba(0,0,0,.35)); }
+.band-zak[aria-pressed="true"] { scale: 1.06; }
+/* Desktop: de zak naast zijn naam en maker, zodat de band laag blijft */
+@media (min-width: 960px) {
+  .toneel { max-width: min(540px, calc((100svh - 236px) * 560 / 760)); }
+  .band-rij { gap: 30px; }
+  .band-zak, .band-zak:nth-child(odd), .band-zak:nth-child(even) { width: auto; grid-template-columns: 70px auto; align-items: center; gap: 12px; transform: none; text-align: left; font-size: 12.5px; }
+  .band-zak .zak-svg { rotate: -6deg; transition: rotate .4s var(--veer), scale .4s var(--veer); }
+  .band-zak:hover { transform: none; }
+  .band-zak:hover .zak-svg { rotate: 0deg; scale: 1.08; }
+  .band-zak .naam { justify-items: start; max-width: 15ch; text-align: left; }
+  .band-zak .naam b { font: 800 14px/1.15 var(--kop); letter-spacing: -.01em; }
+}
+
+/* Zelf typen in de DM */
+.ig-veld { position: relative; }
+.ig-input { position: absolute; inset: 0; width: 100%; min-width: 0; border: 0; outline: 0; padding: 0; margin: 0; background: transparent; font: inherit; color: transparent; caret-color: transparent; cursor: text; }
+.ig-input::placeholder { color: transparent; }
+.scherm.live .ig-input { position: static; color: var(--ig-tekst); caret-color: var(--ig-blauw); }
+.scherm.live .ig-input::placeholder { color: var(--ig-sub); }
+.scherm.live .ig-veld :is(.plaats, .getypt, .caret), .scherm.live .vinger, .scherm.live .zelf-hint { display: none; }
+.scherm.live .ig-chat { touch-action: pan-x; }
+.ig-stuur { cursor: pointer; }
+.ig-invoer:has(.ig-input:focus-visible) { box-shadow: 0 0 0 2px var(--ig-blauw); }
+.bub + .bub.uit, .opts + .bub.uit { margin-top: 6px; }
+.bub.uit + .bub.in, .opts + .bub.in { margin-top: 8px; }
+.opts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin: 6px 0 2px 30px; }
+.opt { font-size: 13.5px; font-weight: 600; font-family: inherit; color: var(--ig-blauw); border: 1px solid var(--ig-rand); background: var(--ig-bg); border-radius: 999px; padding: 7px 13px; cursor: pointer; transition: background-color .2s, transform .25s var(--veer); }
+.opt:hover { background: color-mix(in srgb, var(--ig-blauw) 10%, var(--ig-bg)); }
+.opt.gekozen { background: color-mix(in srgb, var(--ig-blauw) 14%, var(--ig-bg)); transform: scale(.94); }
+.opts .opt:focus-visible { outline: 2px solid var(--ig-blauw); outline-offset: 1px; }
+.zelf-hint { position: absolute; z-index: 4; left: 50%; bottom: 86px; translate: -50% 0; border: 0; cursor: pointer; white-space: nowrap; background: var(--ig-blauw); color: #fff; font: 700 12.5px/1 var(--ios); padding: 9px 14px; border-radius: 999px; box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .45); animation: hintDobber 2.2s ease-in-out infinite; transition: opacity .3s; }
+.zelf-hint::after { content: ""; position: absolute; left: 50%; bottom: -4px; width: 10px; height: 10px; background: inherit; border-radius: 2px; transform: translateX(-50%) rotate(45deg); }
+.scherm.beeld .zelf-hint { opacity: 0; pointer-events: none; }
+@keyframes hintDobber { 0%, 100% { translate: -50% 0; } 50% { translate: -50% -5px; } }
+@media (prefers-reduced-motion: reduce) { .zelf-hint { animation: none; } }
+
+/* KNAP-fotozak: de foto heeft zijn eigen vorm, geen extra rand */
+.zak-foto { overflow: visible; }

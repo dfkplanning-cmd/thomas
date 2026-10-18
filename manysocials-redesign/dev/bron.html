@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://manysocials.ai/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Bagel+Fat+One&family=Caveat:wght@700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Caveat:wght@700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@600;800&display=swap">
 <script>
   // Intro: de animaties staan klaar maar wachten tot de lettertypes er zijn (of hooguit 1,4 s).
   (() => {
@@ -87,13 +87,14 @@
                         <div class="ig-knop"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>Bekijk jouw pagina</span></div>
                       </div>
                     </div>
-                    <div class="ig-invoer" id="ig-invoer" aria-hidden="true">
+                    <div class="ig-invoer" id="ig-invoer">
                       <span class="ig-cam"><svg viewBox="0 0 24 24"><path d="M4 8.5c0-1.1.9-2 2-2h1.6l1.4-2h6l1.4 2H18c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z"/><circle cx="12" cy="12.5" r="3.4"/></svg></span>
-                      <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span></span>
+                      <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span><input class="ig-input" id="ig-input" type="text" enterkeyhint="send" autocomplete="off" maxlength="200" placeholder="Bericht…" aria-label="Typ een bericht in de DM"></span>
                       <span class="ig-rechts"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="9" cy="9.5" r="1.6"/><path d="M20.5 15.5 16 11l-9 9.5"/></svg><svg viewBox="0 0 24 24"><path d="M20.5 12A8.5 8.5 0 1 1 12 3.5"/><path d="M20.5 12c-4.7 0-8.5-3.8-8.5-8.5"/><path d="M8.5 14.5c1.6 1.6 5.4 1.6 7 0"/></svg></span>
-                      <span class="ig-stuur" id="ig-stuur">Verstuur</span>
+                      <span class="ig-stuur" id="ig-stuur" role="button" tabindex="0">Verstuur</span>
                     </div>
                     </div>
+                    <button type="button" class="zelf-hint" id="zelf-hint">Probeer het zelf · typ hier</button>
                   </div>
                 </div>
                 <img class="hand-foto" src="img/hand.webp" alt="" width="709" height="1064" decoding="async">
@@ -108,7 +109,7 @@
   </div>
 </section>
 
-<div class="band" id="band"><span class="band-label" aria-hidden="true">Kies een smaak</span><div class="band-rij" id="band-rij" role="group" aria-label="Kies een smaak voor Sanne"></div></div>
+<div class="band" id="band"><span class="band-label" aria-hidden="true">Kies een smaak</span><div class="band-rij" id="band-rij" role="group" aria-label="Kies een smaak"></div></div>
 
 <section class="sectie" id="diensten" aria-labelledby="diensten-kop">
   <div class="wrap">
@@ -199,7 +200,7 @@
 <div class="kk" id="kk" role="toolbar" aria-label="Ontwerpkeuzes">
   <div class="kk-kleuren" id="kk-kleuren" hidden>
     <span id="kk-naam">Mint (nu) #00B884</span>
-    <div class="kk-knoppen" id="kk-knoppen"><button type="button" data-kleur="#00B884" title="Mint (nu) #00B884" aria-label="Mint (nu) #00B884" style="background:#00B884"></button><button type="button" data-kleur="#FFE600" title="Signaalgeel #FFE600" aria-label="Signaalgeel #FFE600" style="background:#FFE600"></button><button type="button" data-kleur="#FFD45C" title="Boter #FFD45C" aria-label="Boter #FFD45C" style="background:#FFD45C"></button><button type="button" data-kleur="#C6F432" title="Lime #C6F432" aria-label="Lime #C6F432" style="background:#C6F432"></button><button type="button" data-kleur="#B8E986" title="Pistache #B8E986" aria-label="Pistache #B8E986" style="background:#B8E986"></button><button type="button" data-kleur="#3FD0C9" title="Turquoise #3FD0C9" aria-label="Turquoise #3FD0C9" style="background:#3FD0C9"></button><button type="button" data-kleur="#7FD1FF" title="IJsblauw #7FD1FF" aria-label="IJsblauw #7FD1FF" style="background:#7FD1FF"></button><button type="button" data-kleur="#5AA9FF" title="Hemelsblauw #5AA9FF" aria-label="Hemelsblauw #5AA9FF" style="background:#5AA9FF"></button><button type="button" data-kleur="#FF9EC4" title="Roze #FF9EC4" aria-label="Roze #FF9EC4" style="background:#FF9EC4"></button><button type="button" data-kleur="#B9A7FF" title="Lavendel #B9A7FF" aria-label="Lavendel #B9A7FF" style="background:#B9A7FF"></button><button type="button" data-kleur="#E6D3AE" title="Zand #E6D3AE" aria-label="Zand #E6D3AE" style="background:#E6D3AE"></button></div>
+    <div class="kk-knoppen" id="kk-knoppen"><button type="button" data-kleur="#FFC20E" title="Mangogeel #FFC20E" aria-label="Mangogeel #FFC20E" style="background:#FFC20E"></button><button type="button" data-kleur="#D7261E" title="Chilirood #D7261E" aria-label="Chilirood #D7261E" style="background:#D7261E"></button><button type="button" data-kleur="#FF6A13" title="Paprika #FF6A13" aria-label="Paprika #FF6A13" style="background:#FF6A13"></button><button type="button" data-kleur="#00B884" title="Mint (nu) #00B884" aria-label="Mint (nu) #00B884" style="background:#00B884"></button><button type="button" data-kleur="#FFE600" title="Signaalgeel #FFE600" aria-label="Signaalgeel #FFE600" style="background:#FFE600"></button><button type="button" data-kleur="#FFD45C" title="Boter #FFD45C" aria-label="Boter #FFD45C" style="background:#FFD45C"></button><button type="button" data-kleur="#C6F432" title="Lime #C6F432" aria-label="Lime #C6F432" style="background:#C6F432"></button><button type="button" data-kleur="#B8E986" title="Pistache #B8E986" aria-label="Pistache #B8E986" style="background:#B8E986"></button><button type="button" data-kleur="#3FD0C9" title="Turquoise #3FD0C9" aria-label="Turquoise #3FD0C9" style="background:#3FD0C9"></button><button type="button" data-kleur="#7FD1FF" title="IJsblauw #7FD1FF" aria-label="IJsblauw #7FD1FF" style="background:#7FD1FF"></button><button type="button" data-kleur="#5AA9FF" title="Hemelsblauw #5AA9FF" aria-label="Hemelsblauw #5AA9FF" style="background:#5AA9FF"></button><button type="button" data-kleur="#FF9EC4" title="Roze #FF9EC4" aria-label="Roze #FF9EC4" style="background:#FF9EC4"></button><button type="button" data-kleur="#B9A7FF" title="Lavendel #B9A7FF" aria-label="Lavendel #B9A7FF" style="background:#B9A7FF"></button><button type="button" data-kleur="#E6D3AE" title="Zand #E6D3AE" aria-label="Zand #E6D3AE" style="background:#E6D3AE"></button></div>
   </div>
   <span class="kk-label">Chipsmerk</span>
   <div class="kk-merken" id="kk-merken">

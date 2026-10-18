@@ -9,7 +9,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://manysocials.ai/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Bagel+Fat+One&family=Caveat:wght@700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@600;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&family=Caveat:wght@700&family=Instrument+Serif:ital@0;1&family=Unbounded:wght@600;800&display=swap">
 <script>
   // Intro: de animaties staan klaar maar wachten tot de lettertypes er zijn (of hooguit 1,4 s).
   (() => {
@@ -461,7 +461,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .kk-merk:hover .mini, .kk-merk[aria-pressed="true"] .mini { transform: rotate(-10deg) scale(1.08); }
 .kk-merk .mini .zak-svg { width: 100%; display: block; }
 .kk-merk b { font-size: 13.5px; line-height: 1; }
-.kk-merk[data-merk="knap"] b { font-family: "Bagel Fat One", var(--kop); font-weight: 400; letter-spacing: .02em; }
+.kk-merk[data-merk="knap"] b { font-family: var(--kop); font-weight: 800; letter-spacing: -.04em; }
 .kk-merk[data-merk="zilt"] b { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; font-size: 16px; letter-spacing: .18em; }
 .kk-merk[data-merk="golf"] b { font-family: "Unbounded", var(--kop); font-weight: 800; letter-spacing: -.04em; }
 .kk-icoon { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 0; background: transparent; color: #F4F4EF; cursor: pointer; display: grid; place-items: center; transition: background-color .2s; }
@@ -494,7 +494,7 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 .ov-merk.actief { border-color: var(--ink); }
 .ov-merk-kop { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 20px; }
 .ov-merk-kop h3 { font-size: 30px; line-height: 1; }
-.ov-merk[data-merk="knap"] h3 { font-family: "Bagel Fat One", var(--kop); font-weight: 400; letter-spacing: .01em; }
+.ov-merk[data-merk="knap"] h3 { justify-self: start; align-self: start; font-family: var(--kop); font-weight: 800; letter-spacing: -.05em; background: #FFC20E; color: #1B1410; padding: 6px 10px 5px; border-radius: 6px; }
 .ov-merk[data-merk="zilt"] h3 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: .24em; font-size: 34px; }
 .ov-merk[data-merk="golf"] h3 { font-family: "Unbounded", var(--kop); font-weight: 800; letter-spacing: -.05em; }
 .ov-merk-kop p { color: var(--zacht); max-width: 58ch; font-size: 15.5px; flex: 1 1 280px; }
@@ -670,6 +670,54 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
 html { scroll-padding-top: 88px; }
 .kk, .kk-open { translate: 0 calc(-1 * var(--kk-til, 0px)); transition: translate .35s var(--zacht-uit); }
 
+/* ---------- Van de pizzapagina: persoonlijke zakken, zelf typen in de DM, tempo ---------- */
+
+/* Band: elke smaak hoort bij een maker, met gezicht */
+.band-zak .naam { display: grid; justify-items: center; gap: 3px; max-width: 14ch; }
+.band-zak .naam b { font-weight: 600; }
+.band-zak .maker { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; opacity: .85; white-space: nowrap; }
+.band-zak .maker i { width: 18px; height: 18px; flex: none; border-radius: 50%; background: #444 center 30% / cover no-repeat; box-shadow: 0 0 0 1.5px var(--paneel), 0 0 0 2.5px rgba(255,255,255,.35); }
+.band-zak[aria-pressed="true"] .maker i { box-shadow: 0 0 0 1.5px var(--paneel), 0 0 0 3px var(--accent); }
+.band-zak[aria-pressed="true"] .zak-svg { outline: 0; filter: drop-shadow(0 0 0 transparent) drop-shadow(0 0 10px color-mix(in srgb, var(--accent) 75%, transparent)) drop-shadow(0 16px 14px rgba(0,0,0,.35)); }
+.band-zak[aria-pressed="true"] { scale: 1.06; }
+/* Desktop: de zak naast zijn naam en maker, zodat de band laag blijft */
+@media (min-width: 960px) {
+  .toneel { max-width: min(540px, calc((100svh - 236px) * 560 / 760)); }
+  .band-rij { gap: 30px; }
+  .band-zak, .band-zak:nth-child(odd), .band-zak:nth-child(even) { width: auto; grid-template-columns: 70px auto; align-items: center; gap: 12px; transform: none; text-align: left; font-size: 12.5px; }
+  .band-zak .zak-svg { rotate: -6deg; transition: rotate .4s var(--veer), scale .4s var(--veer); }
+  .band-zak:hover { transform: none; }
+  .band-zak:hover .zak-svg { rotate: 0deg; scale: 1.08; }
+  .band-zak .naam { justify-items: start; max-width: 15ch; text-align: left; }
+  .band-zak .naam b { font: 800 14px/1.15 var(--kop); letter-spacing: -.01em; }
+}
+
+/* Zelf typen in de DM */
+.ig-veld { position: relative; }
+.ig-input { position: absolute; inset: 0; width: 100%; min-width: 0; border: 0; outline: 0; padding: 0; margin: 0; background: transparent; font: inherit; color: transparent; caret-color: transparent; cursor: text; }
+.ig-input::placeholder { color: transparent; }
+.scherm.live .ig-input { position: static; color: var(--ig-tekst); caret-color: var(--ig-blauw); }
+.scherm.live .ig-input::placeholder { color: var(--ig-sub); }
+.scherm.live .ig-veld :is(.plaats, .getypt, .caret), .scherm.live .vinger, .scherm.live .zelf-hint { display: none; }
+.scherm.live .ig-chat { touch-action: pan-x; }
+.ig-stuur { cursor: pointer; }
+.ig-invoer:has(.ig-input:focus-visible) { box-shadow: 0 0 0 2px var(--ig-blauw); }
+.bub + .bub.uit, .opts + .bub.uit { margin-top: 6px; }
+.bub.uit + .bub.in, .opts + .bub.in { margin-top: 8px; }
+.opts { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; margin: 6px 0 2px 30px; }
+.opt { font-size: 13.5px; font-weight: 600; font-family: inherit; color: var(--ig-blauw); border: 1px solid var(--ig-rand); background: var(--ig-bg); border-radius: 999px; padding: 7px 13px; cursor: pointer; transition: background-color .2s, transform .25s var(--veer); }
+.opt:hover { background: color-mix(in srgb, var(--ig-blauw) 10%, var(--ig-bg)); }
+.opt.gekozen { background: color-mix(in srgb, var(--ig-blauw) 14%, var(--ig-bg)); transform: scale(.94); }
+.opts .opt:focus-visible { outline: 2px solid var(--ig-blauw); outline-offset: 1px; }
+.zelf-hint { position: absolute; z-index: 4; left: 50%; bottom: 86px; translate: -50% 0; border: 0; cursor: pointer; white-space: nowrap; background: var(--ig-blauw); color: #fff; font: 700 12.5px/1 var(--ios); padding: 9px 14px; border-radius: 999px; box-shadow: 0 12px 24px -10px rgba(0, 0, 0, .45); animation: hintDobber 2.2s ease-in-out infinite; transition: opacity .3s; }
+.zelf-hint::after { content: ""; position: absolute; left: 50%; bottom: -4px; width: 10px; height: 10px; background: inherit; border-radius: 2px; transform: translateX(-50%) rotate(45deg); }
+.scherm.beeld .zelf-hint { opacity: 0; pointer-events: none; }
+@keyframes hintDobber { 0%, 100% { translate: -50% 0; } 50% { translate: -50% -5px; } }
+@media (prefers-reduced-motion: reduce) { .zelf-hint { animation: none; } }
+
+/* KNAP-fotozak: de foto heeft zijn eigen vorm, geen extra rand */
+.zak-foto { overflow: visible; }
+
 </style>
 
 <header class="nav" id="nav">
@@ -735,13 +783,14 @@ html { scroll-padding-top: 88px; }
                         <div class="ig-knop"><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>Bekijk jouw pagina</span></div>
                       </div>
                     </div>
-                    <div class="ig-invoer" id="ig-invoer" aria-hidden="true">
+                    <div class="ig-invoer" id="ig-invoer">
                       <span class="ig-cam"><svg viewBox="0 0 24 24"><path d="M4 8.5c0-1.1.9-2 2-2h1.6l1.4-2h6l1.4 2H18c1.1 0 2 .9 2 2V17c0 1.1-.9 2-2 2H6c-1.1 0-2-.9-2-2z"/><circle cx="12" cy="12.5" r="3.4"/></svg></span>
-                      <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span></span>
+                      <span class="ig-veld" id="ig-veld"><span class="plaats">Bericht…</span><span class="getypt" id="getypt"></span><span class="caret"></span><input class="ig-input" id="ig-input" type="text" enterkeyhint="send" autocomplete="off" maxlength="200" placeholder="Bericht…" aria-label="Typ een bericht in de DM"></span>
                       <span class="ig-rechts"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle cx="9" cy="9.5" r="1.6"/><path d="M20.5 15.5 16 11l-9 9.5"/></svg><svg viewBox="0 0 24 24"><path d="M20.5 12A8.5 8.5 0 1 1 12 3.5"/><path d="M20.5 12c-4.7 0-8.5-3.8-8.5-8.5"/><path d="M8.5 14.5c1.6 1.6 5.4 1.6 7 0"/></svg></span>
-                      <span class="ig-stuur" id="ig-stuur">Verstuur</span>
+                      <span class="ig-stuur" id="ig-stuur" role="button" tabindex="0">Verstuur</span>
                     </div>
                     </div>
+                    <button type="button" class="zelf-hint" id="zelf-hint">Probeer het zelf · typ hier</button>
                   </div>
                 </div>
                 <img class="hand-foto" src="img/hand.webp" alt="" width="709" height="1064" decoding="async">
@@ -756,7 +805,7 @@ html { scroll-padding-top: 88px; }
   </div>
 </section>
 
-<div class="band" id="band"><span class="band-label" aria-hidden="true">Kies een smaak</span><div class="band-rij" id="band-rij" role="group" aria-label="Kies een smaak voor Sanne"></div></div>
+<div class="band" id="band"><span class="band-label" aria-hidden="true">Kies een smaak</span><div class="band-rij" id="band-rij" role="group" aria-label="Kies een smaak"></div></div>
 
 <section class="sectie" id="diensten" aria-labelledby="diensten-kop">
   <div class="wrap">
@@ -847,7 +896,7 @@ html { scroll-padding-top: 88px; }
 <div class="kk" id="kk" role="toolbar" aria-label="Ontwerpkeuzes">
   <div class="kk-kleuren" id="kk-kleuren" hidden>
     <span id="kk-naam">Mint (nu) #00B884</span>
-    <div class="kk-knoppen" id="kk-knoppen"><button type="button" data-kleur="#00B884" title="Mint (nu) #00B884" aria-label="Mint (nu) #00B884" style="background:#00B884"></button><button type="button" data-kleur="#FFE600" title="Signaalgeel #FFE600" aria-label="Signaalgeel #FFE600" style="background:#FFE600"></button><button type="button" data-kleur="#FFD45C" title="Boter #FFD45C" aria-label="Boter #FFD45C" style="background:#FFD45C"></button><button type="button" data-kleur="#C6F432" title="Lime #C6F432" aria-label="Lime #C6F432" style="background:#C6F432"></button><button type="button" data-kleur="#B8E986" title="Pistache #B8E986" aria-label="Pistache #B8E986" style="background:#B8E986"></button><button type="button" data-kleur="#3FD0C9" title="Turquoise #3FD0C9" aria-label="Turquoise #3FD0C9" style="background:#3FD0C9"></button><button type="button" data-kleur="#7FD1FF" title="IJsblauw #7FD1FF" aria-label="IJsblauw #7FD1FF" style="background:#7FD1FF"></button><button type="button" data-kleur="#5AA9FF" title="Hemelsblauw #5AA9FF" aria-label="Hemelsblauw #5AA9FF" style="background:#5AA9FF"></button><button type="button" data-kleur="#FF9EC4" title="Roze #FF9EC4" aria-label="Roze #FF9EC4" style="background:#FF9EC4"></button><button type="button" data-kleur="#B9A7FF" title="Lavendel #B9A7FF" aria-label="Lavendel #B9A7FF" style="background:#B9A7FF"></button><button type="button" data-kleur="#E6D3AE" title="Zand #E6D3AE" aria-label="Zand #E6D3AE" style="background:#E6D3AE"></button></div>
+    <div class="kk-knoppen" id="kk-knoppen"><button type="button" data-kleur="#FFC20E" title="Mangogeel #FFC20E" aria-label="Mangogeel #FFC20E" style="background:#FFC20E"></button><button type="button" data-kleur="#D7261E" title="Chilirood #D7261E" aria-label="Chilirood #D7261E" style="background:#D7261E"></button><button type="button" data-kleur="#FF6A13" title="Paprika #FF6A13" aria-label="Paprika #FF6A13" style="background:#FF6A13"></button><button type="button" data-kleur="#00B884" title="Mint (nu) #00B884" aria-label="Mint (nu) #00B884" style="background:#00B884"></button><button type="button" data-kleur="#FFE600" title="Signaalgeel #FFE600" aria-label="Signaalgeel #FFE600" style="background:#FFE600"></button><button type="button" data-kleur="#FFD45C" title="Boter #FFD45C" aria-label="Boter #FFD45C" style="background:#FFD45C"></button><button type="button" data-kleur="#C6F432" title="Lime #C6F432" aria-label="Lime #C6F432" style="background:#C6F432"></button><button type="button" data-kleur="#B8E986" title="Pistache #B8E986" aria-label="Pistache #B8E986" style="background:#B8E986"></button><button type="button" data-kleur="#3FD0C9" title="Turquoise #3FD0C9" aria-label="Turquoise #3FD0C9" style="background:#3FD0C9"></button><button type="button" data-kleur="#7FD1FF" title="IJsblauw #7FD1FF" aria-label="IJsblauw #7FD1FF" style="background:#7FD1FF"></button><button type="button" data-kleur="#5AA9FF" title="Hemelsblauw #5AA9FF" aria-label="Hemelsblauw #5AA9FF" style="background:#5AA9FF"></button><button type="button" data-kleur="#FF9EC4" title="Roze #FF9EC4" aria-label="Roze #FF9EC4" style="background:#FF9EC4"></button><button type="button" data-kleur="#B9A7FF" title="Lavendel #B9A7FF" aria-label="Lavendel #B9A7FF" style="background:#B9A7FF"></button><button type="button" data-kleur="#E6D3AE" title="Zand #E6D3AE" aria-label="Zand #E6D3AE" style="background:#E6D3AE"></button></div>
   </div>
   <span class="kk-label">Chipsmerk</span>
   <div class="kk-merken" id="kk-merken">
@@ -884,16 +933,23 @@ html { scroll-padding-top: 88px; }
 </dialog>
 
 <script>
-// Chipszakken als SVG: drie merkvoorstellen, elk met dezelfde vijf smaken.
-// Zak.svg(merk, smaak, { naam }) geeft een losse <svg> terug (viewBox 240×320).
+// Chipszakken: drie merkvoorstellen, elk met dezelfde vijf smaken. KNAP is de gekozen fotozak, ZILT en golf. zijn getekend.
+// Zak.svg(merk, smaak, { naam }) geeft een losse <svg> terug (viewBox 240×320). Met een naam krijgt de zak een "van <naam>"-sticker.
 (() => {
   const SMAKEN = [
-    { key: 'mango',   naam: 'Mango met chili',    r1: 'Mango',   r2: 'met chili' },
-    { key: 'truffel', naam: 'Truffel en zeezout', r1: 'Truffel', r2: 'en zeezout' },
-    { key: 'paprika', naam: 'Pittige paprika',    r1: 'Pittige', r2: 'paprika' },
-    { key: 'honing',  naam: 'Honing en mosterd',  r1: 'Honing',  r2: 'en mosterd' },
-    { key: 'limoen',  naam: 'Limoen en jalapeño', r1: 'Limoen',  r2: 'en jalapeño' },
+    { key: 'mango',   naam: 'Mango met chili',    r1: 'Mango',   r2: 'met chili',   maker: 'Sanne' },
+    { key: 'truffel', naam: 'Truffel en zeezout', r1: 'Truffel', r2: 'en zeezout',  maker: 'Jesse' },
+    { key: 'paprika', naam: 'Pittige paprika',    r1: 'Pittige', r2: 'paprika',     maker: 'Noor' },
+    { key: 'honing',  naam: 'Honing en mosterd',  r1: 'Honing',  r2: 'en mosterd',  maker: 'Marije' },
+    { key: 'limoen',  naam: 'Limoen en jalapeño', r1: 'Limoen',  r2: 'en jalapeño', maker: 'Lars' },
   ];
+
+  // Gezichten bij de makers. Een naam zonder foto krijgt een gekleurd rondje met de beginletter.
+  const GEZICHTEN = {
+    sanne: 'img/knap/sanne.jpg', jesse: 'img/gezicht-jesse.webp', noor: 'img/gezicht-noor.webp',
+    marije: 'img/gezicht-marije.webp', lars: 'img/gezicht-lars.webp', thomas: 'img/gezicht-thomas.webp',
+  };
+  const gezicht = naam => GEZICHTEN[String(naam || '').trim().toLowerCase()] || '';
 
   const MERKEN = {
     knap: {
@@ -1092,13 +1148,6 @@ html { scroll-padding-top: 88px; }
     },
   };
 
-  // Eén chip met ribbels, in contourstijl voor KNAP.
-  const chipVol = (x, y, r, s) => `
-    <g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">
-      <path d="M-24 -6 C -22 -20 -6 -26 8 -22 C 22 -18 28 -4 24 8 C 20 20 4 26 -10 22 C -22 18 -26 6 -24 -6 Z" fill="#FFC23D" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>
-      <path d="M-18 -10 C -10 -6 -4 -14 4 -10 C 12 -6 16 -14 20 -10 M-20 0 C -12 4 -6 -4 2 0 C 10 4 14 -4 22 0 M-18 10 C -10 14 -4 6 4 10 C 12 14 16 6 18 10" stroke="#D98A1C" stroke-width="2" fill="none" stroke-linecap="round"/>
-    </g>`;
-
   // Gedeelde schaduw, glans, seal-ribbels en kreukels.
   const afwerking = (p, glans) => `
     <rect width="240" height="320" fill="url(#${p}h)"/>
@@ -1143,42 +1192,31 @@ html { scroll-padding-top: 88px; }
       <rect width="1.3" height="10" fill="#000" fill-opacity=".2"/><rect x="1.9" width=".9" height="10" fill="#fff" fill-opacity=".2"/>
     </pattern>`;
 
-  // ---------- KNAP: luid, vrolijk, stickers ----------
-  const knap = (s, i, k, p, naam) => `
-    <rect width="240" height="320" fill="${k.bg}"/>
-    <pattern id="${p}d" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><circle cx="4.5" cy="4.5" r="2.1" fill="${k.stip}"/></pattern>
-    <path d="M120 40 L240 40 L240 150 C 200 120 160 110 120 40 Z" fill="url(#${p}d)" opacity=".7"/>
-    <path d="M-10 168 C 30 140 70 190 120 164 C 170 138 206 150 250 136 L250 330 L-10 330 Z" fill="${k.blob}"/>
-    <g transform="rotate(-6 120 74)">
-      <text x="123.5" y="88" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="64" fill="${INK}">KNAP</text>
-      <text x="120" y="84" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="64" fill="${CREME}" stroke="${INK}" stroke-width="3" paint-order="stroke" stroke-linejoin="round">KNAP</text>
-    </g>
-    <g transform="translate(120 106) rotate(-6)">
-      <rect x="-44" y="-9" width="88" height="17" rx="8.5" fill="${INK}"/>
-      <text y="3.4" text-anchor="middle" font-family="'DM Mono', ui-monospace, monospace" font-size="8.4" letter-spacing="1.6" fill="${CREME}">CHIPS · 150 G</text>
-    </g>
-    ${chipVol(50, 206, -18, .92)}
-    <g transform="translate(118 184) scale(.82)">${INGR[s.key]('vol')}</g>
-    ${chipVol(192, 200, 24, .8)}
-    <g transform="translate(120 252) rotate(3)">
-      <rect x="-86" y="-24" width="172" height="50" rx="12" fill="${CREME}" stroke="${INK}" stroke-width="3"/>
-      <text y="-2" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="21" fill="${INK}">${s.r1.toUpperCase()}</text>
-      <text y="18" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="15" fill="${k.blob === '#C8F23C' ? '#128A3E' : k.bg === '#FFD400' ? '#E07000' : k.bg}">${s.r2.toUpperCase()}</text>
-    </g>
-    ${naam ? `<g class="zak-naam" transform="translate(194 134) rotate(12)"><g class="zak-naam-in">
-      <path d="${ster(34, 26, 14)}" fill="${CREME}" stroke="${INK}" stroke-width="2.6" stroke-linejoin="round"/>
-      <text y="-5" text-anchor="middle" font-family="'Caveat', 'Comic Sans MS', cursive" font-weight="700" font-size="14" fill="${INK}">van</text>
-      <text y="12" text-anchor="middle" font-family="'Caveat', 'Comic Sans MS', cursive" font-weight="700" font-size="21" fill="${INK}">${naam}</text>
-    </g></g>` : ''}`;
-
-  const ster = (R, r, n) => {
-    let d = '';
-    for (let i = 0; i < n * 2; i++) {
-      const t = (Math.PI / n) * i - Math.PI / 2, rr = i % 2 ? r : R;
-      d += (i ? ' L' : 'M') + f(Math.cos(t) * rr) + ' ' + f(Math.sin(t) * rr);
-    }
-    return d + ' Z';
+  // ---------- KNAP: fotozak (vrijstaand, 3:4) met een ronde "van <naam>"-sticker ----------
+  const RONDJE = ['#FF5A1F', '#6C3BF5', '#00B884', '#E8412C', '#0095F6'];
+  const sticker = (p, naam) => {
+    const foto = gezicht(naam);
+    const tekst = 'van ' + naam;
+    const fs = f(Math.min(15.5, 66 / (.43 * tekst.length)));
+    const kleur = RONDJE[[...naam].reduce((t, c) => t + c.charCodeAt(0), 0) % RONDJE.length];
+    return `<g class="zak-naam" transform="translate(184 156) rotate(9)"><g class="zak-naam-in">
+      <circle r="37" fill="${CREME}" stroke="${INK}" stroke-width="1.4" filter="url(#${p}s)"/>
+      ${foto
+        ? `<image href="${foto}" x="-21" y="-29" width="42" height="42" preserveAspectRatio="xMidYMid slice" clip-path="url(#${p}o)"/>`
+        : `<circle cy="-8" r="21" fill="${kleur}"/><text y="1" text-anchor="middle" font-family="'Bricolage Grotesque', 'Arial Black', sans-serif" font-weight="800" font-size="25" fill="#fff">${naam.charAt(0).toUpperCase()}</text>`}
+      <circle cy="-8" r="21" fill="none" stroke="${INK}" stroke-width="1.2"/>
+      <text text-anchor="middle" font-family="'Caveat', 'Comic Sans MS', cursive" font-weight="700" font-size="${fs}" fill="${INK}"><textPath href="#${p}b" xlink:href="#${p}b" startOffset="50%">${tekst}</textPath></text>
+    </g></g>`;
   };
+  const knapFoto = (s, p, naam, label) => `<svg class="zak-svg zak-foto" viewBox="0 0 240 320" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'} xmlns="http://www.w3.org/2000/svg">
+      ${naam ? `<defs>
+        <filter id="${p}s" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="3" stdDeviation="2.6" flood-color="#000" flood-opacity=".32"/></filter>
+        <clipPath id="${p}o"><circle cy="-8" r="21"/></clipPath>
+        <path id="${p}b" d="M-27.6 12.9 A30.5 30.5 0 0 0 27.6 12.9" fill="none"/>
+      </defs>` : ''}
+      <image href="img/knap/${s.key}.webp" width="240" height="320" preserveAspectRatio="xMidYMid meet"/>
+      ${naam ? sticker(p, naam) : ''}
+    </svg>`;
 
   // ---------- ZILT: mat, goudfolie, lijntekening ----------
   const zilt = (s, i, k, p, naam) => `
@@ -1241,13 +1279,14 @@ html { scroll-padding-top: 88px; }
       <text x="11" y="14.6" font-family="'Unbounded', 'Arial Black', sans-serif" font-weight="600" font-size="9" fill="${k.bg}">van ${naam.toLowerCase()}</text>
     </g></g>` : ''}`;
 
-  const TEKEN = { knap, zilt, golf };
+  const TEKEN = { zilt, golf };
 
   const svg = (merk, i, opts = {}) => {
     const M = MERKEN[merk], s = SMAKEN[i], k = M.kleuren[i];
     const p = 'z' + (++teller) + '-';
     const naam = opts.naam ? String(opts.naam).replace(/[<>&"]/g, '') : '';
     const label = opts.label ?? `Een zak chips met de smaak ${s.naam.toLowerCase()}`;
+    if (merk === 'knap') return knapFoto(s, p, naam, label);
     return `<svg class="zak-svg" viewBox="0 0 240 320" ${label ? `role="img" aria-label="${label}"` : 'aria-hidden="true"'} xmlns="http://www.w3.org/2000/svg">
       <defs>${defs(p)}</defs>
       <g clip-path="url(#${p}c)">${TEKEN[merk](s, i, k, p, naam)}${afwerking(p, M.glans)}</g>
@@ -1267,10 +1306,10 @@ html { scroll-padding-top: 88px; }
   const logo = (merk) => {
     if (merk === 'zilt') return `<svg viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="lg${++teller}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8913F"/><stop offset=".5" stop-color="#F4DE9C"/><stop offset="1" stop-color="#A88337"/></linearGradient></defs><rect width="40" height="40" fill="#22211E"/><text x="20" y="27.5" text-anchor="middle" font-family="'Instrument Serif', Georgia, serif" font-size="22" fill="url(#lg${teller})">Z</text></svg>`;
     if (merk === 'golf') return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#FF9F1C"/><circle cx="27" cy="26" r="8" fill="#FF4B1F"/><text x="8" y="25" font-family="'Unbounded', 'Arial Black', sans-serif" font-weight="800" font-size="15" letter-spacing="-.8" fill="#1B1410">g.</text></svg>`;
-    return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#FFB000"/><text x="21" y="29" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="23" fill="${INK}">K</text><text x="20" y="28" text-anchor="middle" font-family="'Bagel Fat One', 'Arial Black', sans-serif" font-size="23" fill="${CREME}" stroke="${INK}" stroke-width="1.6" paint-order="stroke">K</text></svg>`;
+    return `<svg viewBox="0 0 40 40" aria-hidden="true"><rect width="40" height="40" fill="#FFC20E"/><text x="20" y="26.6" text-anchor="middle" font-family="'Bricolage Grotesque', 'Arial Black', sans-serif" font-weight="800" font-size="12.5" letter-spacing="-.6" fill="#1B1410">KNAP</text></svg>`;
   };
 
-  window.Zak = { SMAKEN, MERKEN, svg, chip, logo };
+  window.Zak = { SMAKEN, MERKEN, svg, chip, logo, gezicht };
 })();
 
 </script>
@@ -1303,6 +1342,9 @@ html { scroll-padding-top: 88px; }
   if (!Zak.MERKEN[merk]) merk = 'knap';
   const STUDIO = { knap: ['#FFF3D6', '#FFC870'], zilt: ['#F3EBDD', '#D8C3A1'], golf: ['#FFEFD2', '#FFC266'] };
   let smaak = 0; // gekozen smaak in de band, standaard mango met chili
+  let eigen = null; // eigen smaak uit de live-DM: { i, naam, maker }
+  const keuze = () => eigen || { i: smaak, naam: Zak.SMAKEN[smaak].naam, maker: Zak.SMAKEN[smaak].maker };
+  const zonder = t => String(t).replace(/[<>&"]/g, '');
 
   const vulZakken = (root, wissel) => {
     $$('[data-zak]', root).forEach(el => {
@@ -1319,7 +1361,8 @@ html { scroll-padding-top: 88px; }
     let h = '';
     for (let set = 0; set < 4; set++) for (let i = 0; i < 5; i++) {
       const verborgen = set ? ' tabindex="-1" aria-hidden="true"' : '';
-      h += `<button type="button" class="band-zak" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
+      const s = Zak.SMAKEN[i], foto = Zak.gezicht(s.maker);
+      h += `<button type="button" class="band-zak" data-smaak="${i}" aria-pressed="${i === smaak && !eigen}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam"><b>${s.naam}</b><span class="maker"><i style="background-image:url(${foto})"></i>van ${s.maker}</span></span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
     }
     band.innerHTML = h;
   };
@@ -1346,16 +1389,23 @@ html { scroll-padding-top: 88px; }
 
   // ---------- Werkbalk: merk en steunkleur ----------
   $$('.kk-merk').forEach(b => b.addEventListener('click', () => zetMerk(b.dataset.merk, true)));
-  const namen = { '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  const namen = { '#FFC20E': 'Mangogeel', '#D7261E': 'Chilirood', '#FF6A13': 'Paprika', '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  // Donkere steunkleur krijgt witte tekst; bij een rode steunkleur wordt het signaalrood zwart, zodat er niet twee roden botsen.
+  const STANDAARD = '#00B884';
   const zetKleur = k => {
-    if (!namen[k]) k = '#00B884';
-    document.documentElement.style.setProperty('--accent', k);
+    if (!namen[k]) k = STANDAARD;
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(k.slice(i, i + 2), 16) / 255).map(c => c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4);
+    const licht = .2126 * r + .7152 * g + .0722 * b;
+    const root = document.documentElement.style;
+    root.setProperty('--accent', k);
+    root.setProperty('--op-accent', licht < .2 ? '#FFFFFF' : '#0F0F0E');
+    if (r > g * 3 && r > b * 3) root.setProperty('--heet', '#0F0F0E'); else root.removeProperty('--heet');
     $('#kk-naam').textContent = namen[k] + ' ' + k;
     $$('#kk-knoppen button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.kleur === k)));
     opslag.set('ms-kleur', k);
   };
   $$('#kk-knoppen button').forEach(b => b.addEventListener('click', () => zetKleur(b.dataset.kleur)));
-  zetKleur(opslag.get('ms-kleur') || '#00B884');
+  zetKleur(opslag.get('ms-kleur') || STANDAARD);
   const kleurPaneel = $('#kk-kleuren'), kleurKnop = $('#kk-kleur');
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
@@ -1378,6 +1428,8 @@ html { scroll-padding-top: 88px; }
   window.addEventListener('scroll', tilKk, { passive: true });
   window.addEventListener('resize', tilKk);
   tilKk();
+  bandEl.addEventListener('animationend', tilKk);
+  window.addEventListener('load', tilKk);
   const themaKnop = $('#kk-thema');
   const zetThema = donker => {
     document.documentElement.classList.toggle('donker', donker);
@@ -1430,17 +1482,20 @@ html { scroll-padding-top: 88px; }
   let scrollY = 0;
 
   // De gekozen smaak in de sjablonen en de zwevende zak zetten.
+  // Smaaknaam en maker op het etiket: <b>naam</b> gevolgd door "van <maker>".
+  const zetEtiket = (el, k, voor = '') => { $('b', el).textContent = k.naam; el.lastChild.textContent = `${voor}van ${k.maker}`; };
   const zetSmaakInBeeld = () => {
-    const s = Zak.SMAKEN[smaak];
-    sjablonen[2].textContent = s.naam;
-    const zak = $('[data-zak]', sjablonen[3]);
-    zak.dataset.zak = smaak;
-    zak.dataset.label = `Een zak chips met de smaak ${s.naam.toLowerCase()}`;
-    $('.et b', sjablonen[3]).textContent = s.naam;
-    $('[data-zak]', pop).dataset.zak = smaak;
+    const k = keuze();
+    sjablonen[2].textContent = k.naam;
+    [$('[data-zak]', sjablonen[3]), $('[data-zak]', pop)].forEach(zak => {
+      zak.dataset.zak = k.i;
+      zak.dataset.naam = k.maker;
+    });
+    $('[data-zak]', sjablonen[3]).dataset.label = `Een zak chips met de smaak ${k.naam.toLowerCase()}, van ${k.maker}`;
+    zetEtiket($('.et', sjablonen[3]), k);
     vulZakken(pop, false);
-    $('.pop-label b', pop).textContent = s.naam;
-    $$('.band-zak').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.smaak === smaak)));
+    zetEtiket($('.pop-label', pop), k, ' · ');
+    $$('.band-zak').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.smaak === smaak && !eigen)));
   };
 
   // Aanraakpunt: zo zie je waar er getikt en geveegd wordt.
@@ -1497,6 +1552,7 @@ html { scroll-padding-top: 88px; }
     void draad.offsetWidth;
     draad.style.transition = '';
     getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
+    scherm.classList.remove('beeld');
     vinger.classList.remove('aan', 'druk', 'sleep');
   };
 
@@ -1527,7 +1583,9 @@ html { scroll-padding-top: 88px; }
     }
     pop.getAnimations().forEach(a => a.cancel());
     const tin = toneelIn.getBoundingClientRect();
-    const b = $('.creatie-zak', draad).getBoundingClientRect();
+    const zakken = $$('.creatie-zak', draad);
+    if (!zakken.length) return;
+    const b = zakken[zakken.length - 1].getBoundingClientRect();
     const bx = (b.left - tin.left) / schaal, by = (b.top - tin.top) / schaal, k = (b.width / schaal) / 230;
     pop.classList.remove('geland');
     pop.animate([
@@ -1559,7 +1617,10 @@ html { scroll-padding-top: 88px; }
   };
 
   const gesprek = async (mijn, eersteWacht) => {
-    const pauze = maakPauze(mijn);
+    // Het gesprek zelf duurt zo'n 3 seconden (tempo f), daarna krijgen de beelden de tijd.
+    const echtePauze = maakPauze(mijn);
+    let f = 1;
+    const pauze = ms => echtePauze(ms * f);
     const tik = async (x, y, opDruk) => {
       plaats(x, y);
       vinger.classList.add('aan');
@@ -1615,6 +1676,7 @@ html { scroll-padding-top: 88px; }
     try {
       await pauze(eersteWacht);
       while (true) {
+        f = .2;
         await pauze(700);
         await typ('WIN');
         await verstuur(0);
@@ -1622,10 +1684,12 @@ html { scroll-padding-top: 88px; }
         await typtIndicator(1300);
         voegToe(1); scrollNaarOnder();
         await pauze(1700);
-        await typ(Zak.SMAKEN[smaak].naam);
+        await typ(keuze().naam);
         await verstuur(2);
         await pauze(400);
         await typtIndicator(1000);
+        f = 1;
+        scherm.classList.add('beeld');
         const media = voegToe(3, ['genereren']);
         await pauze(1500);
         media.classList.remove('genereren'); media.classList.add('klaar');
@@ -1653,11 +1717,187 @@ html { scroll-padding-top: 88px; }
     }
   };
 
+  // ---------- Zelf typen: een echte DM met de KNAP-agent ----------
+  // Claude antwoordt via de sample-capability; zonder die (of zonder toestemming) neemt een eenvoudig script het over.
+  const invoerVeld = $('#ig-input'), hint = $('#zelf-hint');
+  const GROET = 'Hoi! Hier bedenk je je eigen chipssmaak. Hoe heet je?';
+  const BASIS = Zak.SMAKEN.map(s => s.key);
+  const REGELS = `Je bent de DM-assistent van het chipsmerk KNAP op Instagram, in een winactie: fans bedenken in de DM hun eigen chipssmaak, krijgen een zak met hun naam erop en halen stemmen op. De smaak met de meeste stemmen ligt straks echt in de winkel.
+Schrijf kort en informeel Nederlands, hooguit drie korte zinnen, hooguit één emoji. Vraag één ding tegelijk: eerst de voornaam (die vraag is al gesteld; wil iemand geen naam geven, ga dan door met "jou"), daarna welke smaak ze willen proeven (zoet, pittig, fris, hartig, ingrediënten). Is de wens vaag, stel dan hooguit één vervolgvraag.
+Daarna: bedenk een smaaknaam van twee tot vier woorden, zoals "Mango met chili" of "Truffel en zeezout". Zeg dat de zak klaar is en dat ze stemmen ophalen door hem te delen, en vul "zak" in. Iedereen doet mee met één smaak; wil iemand er nog een, leg dan vriendelijk uit dat dat één keer kan.
+Blijf bij chips en deze winactie; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste smaken weiger je met humor. Zet nooit tekst tussen [ ] in je bericht.
+Antwoord met alleen JSON in deze vorm:
+{"tekst": "je bericht", "opties": ["Zoet en pittig", "Fris en zuur", "Hartig met truffel"], "zak": null}
+"opties" bevat hooguit 3 korte snelknoppen, of is een lege lijst [].
+of, als de smaak af is:
+{"tekst": "je bericht", "opties": [], "zak": {"naam": "Mango met chili", "persoon": "Sanne", "basis": "mango"}}
+Kies bij "basis" de zak die het meest lijkt: mango (fruitig, tropisch, zoet en pittig), truffel (hartig, umami, kaas, paddenstoel, zout), paprika (pittig, rokerig, chili, barbecue), honing (zoet, honing, mosterd, karamel), limoen (fris, zuur, citrus, kruiden, jalapeño).`;
+  const TREF = [
+    ['mango', ['mango', 'zoet en pittig', 'ananas', 'perzik', 'tropisch', 'fruit', 'passie', 'kokos']],
+    ['truffel', ['truffel', 'zout', 'kaas', 'paddenstoel', 'umami', 'hartig', 'ui', 'knoflook', 'parmezaan']],
+    ['limoen', ['limoen', 'lime', 'citroen', 'zuur', 'fris', 'jalape', 'azijn', 'munt', 'koriander', 'dille', 'augurk']],
+    ['honing', ['honing', 'mosterd', 'karamel', 'zoet', 'kaneel', 'stroop', 'esdoorn']],
+    ['paprika', ['paprika', 'pittig', 'chili', 'peper', 'sriracha', 'rook', 'bbq', 'barbecue', 'heet']],
+  ];
+  let live = false, liveId = 0, bezig = false, beurten = [], agent = null, stap = 0, recept = {};
+  if (window.claude && claude.use) claude.use('sample').then(s => { agent = s; }, () => {});
+
+  const bubbel = (tekst, kant) => {
+    const n = document.createElement('div');
+    n.className = `bub ${kant} in-anim` + (kant === 'in' ? ' met-av' : '');
+    n.textContent = tekst;
+    draad.appendChild(n);
+    scrollNaarOnder();
+  };
+  const snelknoppen = lijst => {
+    if (!Array.isArray(lijst) || !lijst.length) return;
+    const o = document.createElement('div');
+    o.className = 'opts in-anim';
+    lijst.slice(0, 3).forEach(t => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.textContent = String(t).slice(0, 30);
+      o.appendChild(b);
+    });
+    draad.appendChild(o);
+    scrollNaarOnder();
+  };
+  const hoofdletter = t => t.charAt(0).toUpperCase() + t.slice(1);
+  // De zak met de naam van de bezoeker: verschijnt in de chat en landt daarna naast de telefoon.
+  const maakZak = z => {
+    const i = Math.max(0, BASIS.indexOf(z.basis));
+    const maker = zonder(String(z.persoon || recept.naam || 'jou').trim().split(/\s+/)[0]).slice(0, 14) || 'jou';
+    const naam = hoofdletter(zonder(String(z.naam || '').trim()).slice(0, 32)) || Zak.SMAKEN[i].naam;
+    eigen = { i, naam, maker: hoofdletter(maker) };
+    zetSmaakInBeeld();
+    const media = sjablonen[3].cloneNode(true);
+    media.classList.add('in-anim', 'genereren');
+    draad.appendChild(media);
+    vulZakken(media, false);
+    scrollNaarOnder();
+    const id = liveId;
+    setTimeout(() => {
+      if (!live || id !== liveId || !media.isConnected) return;
+      media.classList.remove('genereren'); media.classList.add('klaar');
+      setTimeout(() => { if (live && id === liveId) vlieg(); }, 700);
+    }, 1600);
+  };
+
+  const scriptAgent = () => {
+    const t = beurten[beurten.length - 1].content;
+    if (stap === -1) {
+      const woorden = t.replace(/^(hoi|hey|hallo|ik ben|ik heet|mijn naam is|de naam is|noem me)[\s,]+/i, '').split(/[\s,.!]+/).filter(Boolean);
+      recept.naam = hoofdletter(woorden[0] || t);
+      stap = 0;
+      return { tekst: `Leuk, ${recept.naam}! Welke smaak wil jij proeven?`, opties: ['Zoet en pittig', 'Fris en zuur', 'Hartig met truffel'] };
+    }
+    if (stap === 0) {
+      stap = 1;
+      const l = t.toLowerCase();
+      const basis = (TREF.find(([, w]) => w.some(x => l.includes(x))) || ['mango'])[0];
+      const naam = t.trim().length <= 28 ? hoofdletter(t.trim()) : Zak.SMAKEN[BASIS.indexOf(basis)].naam;
+      return { tekst: `Goede keuze, ${recept.naam || 'topper'}! Hier is jouw zak chips. Deel hem en haal stemmen op.`, zak: { naam, persoon: recept.naam, basis } };
+    }
+    return { tekst: 'Je doet al mee met jouw smaak. Deel je zak en haal stemmen op!' };
+  };
+  const vraagAgent = async () => {
+    if (agent) {
+      try {
+        const r = await agent.json([{ role: 'user', content: REGELS }, ...beurten.slice(-14)], { modelTier: 'quick', cache: false });
+        if (r && typeof r.tekst === 'string' && r.tekst.trim()) return r;
+      } catch (e) {
+        if (!['upstream_error', 'invalid_json', 'rate_limited', 'cancelled'].includes(e && e.code)) agent = null;
+      }
+    }
+    return scriptAgent();
+  };
+
+  const stuurBericht = async tekst => {
+    tekst = String(tekst).trim().slice(0, 200);
+    if (!live || !tekst || bezig) return;
+    const mijn = liveId;
+    bezig = true;
+    $$('.opts', draad).forEach(o => o.remove());
+    bubbel(tekst, 'uit');
+    beurten.push({ role: 'user', content: tekst });
+    const stippen = document.createElement('div');
+    stippen.className = 'typen in-anim';
+    stippen.innerHTML = '<i></i><i></i><i></i>';
+    draad.appendChild(stippen);
+    scrollNaarOnder();
+    const [r] = await Promise.all([vraagAgent(), wacht(700)]);
+    stippen.remove();
+    if (mijn !== liveId) return;
+    bezig = false;
+    const tekstIn = String(r.tekst).slice(0, 400);
+    bubbel(tekstIn, 'in');
+    const z = r.zak && typeof r.zak === 'object' ? r.zak : null;
+    beurten.push({ role: 'assistant', content: tekstIn + (z ? ` [zak: ${z.naam}, van ${z.persoon}]` : '') });
+    snelknoppen(r.opties);
+    if (z) maakZak(z);
+  };
+
+  const startLive = () => {
+    if (live) return;
+    live = true; liveId++; run++;
+    verbergPop(true);
+    leeg();
+    draad.style.opacity = '';
+    scherm.classList.add('live');
+    beurten = [{ role: 'assistant', content: GROET }];
+    stap = -1; recept = {};
+    bubbel(GROET, 'in');
+  };
+  function stopLive() {
+    if (!live) return;
+    live = false; liveId++; bezig = false;
+    scherm.classList.remove('live');
+    invoerVeld.value = '';
+    invoerVeld.blur();
+  }
+  const verstuurVeld = () => { const t = invoerVeld.value; invoerVeld.value = ''; invoer.classList.remove('tekst'); stuurBericht(t); };
+
+  invoerVeld.addEventListener('pointerdown', startLive);
+  invoerVeld.addEventListener('focus', startLive);
+  invoerVeld.addEventListener('input', () => invoer.classList.toggle('tekst', !!invoerVeld.value.trim()));
+  invoerVeld.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); verstuurVeld(); } });
+  stuur.addEventListener('click', () => { if (live) { verstuurVeld(); invoerVeld.focus(); } });
+  stuur.addEventListener('keydown', e => { if (live && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); verstuurVeld(); } });
+  hint.addEventListener('click', () => invoerVeld.focus());
+  draad.addEventListener('click', e => {
+    if (!live) return;
+    const opt = e.target.closest('.opt');
+    if (opt && !bezig) {
+      opt.classList.add('gekozen');
+      stuurBericht(opt.textContent);
+      if (matchMedia('(pointer: fine)').matches) invoerVeld.focus({ preventScroll: true });
+    }
+  });
+  // Scrollen in de live-chat met wiel of vinger; aan de rand scrolt de pagina gewoon door.
+  const scrollChat = dy => {
+    const max = Math.max(0, draad.offsetHeight - chat.clientHeight);
+    const nieuw = Math.min(max, Math.max(0, scrollY + dy));
+    if (nieuw === scrollY) return false;
+    scrollY = nieuw;
+    draad.style.transform = `translateY(${-scrollY}px)`;
+    return true;
+  };
+  chat.addEventListener('wheel', e => { if (live && scrollChat(e.deltaY)) e.preventDefault(); }, { passive: false });
+  let vingerY = null;
+  chat.addEventListener('touchstart', e => { vingerY = live ? e.touches[0].clientY : null; }, { passive: true });
+  chat.addEventListener('touchmove', e => {
+    if (!live || vingerY === null) return;
+    const y = e.touches[0].clientY;
+    if (scrollChat((vingerY - y) / schaal)) e.preventDefault();
+    vingerY = y;
+  }, { passive: false });
+
   // Kies een smaak in de band: het gesprek begint opnieuw met die smaak.
   band.addEventListener('click', e => {
     const b = e.target.closest('.band-zak');
     if (!b) return;
+    stopLive();
     smaak = +b.dataset.smaak;
+    eigen = null;
     run++;
     draad.style.opacity = '';
     verbergPop(true);

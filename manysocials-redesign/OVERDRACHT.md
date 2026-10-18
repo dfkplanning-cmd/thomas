@@ -17,7 +17,11 @@ Twee presentaties, allebei gepubliceerd als Claude-artifact (privé, eigenaar df
 
 Publiceren: Artifact-tool met hetzelfde `file_path` (`manysocials-redesign/pizza.html` of `index.html`). In een nieuwe sessie eerst `action: read` op de URL en dan publiceren met `url`, anders ontstaat een nieuw artifact. Nieuwe beelden meesturen via `files` (`{"img/naam.webp": "manysocials-redesign/beeld/naam.webp"}`). De pizzapagina declareert de capability `sample` (live agent in de DM); bij een gewone herpublicatie `capabilities` weglaten, dan blijft die staan.
 
-Beelden staan in `beeld/`. Voor de lokale preview moeten ze ook in `dev-pizza/voorbeeld/img/` staan.
+De chipspagina declareert sinds 2026-10-18 ook `sample` (zelf typen in de DM met de KNAP-agent, `REGELS` in `dev/pagina.js`, script als terugval).
+
+KNAP is de gekozen verpakking: vrijstaande fotozakken in `beeld/knap/<smaak>.webp` (publiceren als `img/knap/...`), met een ronde "van <naam>"-sticker (gezicht uit `beeld/knap/sanne.jpg` of `beeld/gezicht-*.webp`). Makers in de band: Sanne, Jesse, Noor, Marije, Lars.
+
+Beelden staan in `beeld/`. Voor de lokale preview moeten ze ook in `dev-pizza/voorbeeld/img/` en `dev/img/` staan.
 
 ## Pizzapagina in het kort
 

@@ -26,6 +26,9 @@
   if (!Zak.MERKEN[merk]) merk = 'knap';
   const STUDIO = { knap: ['#FFF3D6', '#FFC870'], zilt: ['#F3EBDD', '#D8C3A1'], golf: ['#FFEFD2', '#FFC266'] };
   let smaak = 0; // gekozen smaak in de band, standaard mango met chili
+  let eigen = null; // eigen smaak uit de live-DM: { i, naam, maker }
+  const keuze = () => eigen || { i: smaak, naam: Zak.SMAKEN[smaak].naam, maker: Zak.SMAKEN[smaak].maker };
+  const zonder = t => String(t).replace(/[<>&"]/g, '');
 
   const vulZakken = (root, wissel) => {
     $$('[data-zak]', root).forEach(el => {
@@ -42,7 +45,8 @@
     let h = '';
     for (let set = 0; set < 4; set++) for (let i = 0; i < 5; i++) {
       const verborgen = set ? ' tabindex="-1" aria-hidden="true"' : '';
-      h += `<button type="button" class="band-zak" data-smaak="${i}" aria-pressed="${i === smaak}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam">${Zak.SMAKEN[i].naam}</span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
+      const s = Zak.SMAKEN[i], foto = Zak.gezicht(s.maker);
+      h += `<button type="button" class="band-zak" data-smaak="${i}" aria-pressed="${i === smaak && !eigen}"${verborgen}>${Zak.svg(merk, i, { label: '' })}<span class="naam"><b>${s.naam}</b><span class="maker"><i style="background-image:url(${foto})"></i>van ${s.maker}</span></span></button><div class="band-chip" aria-hidden="true">${Zak.chip(i * 7 - 10)}</div>`;
     }
     band.innerHTML = h;
   };
@@ -69,16 +73,23 @@
 
   // ---------- Werkbalk: merk en steunkleur ----------
   $$('.kk-merk').forEach(b => b.addEventListener('click', () => zetMerk(b.dataset.merk, true)));
-  const namen = { '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  const namen = { '#FFC20E': 'Mangogeel', '#D7261E': 'Chilirood', '#FF6A13': 'Paprika', '#00B884': 'Mint (nu)', '#FFE600': 'Signaalgeel', '#FFD45C': 'Boter', '#C6F432': 'Lime', '#B8E986': 'Pistache', '#3FD0C9': 'Turquoise', '#7FD1FF': 'IJsblauw', '#5AA9FF': 'Hemelsblauw', '#FF9EC4': 'Roze', '#B9A7FF': 'Lavendel', '#E6D3AE': 'Zand' };
+  // Donkere steunkleur krijgt witte tekst; bij een rode steunkleur wordt het signaalrood zwart, zodat er niet twee roden botsen.
+  const STANDAARD = '#00B884';
   const zetKleur = k => {
-    if (!namen[k]) k = '#00B884';
-    document.documentElement.style.setProperty('--accent', k);
+    if (!namen[k]) k = STANDAARD;
+    const [r, g, b] = [1, 3, 5].map(i => parseInt(k.slice(i, i + 2), 16) / 255).map(c => c <= .04045 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4);
+    const licht = .2126 * r + .7152 * g + .0722 * b;
+    const root = document.documentElement.style;
+    root.setProperty('--accent', k);
+    root.setProperty('--op-accent', licht < .2 ? '#FFFFFF' : '#0F0F0E');
+    if (r > g * 3 && r > b * 3) root.setProperty('--heet', '#0F0F0E'); else root.removeProperty('--heet');
     $('#kk-naam').textContent = namen[k] + ' ' + k;
     $$('#kk-knoppen button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.kleur === k)));
     opslag.set('ms-kleur', k);
   };
   $$('#kk-knoppen button').forEach(b => b.addEventListener('click', () => zetKleur(b.dataset.kleur)));
-  zetKleur(opslag.get('ms-kleur') || '#00B884');
+  zetKleur(opslag.get('ms-kleur') || STANDAARD);
   const kleurPaneel = $('#kk-kleuren'), kleurKnop = $('#kk-kleur');
   kleurKnop.addEventListener('click', () => { const open = kleurPaneel.hidden; kleurPaneel.hidden = !open; kleurKnop.setAttribute('aria-expanded', String(open)); });
   document.addEventListener('click', e => { if (!kleurPaneel.hidden && !e.target.closest('#kk')) { kleurPaneel.hidden = true; kleurKnop.setAttribute('aria-expanded', 'false'); } });
@@ -101,6 +112,8 @@
   window.addEventListener('scroll', tilKk, { passive: true });
   window.addEventListener('resize', tilKk);
   tilKk();
+  bandEl.addEventListener('animationend', tilKk);
+  window.addEventListener('load', tilKk);
   const themaKnop = $('#kk-thema');
   const zetThema = donker => {
     document.documentElement.classList.toggle('donker', donker);
@@ -153,17 +166,20 @@
   let scrollY = 0;
 
   // De gekozen smaak in de sjablonen en de zwevende zak zetten.
+  // Smaaknaam en maker op het etiket: <b>naam</b> gevolgd door "van <maker>".
+  const zetEtiket = (el, k, voor = '') => { $('b', el).textContent = k.naam; el.lastChild.textContent = `${voor}van ${k.maker}`; };
   const zetSmaakInBeeld = () => {
-    const s = Zak.SMAKEN[smaak];
-    sjablonen[2].textContent = s.naam;
-    const zak = $('[data-zak]', sjablonen[3]);
-    zak.dataset.zak = smaak;
-    zak.dataset.label = `Een zak chips met de smaak ${s.naam.toLowerCase()}`;
-    $('.et b', sjablonen[3]).textContent = s.naam;
-    $('[data-zak]', pop).dataset.zak = smaak;
+    const k = keuze();
+    sjablonen[2].textContent = k.naam;
+    [$('[data-zak]', sjablonen[3]), $('[data-zak]', pop)].forEach(zak => {
+      zak.dataset.zak = k.i;
+      zak.dataset.naam = k.maker;
+    });
+    $('[data-zak]', sjablonen[3]).dataset.label = `Een zak chips met de smaak ${k.naam.toLowerCase()}, van ${k.maker}`;
+    zetEtiket($('.et', sjablonen[3]), k);
     vulZakken(pop, false);
-    $('.pop-label b', pop).textContent = s.naam;
-    $$('.band-zak').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.smaak === smaak)));
+    zetEtiket($('.pop-label', pop), k, ' · ');
+    $$('.band-zak').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.smaak === smaak && !eigen)));
   };
 
   // Aanraakpunt: zo zie je waar er getikt en geveegd wordt.
@@ -220,6 +236,7 @@
     void draad.offsetWidth;
     draad.style.transition = '';
     getypt.textContent = ''; invoer.classList.remove('tekst'); veld.classList.remove('actief');
+    scherm.classList.remove('beeld');
     vinger.classList.remove('aan', 'druk', 'sleep');
   };
 
@@ -250,7 +267,9 @@
     }
     pop.getAnimations().forEach(a => a.cancel());
     const tin = toneelIn.getBoundingClientRect();
-    const b = $('.creatie-zak', draad).getBoundingClientRect();
+    const zakken = $$('.creatie-zak', draad);
+    if (!zakken.length) return;
+    const b = zakken[zakken.length - 1].getBoundingClientRect();
     const bx = (b.left - tin.left) / schaal, by = (b.top - tin.top) / schaal, k = (b.width / schaal) / 230;
     pop.classList.remove('geland');
     pop.animate([
@@ -282,7 +301,10 @@
   };
 
   const gesprek = async (mijn, eersteWacht) => {
-    const pauze = maakPauze(mijn);
+    // Het gesprek zelf duurt zo'n 3 seconden (tempo f), daarna krijgen de beelden de tijd.
+    const echtePauze = maakPauze(mijn);
+    let f = 1;
+    const pauze = ms => echtePauze(ms * f);
     const tik = async (x, y, opDruk) => {
       plaats(x, y);
       vinger.classList.add('aan');
@@ -338,6 +360,7 @@
     try {
       await pauze(eersteWacht);
       while (true) {
+        f = .2;
         await pauze(700);
         await typ('WIN');
         await verstuur(0);
@@ -345,10 +368,12 @@
         await typtIndicator(1300);
         voegToe(1); scrollNaarOnder();
         await pauze(1700);
-        await typ(Zak.SMAKEN[smaak].naam);
+        await typ(keuze().naam);
         await verstuur(2);
         await pauze(400);
         await typtIndicator(1000);
+        f = 1;
+        scherm.classList.add('beeld');
         const media = voegToe(3, ['genereren']);
         await pauze(1500);
         media.classList.remove('genereren'); media.classList.add('klaar');
@@ -376,11 +401,187 @@
     }
   };
 
+  // ---------- Zelf typen: een echte DM met de KNAP-agent ----------
+  // Claude antwoordt via de sample-capability; zonder die (of zonder toestemming) neemt een eenvoudig script het over.
+  const invoerVeld = $('#ig-input'), hint = $('#zelf-hint');
+  const GROET = 'Hoi! Hier bedenk je je eigen chipssmaak. Hoe heet je?';
+  const BASIS = Zak.SMAKEN.map(s => s.key);
+  const REGELS = `Je bent de DM-assistent van het chipsmerk KNAP op Instagram, in een winactie: fans bedenken in de DM hun eigen chipssmaak, krijgen een zak met hun naam erop en halen stemmen op. De smaak met de meeste stemmen ligt straks echt in de winkel.
+Schrijf kort en informeel Nederlands, hooguit drie korte zinnen, hooguit één emoji. Vraag één ding tegelijk: eerst de voornaam (die vraag is al gesteld; wil iemand geen naam geven, ga dan door met "jou"), daarna welke smaak ze willen proeven (zoet, pittig, fris, hartig, ingrediënten). Is de wens vaag, stel dan hooguit één vervolgvraag.
+Daarna: bedenk een smaaknaam van twee tot vier woorden, zoals "Mango met chili" of "Truffel en zeezout". Zeg dat de zak klaar is en dat ze stemmen ophalen door hem te delen, en vul "zak" in. Iedereen doet mee met één smaak; wil iemand er nog een, leg dan vriendelijk uit dat dat één keer kan.
+Blijf bij chips en deze winactie; stuur andere onderwerpen vriendelijk terug. Verzin geen prijzen, codes of beloftes. Ongepaste smaken weiger je met humor. Zet nooit tekst tussen [ ] in je bericht.
+Antwoord met alleen JSON in deze vorm:
+{"tekst": "je bericht", "opties": ["Zoet en pittig", "Fris en zuur", "Hartig met truffel"], "zak": null}
+"opties" bevat hooguit 3 korte snelknoppen, of is een lege lijst [].
+of, als de smaak af is:
+{"tekst": "je bericht", "opties": [], "zak": {"naam": "Mango met chili", "persoon": "Sanne", "basis": "mango"}}
+Kies bij "basis" de zak die het meest lijkt: mango (fruitig, tropisch, zoet en pittig), truffel (hartig, umami, kaas, paddenstoel, zout), paprika (pittig, rokerig, chili, barbecue), honing (zoet, honing, mosterd, karamel), limoen (fris, zuur, citrus, kruiden, jalapeño).`;
+  const TREF = [
+    ['mango', ['mango', 'zoet en pittig', 'ananas', 'perzik', 'tropisch', 'fruit', 'passie', 'kokos']],
+    ['truffel', ['truffel', 'zout', 'kaas', 'paddenstoel', 'umami', 'hartig', 'ui', 'knoflook', 'parmezaan']],
+    ['limoen', ['limoen', 'lime', 'citroen', 'zuur', 'fris', 'jalape', 'azijn', 'munt', 'koriander', 'dille', 'augurk']],
+    ['honing', ['honing', 'mosterd', 'karamel', 'zoet', 'kaneel', 'stroop', 'esdoorn']],
+    ['paprika', ['paprika', 'pittig', 'chili', 'peper', 'sriracha', 'rook', 'bbq', 'barbecue', 'heet']],
+  ];
+  let live = false, liveId = 0, bezig = false, beurten = [], agent = null, stap = 0, recept = {};
+  if (window.claude && claude.use) claude.use('sample').then(s => { agent = s; }, () => {});
+
+  const bubbel = (tekst, kant) => {
+    const n = document.createElement('div');
+    n.className = `bub ${kant} in-anim` + (kant === 'in' ? ' met-av' : '');
+    n.textContent = tekst;
+    draad.appendChild(n);
+    scrollNaarOnder();
+  };
+  const snelknoppen = lijst => {
+    if (!Array.isArray(lijst) || !lijst.length) return;
+    const o = document.createElement('div');
+    o.className = 'opts in-anim';
+    lijst.slice(0, 3).forEach(t => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.textContent = String(t).slice(0, 30);
+      o.appendChild(b);
+    });
+    draad.appendChild(o);
+    scrollNaarOnder();
+  };
+  const hoofdletter = t => t.charAt(0).toUpperCase() + t.slice(1);
+  // De zak met de naam van de bezoeker: verschijnt in de chat en landt daarna naast de telefoon.
+  const maakZak = z => {
+    const i = Math.max(0, BASIS.indexOf(z.basis));
+    const maker = zonder(String(z.persoon || recept.naam || 'jou').trim().split(/\s+/)[0]).slice(0, 14) || 'jou';
+    const naam = hoofdletter(zonder(String(z.naam || '').trim()).slice(0, 32)) || Zak.SMAKEN[i].naam;
+    eigen = { i, naam, maker: hoofdletter(maker) };
+    zetSmaakInBeeld();
+    const media = sjablonen[3].cloneNode(true);
+    media.classList.add('in-anim', 'genereren');
+    draad.appendChild(media);
+    vulZakken(media, false);
+    scrollNaarOnder();
+    const id = liveId;
+    setTimeout(() => {
+      if (!live || id !== liveId || !media.isConnected) return;
+      media.classList.remove('genereren'); media.classList.add('klaar');
+      setTimeout(() => { if (live && id === liveId) vlieg(); }, 700);
+    }, 1600);
+  };
+
+  const scriptAgent = () => {
+    const t = beurten[beurten.length - 1].content;
+    if (stap === -1) {
+      const woorden = t.replace(/^(hoi|hey|hallo|ik ben|ik heet|mijn naam is|de naam is|noem me)[\s,]+/i, '').split(/[\s,.!]+/).filter(Boolean);
+      recept.naam = hoofdletter(woorden[0] || t);
+      stap = 0;
+      return { tekst: `Leuk, ${recept.naam}! Welke smaak wil jij proeven?`, opties: ['Zoet en pittig', 'Fris en zuur', 'Hartig met truffel'] };
+    }
+    if (stap === 0) {
+      stap = 1;
+      const l = t.toLowerCase();
+      const basis = (TREF.find(([, w]) => w.some(x => l.includes(x))) || ['mango'])[0];
+      const naam = t.trim().length <= 28 ? hoofdletter(t.trim()) : Zak.SMAKEN[BASIS.indexOf(basis)].naam;
+      return { tekst: `Goede keuze, ${recept.naam || 'topper'}! Hier is jouw zak chips. Deel hem en haal stemmen op.`, zak: { naam, persoon: recept.naam, basis } };
+    }
+    return { tekst: 'Je doet al mee met jouw smaak. Deel je zak en haal stemmen op!' };
+  };
+  const vraagAgent = async () => {
+    if (agent) {
+      try {
+        const r = await agent.json([{ role: 'user', content: REGELS }, ...beurten.slice(-14)], { modelTier: 'quick', cache: false });
+        if (r && typeof r.tekst === 'string' && r.tekst.trim()) return r;
+      } catch (e) {
+        if (!['upstream_error', 'invalid_json', 'rate_limited', 'cancelled'].includes(e && e.code)) agent = null;
+      }
+    }
+    return scriptAgent();
+  };
+
+  const stuurBericht = async tekst => {
+    tekst = String(tekst).trim().slice(0, 200);
+    if (!live || !tekst || bezig) return;
+    const mijn = liveId;
+    bezig = true;
+    $$('.opts', draad).forEach(o => o.remove());
+    bubbel(tekst, 'uit');
+    beurten.push({ role: 'user', content: tekst });
+    const stippen = document.createElement('div');
+    stippen.className = 'typen in-anim';
+    stippen.innerHTML = '<i></i><i></i><i></i>';
+    draad.appendChild(stippen);
+    scrollNaarOnder();
+    const [r] = await Promise.all([vraagAgent(), wacht(700)]);
+    stippen.remove();
+    if (mijn !== liveId) return;
+    bezig = false;
+    const tekstIn = String(r.tekst).slice(0, 400);
+    bubbel(tekstIn, 'in');
+    const z = r.zak && typeof r.zak === 'object' ? r.zak : null;
+    beurten.push({ role: 'assistant', content: tekstIn + (z ? ` [zak: ${z.naam}, van ${z.persoon}]` : '') });
+    snelknoppen(r.opties);
+    if (z) maakZak(z);
+  };
+
+  const startLive = () => {
+    if (live) return;
+    live = true; liveId++; run++;
+    verbergPop(true);
+    leeg();
+    draad.style.opacity = '';
+    scherm.classList.add('live');
+    beurten = [{ role: 'assistant', content: GROET }];
+    stap = -1; recept = {};
+    bubbel(GROET, 'in');
+  };
+  function stopLive() {
+    if (!live) return;
+    live = false; liveId++; bezig = false;
+    scherm.classList.remove('live');
+    invoerVeld.value = '';
+    invoerVeld.blur();
+  }
+  const verstuurVeld = () => { const t = invoerVeld.value; invoerVeld.value = ''; invoer.classList.remove('tekst'); stuurBericht(t); };
+
+  invoerVeld.addEventListener('pointerdown', startLive);
+  invoerVeld.addEventListener('focus', startLive);
+  invoerVeld.addEventListener('input', () => invoer.classList.toggle('tekst', !!invoerVeld.value.trim()));
+  invoerVeld.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.isComposing) { e.preventDefault(); verstuurVeld(); } });
+  stuur.addEventListener('click', () => { if (live) { verstuurVeld(); invoerVeld.focus(); } });
+  stuur.addEventListener('keydown', e => { if (live && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); verstuurVeld(); } });
+  hint.addEventListener('click', () => invoerVeld.focus());
+  draad.addEventListener('click', e => {
+    if (!live) return;
+    const opt = e.target.closest('.opt');
+    if (opt && !bezig) {
+      opt.classList.add('gekozen');
+      stuurBericht(opt.textContent);
+      if (matchMedia('(pointer: fine)').matches) invoerVeld.focus({ preventScroll: true });
+    }
+  });
+  // Scrollen in de live-chat met wiel of vinger; aan de rand scrolt de pagina gewoon door.
+  const scrollChat = dy => {
+    const max = Math.max(0, draad.offsetHeight - chat.clientHeight);
+    const nieuw = Math.min(max, Math.max(0, scrollY + dy));
+    if (nieuw === scrollY) return false;
+    scrollY = nieuw;
+    draad.style.transform = `translateY(${-scrollY}px)`;
+    return true;
+  };
+  chat.addEventListener('wheel', e => { if (live && scrollChat(e.deltaY)) e.preventDefault(); }, { passive: false });
+  let vingerY = null;
+  chat.addEventListener('touchstart', e => { vingerY = live ? e.touches[0].clientY : null; }, { passive: true });
+  chat.addEventListener('touchmove', e => {
+    if (!live || vingerY === null) return;
+    const y = e.touches[0].clientY;
+    if (scrollChat((vingerY - y) / schaal)) e.preventDefault();
+    vingerY = y;
+  }, { passive: false });
+
   // Kies een smaak in de band: het gesprek begint opnieuw met die smaak.
   band.addEventListener('click', e => {
     const b = e.target.closest('.band-zak');
     if (!b) return;
+    stopLive();
     smaak = +b.dataset.smaak;
+    eigen = null;
     run++;
     draad.style.opacity = '';
     verbergPop(true);

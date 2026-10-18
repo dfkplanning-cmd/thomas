@@ -21,7 +21,7 @@ De chipspagina declareert sinds 2026-10-18 ook `sample` (zelf typen in de DM met
 
 KNAP is de gekozen verpakking: vrijstaande fotozakken in `beeld/knap/<smaak>.webp` (publiceren als `img/knap/...`), met een ronde "van <naam>"-sticker (gezicht uit `beeld/knap/sanne.jpg` of `beeld/gezicht-*.webp`). Makers in de band: Sanne, Jesse, Noor, Marije, Lars.
 
-Foto's op de chipspagina (`beeld/chips/`, publiceren als `img/chips/...`, bron-PNG's in `Z:\Claude\manysocials-redesignotos\`): bank onder Onze diensten, maker/dm/tafel/finale als vier winactiekaarten onder het vlaggenschip, fabriek onder de live-inzendingen, straat naast Vragen, product (met Jesse) in de afsluiter.
+Foto's op de chipspagina (`beeld/chips/`, publiceren als `img/chips/...`, bron-PNG's in `Z:/Claude/manysocials-redesign/fotos/`): bank onder Onze diensten, maker/dm/tafel/finale als vier winactiekaarten onder het vlaggenschip, fabriek onder de live-inzendingen, straat naast Vragen, product (met Jesse) in de afsluiter.
 
 Beelden staan in `beeld/`. Voor de lokale preview moeten ze ook in `dev-pizza/voorbeeld/img/` en `dev/img/` staan.
 
